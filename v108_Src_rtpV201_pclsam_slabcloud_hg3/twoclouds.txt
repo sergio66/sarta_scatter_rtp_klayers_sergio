@@ -1,0 +1,103 @@
+
+Radiative transfer for two complex clouds
+
+
+c Loop upward over layers below cloud2
+DO ILAY=NLAY,LCBOT2+1,-1
+c   regular rad tranfer
+ENDDO
+
+% Layer containing cloud2 bottom
+ILAY = LCBOT2
+IF (CLEARB2 .GT. 0.0) THEN
+   TBOT = TLEV(ILAY+1)
+   TTOP = TCBOT2
+   ODAIR = TAU(ILAY)*((PLEV(ILAY+1)-CPRBOT2)/(PLEV(ILAY+1)-PLEV(ILAY)))
+c  regular rad transfer at T=(TBOT+TTOP)/2
+ENDIF
+IF (LCBOT2 .EQ. LCBOT2) THEN
+   TBOT=TCBOT2
+   TTOP=TCTOP2
+   ODAIR=TAU(ILAY)*((CPRBOT2-CPRTOP2)/(PLEV(ILAY+1)-PLEV(ILAY)))
+c  modified rad transfer
+ELSE
+   TBOT=TCBOT2
+   TTOP=TLEV(ILAY)
+   ODAIR=TAU(ILAY)*((CPRBOT2 - PLEV(ILAY))/(PLEV(ILAY+1)-PLEV(ILAY)))
+c  modifed rad transfer
+c  Loop upward over the full cloudy layers
+   DO ILAY=LCBOT2-1,LCTOP2+1,-1
+      TBOT=TLEV(ILAY+1)
+      TTOP=TLEV(ILAY)
+      ODAIR=TAU(ILAY)
+c     modified rad transfer
+   ENDDO
+c  Layer containing cloud2 top
+   ILAY=LCTOP2
+   TBOT=TLEV(ILAY+1)
+   TTOP=TCTOP2
+   ODAIR=TAU(ILAY)*((PLEV(ILAY+1)-CPRTOP2)/(PLEV(ILAY+1)-PLEV(ILAY)))
+c  modified rad transfer
+END
+
+c Do any fractional clear layer directly above cloud2
+ILAY=LCTOP2
+IF (CLEART2 .GT. 0.0) THEN
+   IF (LCTOP2 .EQ. LCBOT1 .AND. CPRTOP2 .GT. CPRBOT1) THEN
+      TBOT=TCTOP2
+      TTOP=TCBOT1
+      ODAIR=TAU(ILAY)*((CPRTOP2 - CPRBOT1)/(PLEV(ILAY+1)-PLEV(ILAY)))
+c     regular rad transfer at T=(TBOT+TTOP)/2
+   ELSE
+      TBOT=TCTOP2
+      TTOP=TLEV(ILAY)
+      ODAIR=TAU(ILAY)*((CPRTOP2 - PLEV(ILAY))/(PLEV(ILAY+1)-PLEV(ILAY)))
+c     regular rad transfer at T=(TBOT+TTOP)/2
+   ENDIF
+END
+
+c Loop over full clear layers
+DO ILAY=LCTOP2-1,LCBOT1+1,-1
+c   regular rad tranfer
+ENDDO
+
+c Layer containing LCBOT1
+ILAY=LCBOT1
+IF (LCBOT1 .EQ. LCBOT1) THEN
+   TBOT=TCBOT1
+   TTOP=TCTOP1
+   ODAIR=TAU(ILAY)*((CPRBOT1-CPRTOP1)/(PLEV(ILAY+1)-PLEV(ILAY)))
+c  modified rad transfer
+ELSE
+   TBOT=TCBOT1
+   TTOP=TLEV(ILAY)
+   ODAIR=TAU(ILAY)*((CPRBOT1 - PLEV(ILAY))/(PLEV(ILAY+1)-PLEV(ILAY)))
+c  modifed rad transfer
+c  Loop upward over the full cloudy layers
+   DO ILAY=LCBOT1-1,LCTOP1+1,-1
+      TBOT=TLEV(ILAY+1)
+      TTOP=TLEV(ILAY)
+      ODAIR=TAU(ILAY)
+c     modified rad transfer
+   ENDDO
+c  Layer containing cloud1 top
+   ILAY=LCTOP1
+   TBOT=TLEV(ILAY+1)
+   TTOP=TCTOP1
+   ODAIR=TAU(ILAY)*((PLEV(ILAY+1)-CPRTOP1)/(PLEV(ILAY+1)-PLEV(ILAY)))
+c  modified rad transfer
+END
+
+c Do any clear fractional layer above cloud1
+IF (CLEART1 .GT. 0.0) THEN
+   TBOT=TCTOP1
+   TTOP=TLEV(ILAY)
+   ODAIR=TAU(ILAY)*((CPRTOP1 - PLEV(ILAY))/(PLEV(ILAY+1)-PLEV(ILAY)))
+c  regular rad transfer at T=(TBOT+TTOP)/2
+ENDIF
+
+c Do full clear layers above cloud1
+DO ILAY=LCTOP1-1,1,-1
+c regualt radiative transfer
+ENDDO
+

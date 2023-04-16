@@ -1,0 +1,30 @@
+        IMPLICIT NONE
+  
+!        CHARACTER*11, PUBLIC, PARAMETER :: FILE_FORMAT = 'BINARY     ' ! 'UNFORMATTED' for pgf90 & g95 
+                                                                       ! 'BINARY     ' for Intel f90
+
+        INTEGER, PUBLIC, PARAMETER                ::  THETMAX = 9      ! Number of zenith angles
+        INTEGER, PUBLIC, PARAMETER                ::  NUM_LIQ = 2938       ! Number of wavenumbers
+        INTEGER, PUBLIC, PARAMETER                ::  NUM_ICE = 3151       ! Number of wavenumbers
+        INTEGER, PUBLIC, PARAMETER                ::  TAUMAX_ICE = 25  ! No. of ice optical depths
+        INTEGER, PUBLIC, PARAMETER                ::  DMAX_ICE = 18    ! No. of ice effective diameters
+        INTEGER, PUBLIC, PARAMETER                ::  TAUMAX_LIQ = 22  ! No. of liquid optical depths
+        INTEGER, PUBLIC, PARAMETER                ::  DMAX_LIQ = 13    ! No. of liquid effective diameters
+        INTEGER, PUBLIC, PARAMETER                ::  NLEVEL_MAX = 101
+        INTEGER, PUBLIC, PARAMETER                ::  NSPEC_MAX = 5    ! Max number of hydrometeor species
+        INTEGER, PUBLIC, PARAMETER                ::  NANG_MAX = 3
+        REAL( fp_kind ), PUBLIC, PARAMETER        ::  ZERO = 0.0_fp_kind
+        REAL( fp_kind ), PUBLIC, PARAMETER        ::  ONE = 1.0_fp_kind
+        REAL( fp_kind ), PUBLIC, PARAMETER        ::  TWO = 2.0_fp_kind
+        REAL( fp_kind ), PUBLIC, PARAMETER        ::  PI = 3.14159265_fp_kind
+
+        INTEGER, PUBLIC :: TAU_idx
+        INTEGER, PUBLIC :: TAU_idx_
+        INTEGER, PUBLIC :: D_idx
+        INTEGER, PUBLIC :: D_idx_
+        INTEGER, PUBLIC :: THET_idx
+        INTEGER, PUBLIC :: THET_idx_
+        REAL( fp_kind ), PUBLIC, DIMENSION( THETMAX ) :: THET
+        REAL, PUBLIC, DIMENSION( 2 * THETMAX, NUM_ICE, TAUMAX_ICE * DMAX_ICE ) :: RT_ICE
+        REAL, PUBLIC, DIMENSION( 2 * THETMAX, NUM_LIQ, TAUMAX_LIQ * DMAX_LIQ ) :: RT_LIQ
+

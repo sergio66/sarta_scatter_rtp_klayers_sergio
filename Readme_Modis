@@ -1,0 +1,39 @@
+v105_Src_Modis  has MODIS code that Scott gave to Chris Barnet. Here he 
+                "fixed"  the center frequencies to make the fast model more 
+                accurate
+  See MODIS_OUTPUT
+    input file = pin_feb2002_sea_airsnadir_op.modis.rtp
+    output file = feb2002_raw_op_modis.rad.rtp
+            
+
+v105_Src_pclsam has MODIS code, but with frequencies unfixed
+                Comparing the two version for NO CLOUD, we have 
+                     delta(BT) ~  0.2K  for freqs <= 1300 cm-1
+                     delta(BT) >> 0.2K  for freqs >= 1300 cm-1
+  See MODIS_OUTPUT
+    input file = pin_feb2002_sea_airsnadir_op.modis.rtp
+    output file = feb2002_raw_op_modis_pclsam.rad.rtp
+
+see modis_diff.jpeg
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+cloud effects
+
+fin =  pin_feb2002_sea_airsnadir_op_dust.modis.rtp
+fout = feb2002_sea_airsnadir_dust.modis.rad.rtp
+
+[h,ha,p,pa] = rtpread('feb2002_raw_op_modis.rad.rtp');               
+[h1,ha1,p1,pa1] = rtpread('feb2002_raw_op_modis_pclsam.rad.rtp');
+[h2,ha2,p2,pa2] = rtpread('feb2002_sea_airsnadir_dust.modis.rad.rtp');    
+warm = find(p.stemp >= 280);
+
+plot(h.vchan,rad2bt(h.vchan,p.rcalc(:,warm))-rad2bt(h.vchan,p1.rcalc(:,warm)))
+xlabel('Wavenumber cm-1');
+ylabel('\Delta BT(K)');
+title('MODIS model differences (good-notsogood)')
+
+plot(h.vchan,rad2bt(h.vchan,p2.rcalc(:,warm))-rad2bt(h.vchan,p1.rcalc(:,warm)))
+xlabel('Wavenumber cm-1');
+ylabel('\Delta BT(K)');
+title('MODIS model differences (cld - clr)')                

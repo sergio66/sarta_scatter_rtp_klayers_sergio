@@ -1,0 +1,68 @@
+cp -a   /asl/s1/sergio/RTP_pin_feb2002/junk.ip.rtp .
+cp -a /asl/s1/sergio/RTP_pin_feb2002/pin_feb2002_sea_airsnadir_ip.so2.latlon.const_emiss.rtp junk.ip.rtp
+
+addpath /asl/matlib/h4tools
+addpath /asl/matlib/aslutil
+[hx,hax,px,pax] = rtpread('junk.ip.rtp');
+oo = find(px.nlevs < 90);
+oo = 1 : length(px.stemp);
+pxx = px;
+pxx.plevs = zeros(140,49);
+pxx.ptemp = zeros(140,49);
+pxx.gas_1 = zeros(140,49);
+pxx.gas_2 = zeros(140,49);
+pxx.gas_3 = zeros(140,49);
+pxx.gas_9 = zeros(140,49);
+pxx.gas_5 = zeros(140,49);
+pxx.gas_6 = zeros(140,49);
+for ii = 1 : length(oo)
+  nlevs = px.nlevs(oo(ii));
+  plevs = px.plevs(1:nlevs,ii);
+  ptemp = px.ptemp(1:nlevs,ii);
+  gas_1 = px.gas_1(1:nlevs,ii);
+  gas_2 = px.gas_2(1:nlevs,ii);
+  gas_3 = px.gas_3(1:nlevs,ii);
+  gas_9 = px.gas_9(1:nlevs,ii);
+  gas_5 = px.gas_5(1:nlevs,ii);
+  gas_6 = px.gas_6(1:nlevs,ii);
+  
+  pmin = min(plevs); pmax = max(plevs);
+  plevs140 = exp(linspace(log(pmin),log(pmax),140));
+  pxx.nlevs(ii)   = 140;
+  pxx.plevs(:,ii) = plevs140;
+  pxx.ptemp(:,ii) = interp1(log(plevs),ptemp,log(plevs140),[],'extrap');
+  pxx.gas_1(:,ii) = interp1(log(plevs),gas_1,log(plevs140),[],'extrap');
+  pxx.gas_2(:,ii) = interp1(log(plevs),gas_2,log(plevs140),[],'extrap');
+  pxx.gas_3(:,ii) = interp1(log(plevs),gas_3,log(plevs140),[],'extrap');
+  pxx.gas_9(:,ii) = interp1(log(plevs),gas_9,log(plevs140),[],'extrap');
+  pxx.gas_5(:,ii) = interp1(log(plevs),gas_5,log(plevs140),[],'extrap');
+  pxx.gas_6(:,ii) = interp1(log(plevs),gas_6,log(plevs140),[],'extrap');
+end
+rtpwrite('junk140.ip.rtp',hx,hax,pxx,pax)
+
+ii = 1; nlevs = px.nlevs(oo(ii));
+semilogy(px.ptemp(1:nlevs,1),px.plevs(1:nlevs,1),'bo',pxx.ptemp(:,1),pxx.plevs(:,1),'r.-')
+set(gca,'ydir','reverse')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+time /asl/packages/klayersV205/BinV201/klayers_airs fin=junk.ip.rtp fout=usual.op.rtp
+time /home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19 fin=usual.op.rtp fout=usual.rp.rtp
+
+time /home/sergio/SARTA_CLOUDY/RTP_150levs/KLAYERS/BinV201/klayers_airs fin=junk.ip.rtp fout=sergio.op.rtp
+time /home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19 fin=sergio.op.rtp fout=sergio.rp.rtp
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+time /asl/packages/klayersV205/BinV201/klayers_airs fin=junk140.ip.rtp fout=usual140.op.rtp
+YAY ERROR
+time /home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19 fin=usual140.op.rtp fout=usual140.rp.rtp
+
+time /home/sergio/SARTA_CLOUDY/RTP_150levs/KLAYERS/BinV201/klayers_airs fin=junk140.ip.rtp fout=sergio140.op.rtp
+time /home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19 fin=sergio140.op.rtp fout=sergio140.rp.rtp
+
+%[h,ha,p0,pa] = rtpread('usual.rp.rtp');
+[h,ha,p140,pa] = rtpread('sergio140.rp.rtp');
+t0 = rad2bt(h.vchan,p0.rcalc);
+t1 = rad2bt(h.vchan,p1.rcalc);
+t140 = rad2bt(h.vchan,p140.rcalc);
+plot(h.vchan,t0-t140,'r',h.vchan,t0-t1,'b')

@@ -1,0 +1,88 @@
+read_fitted_database.f    reads in the database
+CloudyIR_BT.f  calls      subroutine INTERPOLATION_RT.f
+          also calls      functions  rawnplank, wnbrit
+interpolation_rt.f calls  function   sumfit
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Date: Mon, 01 Dec 2008 12:15:12 -0600
+From: Ping Yang <pyang@ariel.met.tamu.edu>
+To: Sergio DeSouza-Machado <sergio@umbc.edu>
+Cc: Jun Li <jun.li@ssec.wisc.edu>, Bryan Baum <bryan.baum@ssec.wisc.edu>
+Subject: Re: Codes for TOA IR cloudy brightness temperature radiative 
+         transfer calculations
+
+Dear Sergio,
+
+Jun Li's group rewrote the fast IR model code.  It's now in his ftp site. 
+Please use this version.
+
+It will be appreciated if you could acknowledge Jun Li's contribution in 
+relevant publications.
+
+best regards,
+
+-Ping
+
+
+Jun Li wrote:
+> 
+> Dear Ping,
+> 
+> Bryan told me that you would like to get our re-written codes for IR cloudy 
+> BT calculations, please see the following link for the package.  Note that 
+> most subroutines were written by Dr. Heli Wei, while the subroutine 
+> "CloudyIR_BT.f" was written by Hal Woolf
+> based on the equations I rewrote. The new IR cloudy BT subroutine has the 
+> following improvement on the old Heli's subroutine.
+> (1) added surface emissivity contribution
+> (2) consistent with clear BT calculation (Heli's subroutine is discrepant 
+> from the clear one provided by SARTA)
+> 
+> ftp://ftp.ssec.wisc.edu/pub/ssec/junl/cloudyRTM_01Dec2008.tar
+> 
+> Note that you should call "read_fitted_database.f" before call the 
+> "CloudyIR_BT.f".  Please let me know if you have any questions.
+> Best regards,
+> 
+> Jun
+> 
+>----------------------------------------------
+Ping Yang
+
+Professor 
+Department of Atmospheric Sciences 
+Texas A&M University 
+College Station, TX 77843
+
+Tel: 979-845-4923
+
+Email: pyang@ariel.met.tamu.edu
+---------------------------------------------
+
+Hi Sergio,
+A little background may be useful - the original fast model for cloud 
+radiances was built by a fellow named Heli Wei when he was visiting Texas A&M 
+a few years ago. He has since gone back to China. Ping was trying to 
+reconstitute this software in his shop but luckily, a colleague of ours, Jun 
+Li (pronounced June) here at CIMSS has been working with the fast model since 
+Heli left. In fact, Jun and his colleagues have made a number of improvements 
+to the original model. So if you are interested in delving into cloud 
+properties and bringing in surface emissivity, it may be better to work with 
+Jun's version of the model at this point. I am sure you will have questions; 
+if so, Jun can be reached at jun.li@ssec.wisc.edu
+
+I am not sure about the details however. My apologies for this.
+
+Hope this information helps a bit.
+
+Bryan
+
+--------------------------------------------------------------------------
+
+Bryan A. Baum
+University of Wisconsin-Madison
+Space Science and Engineering Center
+E-mail: bryan.baum@ssec.wisc.edu
+Phone: (608) 263-3898
+Web site:  http://www.ssec.wisc.edu/~baum
+

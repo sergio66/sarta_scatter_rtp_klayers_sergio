@@ -1,0 +1,77 @@
+
+these are basically PingYang's 2cldlayer files (originals in ORIG)
+-rw-r--r-- 1 sergio users  1821 2009-02-12 13:12 pyang2cld.param
+-rw-r--r-- 1 sergio users 12166 2009-02-12 13:12 cldice.f
+-rw-r--r-- 1 sergio users 12192 2009-02-12 13:12 cldwater.f
+-rw-r--r-- 1 sergio users  2279 2009-02-12 13:12 intpmu.f
+-rw-r--r-- 1 sergio users  3043 2009-02-12 13:12 intpth.f
+-rw-r--r-- 1 sergio users  2981 2009-02-12 13:12 layertemp.f
+-rw-r--r-- 1 sergio users  1876 2009-02-12 13:12 load_rt_tables.f
+-rw-r--r-- 1 sergio users 17709 2009-02-12 13:12 ly2g.f
+-rw-r--r-- 1 sergio users   367 2009-02-12 13:12 planck.f
+-rw-r--r-- 1 sergio users   571 2009-02-12 13:12 prod.f
+-rw-r--r-- 1 sergio users   964 2009-02-12 13:12 trp.f
+
+see also http://repository.tamu.edu/ for some M.S and PhD thesis supervised by Ping
+Yang, eg Nov 2005 Master thesis by Kinney, Jacqueline Anne
+
+SARTA basic source code 
+some files HAVE been copied from v108_Src_pclsam_ctype_HG3_PYang_1layer
+-rw-r--r-- 1 sergio users  17479 2009-02-12 13:17 scatpy.f
+-rw-r--r-- 1 sergio users  15073 2009-02-12 13:17 scatumbc.f
+-rw-r--r-- 1 sergio users  44981 2009-02-12 13:17 sarta_pclsam.f
+-rw-r--r-- 1 sergio users   5913 2009-02-12 13:19 fnmie_iceaggr_waterdrop_volz_1_Mar08.f
+-rw-r--r-- 1 sergio users   2629 2009-02-12 13:20 make_sarta_pclsam_4500
+-rw-r--r-- 1 sergio users   2139 2009-02-12 13:20 Makefile
+
+the rest are from taro://asl/packages/sartaV108/Src_rtpV105_pclsam_slabcloud_hg3
+-rw-r--r-- 1 hannon pi_strow  19695 Nov 25 17:22 incFTC_apr08x.f
+-rw-r--r-- 1 hannon pi_strow  19695 Nov 25 17:21 incFTC_apr08.f
+-rw-r--r-- 1 hannon pi_strow  46474 Nov 25 17:19 sarta_pclsam.f
+-rw-r--r-- 1 hannon pi_strow  19722 Nov  2 17:50 tunmlt.f
+-rw-r--r-- 1 hannon pi_strow  19623 Jun 27  2008 incFTC.f
+-rw-r--r-- 1 hannon pi_strow   5481 Jun 27  2008 fnmie_iceaggr_waterdrop_cirrus.f
+-rw-r--r-- 1 hannon pi_strow   1829 Jun 27  2008 Makefile
+-rw-r--r-- 1 hannon pi_strow   5471 Jun 13  2008 fnmie_iceaggr_waterdrop_desertdust.f
+-rw-r--r-- 1 hannon pi_strow   5463 Jun 13  2008 fnmie_iceaggr_waterdrop_andesite.f
+-rw-r--r-- 1 hannon pi_strow  32183 Jun 13  2008 calpar.f
+-rw-r--r-- 1 hannon pi_strow  19370 May 16  2008 incFTC_noclouds.f
+-rw-r--r-- 1 hannon pi_strow   6364 May 14  2008 calnte.f
+-rw-r--r-- 1 hannon pi_strow   1344 Mar 25  2008 hg3.f
+-rw-r--r-- 1 hannon pi_strow  13696 Mar 24  2008 calrad1.f
+-rw-r--r-- 1 hannon pi_strow  15875 Mar 24  2008 calrad2.f
+-rw-r--r-- 1 hannon pi_strow  16889 Mar 24  2008 rdrtp.f
+-rw-r--r-- 1 hannon pi_strow   2015 Mar 24  2008 make_sarta_pclsam_4500
+-rw-r--r-- 1 hannon pi_strow  17205 Jan 31  2008 opnrtp.f
+-rw-r--r-- 1 hannon pi_strow  13151 Nov 15  2007 getcld_slab.f
+-rw-r--r-- 1 hannon pi_strow  13277 Nov 14  2007 ccprep_slab.f
+-rw-r--r-- 1 hannon pi_strow   7899 Nov 14  2007 bkprep.f
+-rw-r--r-- 1 hannon pi_strow   5456 Feb 22  2007 getmie.f
+-rw-r--r-- 1 hannon pi_strow   5062 Jan  8  2007 faketz.f
+-rw-r--r-- 1 hannon pi_strow  29851 Jan  5  2007 test_rdcoef_pclsam.f
+-rw-r--r-- 1 hannon pi_strow  27913 Jan  5  2007 rdcoef_pclsam.f
+-rw-r--r-- 1 hannon pi_strow   7533 Jan  5  2007 calrad0.f
+-rw-r--r-- 1 hannon pi_strow  13235 Jan  2  2007 calt5_od.f
+-rw-r--r-- 1 hannon pi_strow  16581 Dec 22  2006 calt2_od.f
+-rw-r--r-- 1 hannon pi_strow  17027 Dec 22  2006 calt3_od.f
+-rw-r--r-- 1 hannon pi_strow  15228 Dec 22  2006 calt4_od.f
+-rw-r--r-- 1 hannon pi_strow  14589 Dec 22  2006 calt6_od.f
+-rw-r--r-- 1 hannon pi_strow  13629 Dec 22  2006 calt7_od.f
+-rw-r--r-- 1 hannon pi_strow  18549 Dec 22  2006 calt1_od.f
+-rw-r--r-- 1 hannon pi_strow   9050 Apr 26  2006 calowp.f
+-rw-r--r-- 1 hannon pi_strow 171216 Dec  8  2005 tunmlt_exper_7.txt
+-rw-r--r-- 1 hannon pi_strow  17825 Oct 13  2005 sunpar.f
+-rw-r--r-- 1 hannon pi_strow   5502 Jun 24  2005 getbot.f
+-rw-r--r-- 1 hannon pi_strow   7789 Jun 24  2005 rdprof.f
+-rw-r--r-- 1 hannon pi_strow   8869 Feb  6  2004 rdinfo.f
+-rw-r--r-- 1 hannon pi_strow   8417 Feb  6  2004 setems.f
+-rw-r--r-- 1 hannon pi_strow   4675 Feb  5  2004 mean_t.f
+-rw-r--r-- 1 hannon pi_strow   4324 Sep 13  2001 wrtrtp.f
+-rw-r--r-- 1 hannon pi_strow   4447 May  2  2001 cbplev.f
+-rw-r--r-- 1 hannon pi_strow   3342 Mar 27  2001 util.f
+-rw-r--r-- 1 hannon pi_strow   5365 Feb 14  2001 rdsun.f
+-rw-r--r-- 1 hannon pi_strow   6432 Aug 16  2000 calokw.f
+-rw-r--r-- 1 hannon pi_strow   4367 Aug 16  2000 qikexp.f
+-rw-r--r-- 1 hannon pi_strow   5115 Aug 16  2000 saconv.f
+-rw-r--r-- 1 hannon pi_strow   5580 Aug 16  2000 vaconv.f
+

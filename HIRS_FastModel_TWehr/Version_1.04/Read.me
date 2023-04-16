@@ -1,0 +1,26 @@
+This directory contains the source code for HFFP (HIRS fast forward
+program). Use the Makefile to create the executable hffp.x (make hffp.x)
+
+INPUT contains the input files as predictor numbers, coefficients etc. It
+also contains the 48 fit profiles. (These are not needed to run HFFP.)
+
+sample.ctl is a template control file.
+
+Adjust your path names in hffp_aux_dec.f 
+Edit hffp_glob_dec.f - if you know what you are doing! To be conservative
+with the precision of the Jacobians, set the following parameters to
+100: MILAYT MILAYW MILAYO. The default value are not a recommendation -
+everybody has to find the right numbers or use 100.
+
+To run the program call hffp.x or use something like
+echo "sample.ctl" | hffp.x
+if sample.ctl is your control file.
+
+All your results will go to the output directory as set in 
+hffp_aux_dec.f (default is ./OUTPUT/)
+
+The documentation can be found in DOC.
+
+
+
+

@@ -1,0 +1,9 @@
+cp -aR /asl/packages/klayersV205/* .
+
+cd Src_rtpV201
+
+edit make_klayers to 
+  point to new HDF libs
+  point to new RTP libs
+  point to ifort
+

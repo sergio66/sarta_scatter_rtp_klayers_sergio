@@ -1,0 +1,23 @@
+Date: Fri, 3 Nov 2006 13:49:55 -0500
+From: Scott Hannon <hannon@umbc.edu>
+To: Sergio DeSouza-Machado <sergio@umbc.edu>
+Subject: sartaV105 MODIS fast model
+
+
+The modified source code for the sartaV105 MODIS fast model
+is located in
+   /asl/packages/sartaV105/Src_MODIS
+
+The complete package I gave to Chris B last year is at
+   http://asl.umbc.edu/pub/hannon/ChrisB/chrisb.tar
+
+The document file is at
+   /asl/packages/sartaV105/Doc/modis.pdf
+
+
+Scott Hannon
+Department of Physics                        email : hannon@umbc.edu
+University of Maryland Baltimore County      Phone : 410-455-3001
+1000 Hilltop Circle                          Office: Physics 430
+Baltimore, MD 21250
+

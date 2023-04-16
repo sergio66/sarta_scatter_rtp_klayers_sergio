@@ -1,0 +1,4 @@
+ nwantp = -1 (all profs)
+ nwantc = -1 (all chans)
+pvopen(): can't open cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp
+Error! input RTP ptype must be LAYPRO or AIRSLAY

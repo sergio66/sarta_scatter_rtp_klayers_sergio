@@ -1,0 +1,33 @@
+#
+# sergio SARTA git ignore file
+#
+########################################################################
+
+# directories
+OLDSTUFF
+IASI_CRIS
+LatestSarta
+JACvers/F77tof90/
+JACvers/TestOpenAD
+
+WORKS*
+BinV201
+Bin
+bin
+
+# files
+*~
+*.rtp
+*.mat
+*.o
+*.x
+*.gz
+*_genmod.f90 
+*_genmod.mod
+*.jpg
+*.gif
+*.tar
+*.dat
+
+disk_space*
+ugh*

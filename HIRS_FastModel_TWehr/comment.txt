@@ -1,0 +1,57 @@
+
+The HIRS fast model, as packaged up, uses a temperature dependent
+lookup table to set the channel center frequency for purposed of
+radiative transfer.  This email below is about how large an effect
+this is...variable freq vs constant freq
+Scott.
+	From: cbarnet@srt.gsfc.nasa.gov (Chris Barnet)
+	Subject: Re: HFFP HIRS code
+	Date: Fri, 7 Apr 2000 13:20:02 -0400 (EDT)
+
+> I don't remember what Tobias said about how big an effect it is.
+> Must not have been so tiny it was silly, or so big it was amazing.
+> So I'm guessing a few tenths of a Kelvin.
+
+Actually, I computed standard deviations for all the NOAA RTA's he did.
+Here is NOAA-15
+
+   chl      <freq>   sdv(freq)
+     1  669.126496    0.001725
+     3  690.400784    0.016143
+     4  703.091349    0.015896
+     5  715.844240    0.020639
+     6  731.652227    0.017490
+     7  747.562441    0.023793
+     8  896.931996    0.089322
+     9 1031.875505    0.047348
+    10  801.051874    0.014589
+    11 1361.803701    0.091304
+    12 1528.831355    0.139190
+    13 2187.854177    0.043644
+    14 2209.738764    0.034407
+    15 2234.986969    0.036032
+    16 2241.701214    0.041792
+    17 2418.415993    0.067167
+    18 2517.966649    0.094814
+    19 2651.811118    0.637407
+ 
+> I recommend you investigate this issue before deciding what to do.
+> It might not be too much work to modify the code in Tobais' package
+> to use constant freqs rather than variable freqs.  Run it both ways
+> for a variety of profiles and angles (maybe the regression profile),
+> and look at the difference in radiance.  Then you'll at least have
+> a good idea of the penalty you'll pay if you ignore it.
+ 
+For comparison I will use his methodology and then decide whether or
+not to adopt it in our retrievals.  We are heading towards using his
+RTA in Joel's HIRS/AMSU retrievals by early summer.
+ 
+--
+ 
+Dr. Christopher D. Barnet
+NASA/GSFC  Code 910.4
+Bldg.22,   Rm. 348
+Greenbelt, MD 20771
+Voice: (301)-286-2679
+FAX:   (301)-286-2323
+e-mail: cbarnet@spectra.gsfc.nasa.gov

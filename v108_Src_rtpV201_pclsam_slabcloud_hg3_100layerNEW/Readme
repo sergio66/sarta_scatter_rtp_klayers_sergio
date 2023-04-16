@@ -1,0 +1,22 @@
+copied from /asl/packages/sartaV108/Src_rtpV201_pclsam_slabcloud_hg3
+
+This version of sarta is a hybrid between
+  two slab code    from   v108_Src_rtpV201_pclsam_slabcloud_hg3
+  100 layer code   from   v107_Src_pclsam_ctype_100layer_rtpV201
+
+Compared to v107 100 layer code it has the following important tweaks : 
+  a) it reads in cloud gas type and if 300 or higher (aerosol) it keeps the particle
+     size the same as was read in from the rtp file
+     if 100-199 it figures this is water, so it puts a constant 20 um dme
+     if 200-299 it figures this is ice,   so it puts a varying dme depending on layer temp
+  b) when doing calrad2, it combines scattering parameters of overlapping clouds, using
+     the formulation of Cess (Clim. Change, 1985 pgs 237-251)
+
+
+For testing, look at
+-rw-r--r-- 1 sergio pi_strow 4601 Aug 25 16:33 test_gitpackage.m
+-rw-r--r-- 1 sergio pi_strow 3484 Aug 25 16:33 test_cfrac_unchanged.m
+-rw-r--r-- 1 sergio pi_strow 4243 Aug 25 16:33 test_cfrac1.m
+-rw-r--r-- 1 sergio pi_strow  993 Aug 19 12:06 testg77files.m
+-rw-r--r-- 1 sergio pi_strow 2779 Aug 18 19:22 test_sarta.m
+

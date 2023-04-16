@@ -1,0 +1,48 @@
+5/1/2007
+copied from /asl/packages/sartaV107/Src_pclsam_x
+
+
+4/18/2013
+
+
+1)
+see /home/sergio/MATLABCODE/LES/check_sarta.m
+this diffs files in 
+  /home/sergio/SARTA_CLOUDY/v107_Src
+versus
+  /asl/packages/sartaV108/Src_rtpV201
+
+and tells me that
+  calnte.f are different 
+  calpar.f are different 
+  calrad.f are different 
+  calt1.f are different 
+  calt2.f are different 
+  calt4.f are different 
+  calt5.f are different 
+  calt6.f are different 
+  calt7.f are different 
+  opnrtp.f are different 
+  rdinfo.f are different 
+  rdrtp.f are different 
+  sarta.f are different 
+  setems.f are different 
+  tunmlt.f are different 
+  wrtrtp.f are different 
+  
+
+2) So I need to copy these from /asl/packages/sartaV108/Src_rtpV201 into this dir
+using copy.sc
+
+3) also edit make_sarta_pclsam so that
+# set RTPHOME to point to the local RTP installation
+#RTPHOME = /asl/packages/rtpV105_4500
+RTPHOME = /asl/packages/rtpV201
+
+4) type make and notice
+  a) need ntebot 
+     so look at infFTC and include that
+
+5) then barf at "cemis" at getcld.f so need to fix that; for hints, check out 
+       ../Src_rtpV201_pclsam_slabcloud_hg3/getcld_slab.f
+    

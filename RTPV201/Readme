@@ -1,0 +1,9 @@
+copied from /asl/packages/rtpV201/
+
+change maxlevs to 140 in
+  include/rtpdefs_standard.f
+  include/rtp.h
+
+and go through Makefile in EVERY subdir to
+a) reset absoft --> ifort
+b) set the HDF libs

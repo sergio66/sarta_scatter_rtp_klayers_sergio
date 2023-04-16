@@ -1,0 +1,24 @@
+/asl/packages/sartaV105/cc2Src/
+
+Has the new 
+
+>    LOGTTB=LOG(TCTOP/TCBOT)   !!orig    ---->
+>
+>    LOGTTB=LOG(ttorad(v,TCTOP)/ttorad(v,TCBOT))   !!new
+
+-------------------------------------------------
+
+cd cc2Src/
+cp  /asl/packages/sartaV105/cc2Src/*.f .
+
+cp /home/gou/sarta_new/cc2Src/incFTC*.f .
+
+cp /home/gou/sarta_new/cc2Src/Makefile .
+  edit this Makefile ~/sarta/Bin/ replaced with /home/sergio/SARTA_CLOUDY/Bin/
+
+rm incFTC.f  #this is a symbloic link
+
+make whatever
+
+ 
+

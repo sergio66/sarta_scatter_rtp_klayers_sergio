@@ -1,0 +1,119 @@
+#
+# Makefile make_sarta_pclsam
+#
+# ------------
+# Object files
+# ------------
+OBJS = rdprof.o  vaconv.o  calpar.o  qikexp.o  hg3.o  setems_pclsam.o  getbot.o \
+       ycalt1_od.o  ycalt2_od.o  ycalt3_od.o  ycalt4_od.o  ycalt5_od.o \
+       ycalt6_od.o  ycalt7_od.o  bkprep.o  getcld_slab.o \
+       faketz_pclsam.o  sunpar.o   rdsun.o  saconv.o  calowp.o  calokw.o  tunmlt.o \
+       util.o  opnrtp_pclsam.o  rdrtp_pclsam.o  wrtrtp.o  mean_t.o  ycalnte.o \
+       rdinfo.o  cbplev.o  calrad0.o  calrad1.o  calrad2.o rdcldt.o \
+       getmie.o  fnmie.o  rdcoef.o  ccprep_slab.o  intersect.o sarta_pclsam.o
+
+# ------------------------------------------------------------------------
+# HDF LIBS
+# ------------------------------------------------------------------------
+#HDFLIB = -L/asl/packages/external/hdf/hdf4/lib -ldf \
+#	 -L/asl/packages/external/jpeg -ljpeg       \
+#	 -L/asl/packages/external/zlib -lz         
+
+HDF_INSTALL1 = /usr/cluster/contrib/hdf4/4.2.11
+HDFLIB1   = -L$(HDF_INSTALL1)/lib -ldf -ljpeg -lz       ## -lmfhdf
+
+# more libs
+HDF_INSTALL2 = /usr/cluster/contrib/szip2/szip2.1
+HDF_INSTALL2 = /usr/ebuild/software/Szip/2.1.1-GCCcore-6.4.0
+HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
+
+HDFLIB = $(HDFLIB1) $(HDFLIB2)
+
+# ------------------------------------------------------------------------
+# RTP LIB and INCLUDE
+# ------------------------------------------------------------------------
+RTPLIB = -L/asl/packages/rtp/lib -lrtp
+RTPINC = -I/asl/packages/rtp/include
+
+RTPLIB = -L/home/sergio/RTPV201/rtpV201_140levs/lib -lrtp
+RTPINC = -I/home/sergio/RTPV201/rtpV201_140levs/include
+
+# ------------------------------------------------------------------------
+# Compilers
+# ------------------------------------------------------------------------
+
+# INTEL ifort F77
+# ------------------------------------------------------------------------
+# -u  : turn off implicit typing of variables
+# -g  : generate debugging information (turns off optimization)
+# -C  : do run time subscript range checking
+# -w0 : inform about unused variables
+# -O3 : heavy optimization
+# -64 : 64-bit objects (libraries must match)
+# -us : puts trailing underscore
+F77 = /usr/ebuild/software/intel-compilers/2021.2.0/compiler/2021.2.0/linux/bin/intel64/ifort
+F77 = ifort
+FLIB = 
+OPTEXEC = 
+
+## with profiling
+## after running the code, then do eg
+##   time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=junk.op.rtp fout=newdayx.rtp
+##   gprof ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug gmon.out >& ughnew
+## and if you profile eg Scotts code 
+##   time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=junk.op.rtp fout=origdayx.rtp
+##   gprof ../bin/airs_l1c_2834_cloudy_may19_prod_debug gmon.out >& ughnew
+## then compare Scotts code vs My code using
+##   compare_gprof_profiler_output('ughorig','ughnew');
+OPT = -convert big_endian -extend-source 132 -pg
+OPT = -O2 -convert big_endian -extend-source 132 -pg
+OPT = -O2 -convert big_endian -extend-source 132 -pg -check bounds -g -traceback -debug -gen-interfaces -warn interface
+OPTEXEC = -pg
+
+## speedy, no profiling
+##OPT = -O0 -convert big_endian -extend-source 132 -check all -g -cpp -traceback -fp-stack-check -warn interface
+#OPT = -O2 -convert big_endian -extend-source 132 -check bounds -g -traceback -debug -gen-interfaces -warn interfaces
+OPT = -O2 -convert big_endian -extend-source 132
+OPTEXEC =
+
+# Portland Group F77:
+# ------------------------------------------------------------------------
+#    -byteswapio  read big-endian binary files (needed for coefficient files)
+#    -C           array bounds checking
+#    -g           include symbol table info
+#    -O           moderate optimization
+#OPT = -O -byteswapio
+#F77 = pgf77
+
+# gfortran
+# ------------------------------------------------------------------------
+#    -byteswapio  read big-endian binary files (needed for coefficient files)
+#    -C           array bounds checking
+#    -g           include symbol table info
+#    -O           moderate optimization
+# F77 = /usr/ebuild/software/GCCcore/11.2.0/bin/gfortran
+# # 
+# # FLIB = 
+# # OPTEXEC = 
+# # 
+# # ## speedy, no profiling
+# # ##OPT = -O0 -fconvert=big-endian -ffixed-line-length-none -check all -g -cpp -traceback -fp-stack-check -warn interface -fdec-structure
+# # #OPT = -O2 -fconvert=big-endian -ffixed-line-length-none -check bounds -g -traceback -debug -gen-interfaces -warn interfaces -fdec-structure
+# OPT = -O2 -fconvert=big-endian -ffixed-line-length-none -fdec-structure
+# # 
+# # ## with profiling
+# # OPT = -O2 -fconvert=big-endian -ffixed-line-length-none -pg -fdec-structure
+# # OPT = -O2 -fconvert=big-endian -ffixed-line-length-none -pg -check bounds -g -traceback -debug -gen-interfaces -warn interface -fdec-structure
+# # OPT = -O3 -fconvert=big-endian -ffixed-line-length-none -pg -fdec-structure
+# # OPTEXEC = -pg -fdec-structure
+
+# ------------------------------------------------------------------------
+# Build
+# ------------------------------------------------------------------------
+sarta:	$(OBJS)
+	$(F77) $(OPTEXEC) $(OBJS) $(RTPLIB) $(HDFLIB) $(FLIB)
+
+# Compile source to object files
+.f.o:
+	$(F77) -c $(OPT) $(RTPINC) $*.f
+

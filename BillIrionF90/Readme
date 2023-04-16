@@ -1,0 +1,19 @@
+Hi Sergio,
+
+Thanks for your call this afternoon.
+
+I’ve been slowly moving SARTA from just a translation to F90 to where I’ve been modularizing it in a (vain?) effort to speed it up.
+
+The files in
+/home/fwi/dev/sarta_pclsam_d4s/sarta_pclsam_d4s_f90_v1/  (on weather)
+are mostly just a translation from F77 to F90 with some modularization, and inclusion of the calculation of outgoing radiance using D4S transmissivity as input.
+
+The files in
+/home/fwi/dev/sarta_pclsam_d4s/sarta_pclsam_d4s_f90_v10/
+are much more modularized, and save calculated variables between calls.  I have NOT done much as far as speeding up the cloud calculation.
+
+Please feel free to touch base if I can help further.
+
+Cheers,
+Bill
+

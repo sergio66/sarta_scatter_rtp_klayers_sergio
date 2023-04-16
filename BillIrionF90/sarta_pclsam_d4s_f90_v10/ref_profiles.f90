@@ -1,0 +1,240 @@
+
+!INPUT PARAMETERS:
+!    type      name    purpose                     units
+!    --------  ------  --------------------------  ---------------------
+!    REAL arr  REF_TEMPERATURE   reference temperature       K
+!    REAL arr  REF_CO_PROFILE  ref carbon monoxide amount  kiloMoles/cm^2
+!    REAL arr  REF_CO2_PROFILE  reference CO2 amount        kiloMoles/cm^2
+!    REAL arr  REF_HNO3_PROFILE  reference HNO3 amount       kiloMoles/cm^2
+!    REAL arr  REF_CH4_PROFILE  reference methane amount    kiloMoles/cm^2
+!    REAL arr  REF_N2O_PROFILE  reference N2O amount        kiloMoles/cm^2
+!    REAL arr  REF_O3_PROFILE  reference ozone amount      kiloMoles/cm^2
+!    REAL arr  REF_SO2_PROFILE  reference SO2 amount        kiloMoles/cm^2
+!    REAL arr  REF_H2O_PROFILE  reference water amount      kiloMoles/cm^2
+
+
+!ALGORITHM REFERENCES:
+!    none
+
+
+!KNOWN BUGS AND LIMITATIONS:
+!    Assumes the user has supplied vaguely realistic profile amounts
+!    and temperatures.
+
+
+!ROUTINE HISTORY:
+! Date        Programmer     Comments
+! ----------- -------------- --------------------------------------
+! 20 Dec 2017 Bill Irion     Created to store reference amounts
+
+
+MODULE REF_PROFILES
+
+	USE INCFTC, ONLY: MAXLAY, IOUNIT, FNPREF
+
+	IMPLICIT NONE
+
+	! Reference amounts in slab averages
+	REAL, DIMENSION(MAXLAY) :: REF_TEMPERATURE_PROFILE 
+	REAL, DIMENSION(MAXLAY) :: REF_CO2_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_H2O_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_O3_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_CO_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_CH4_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_SO2_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_HNO3_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_N2O_PROFILE
+
+	REAL, DIMENSION(MAXLAY) :: REF_LAYER_THICKNESS_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_LAYER_ALTITUDE_PROFILE
+	REAL, DIMENSION(MAXLAY) :: REF_LAYER_PRESSURE_PROFILE
+
+	CHARACTER*40 :: RPNAM ! Reference profile name
+
+CONTAINS
+
+	SUBROUTINE REF_PROFILES__SET_REFERENCE_PROFILES( &
+		INPUT_REF_TEMPERATURE, &
+		INPUT_REF_CO2_PROFILE, &
+		INPUT_REF_H2O_PROFILE, &
+		INPUT_REF_O3_PROFILE, &
+		INPUT_REF_CO_PROFILE, &
+		INPUT_REF_CH4_PROFILE, &
+		INPUT_REF_SO2_PROFILE, &
+		INPUT_REF_HNO3_PROFILE, &
+		INPUT_REF_N2O_PROFILE)
+
+		!
+		! ARGUMENTS
+		!
+		! Input
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_TEMPERATURE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_CO2_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_H2O_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_O3_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_CO_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_CH4_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_SO2_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_HNO3_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_N2O_PROFILE
+
+		!
+		! IMPLICIT VARIABLES
+		!
+		! MAXLAY	! Number of layers, from incftc
+	
+		!
+		! LOCAL VARIABLES
+		!
+		! None
+
+		!
+		!
+		! EXECUTABLE CODE 
+		!
+		!
+
+		REF_TEMPERATURE_PROFILE(:) = INPUT_REF_TEMPERATURE(:)
+		REF_CO2_PROFILE(:) = INPUT_REF_CO2_PROFILE(:)
+		REF_H2O_PROFILE(:) = INPUT_REF_H2O_PROFILE(:)
+		REF_O3_PROFILE(:) = INPUT_REF_O3_PROFILE(:)
+		REF_CO_PROFILE(:) = INPUT_REF_CO_PROFILE(:)
+		REF_CH4_PROFILE(:) = INPUT_REF_CH4_PROFILE(:)
+		REF_SO2_PROFILE(:) = INPUT_REF_SO2_PROFILE(:)
+		REF_HNO3_PROFILE(:) = INPUT_REF_HNO3_PROFILE(:)
+		REF_N2O_PROFILE(:) = INPUT_REF_N2O_PROFILE(:)
+
+		RETURN
+
+	END SUBROUTINE REF_PROFILES__SET_REFERENCE_PROFILES
+
+	SUBROUTINE REF_PROFILES__SET_REFERENCE_LAYER_PROFILES( &
+		INPUT_REF_LAYER_THICKNESS_PROFILE, &
+		INPUT_REF_LAYER_ALTITUDE_PROFILE, &
+		INPUT_REF_LAYER_PRESSURE_PROFILE)
+	
+		!
+		! ARGUMENTS
+		!
+		! Input
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_LAYER_THICKNESS_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_LAYER_ALTITUDE_PROFILE
+		REAL, INTENT(IN), DIMENSION(MAXLAY) :: INPUT_REF_LAYER_PRESSURE_PROFILE
+
+		!
+		! IMPLICIT VARIABLES
+		!
+		! MAXLAY	! Number of layers, from incftc
+	
+		!
+		! LOCAL VARIABLES
+		!
+		! None
+
+		!
+		!
+		! EXECUTABLE CODE 
+		!
+		!
+
+		REF_LAYER_THICKNESS_PROFILE(:) = INPUT_REF_LAYER_THICKNESS_PROFILE(:)
+		REF_LAYER_ALTITUDE_PROFILE(:) = INPUT_REF_LAYER_ALTITUDE_PROFILE(:)
+		REF_LAYER_PRESSURE_PROFILE(:) = INPUT_REF_LAYER_PRESSURE_PROFILE(:)
+
+		
+	END SUBROUTINE REF_PROFILES__SET_REFERENCE_LAYER_PROFILES
+
+	SUBROUTINE REF_PROFILES__READ_REF_PROFILES
+
+		!
+		! ARGUMENTS
+		!
+		! None
+
+		!
+		! IMPLICIT VARIABLES
+		!
+		! MAXLAY	! Number of layers, from incftc
+		! IOUNIT  	! Unit number for fortran read, from incftc
+		! FNPREF 	! Filepath for fixed amounts file, from incftc
+
+		!
+		! LOCAL VARIABLES
+		!
+		INTEGER :: IERR
+		INTEGER :: IJUNK
+		INTEGER :: L			! layer number
+		CHARACTER*80 :: CLINE	! string from file
+
+		!
+		!
+		! EXECUTABLE CODE 
+		!
+		!
+
+		!
+		! Open the profile file
+		!
+		
+		PRINT *, 'REF_PROFILES__READ_REF_PROFILES Reading reference profile ', FNPREF
+		OPEN(UNIT = IOUNIT, FILE = FNPREF, STATUS = 'OLD', FORM = 'FORMATTED', IOSTAT = IERR)
+		IF (IERR .NE. 0) THEN
+			WRITE(6,1010) IERR, FNPREF
+1010		FORMAT('REF_PROFILES__READ_REF_PROFILES  Error ',I5,' opening reference profile file:',/,A80)
+			STOP
+		ENDIF
+
+		!
+		! Skip any comments at the top of the file
+		!
+		DO
+			READ(IOUNIT, "(A80)") CLINE
+			IF (CLINE(1:1) .NE. '!') THEN
+				BACKSPACE(IOUNIT)
+				EXIT
+			ENDIF
+		ENDDO
+
+		!
+		! Read the profile's name/comment
+		!
+		READ(IOUNIT, "(A40)" ) RPNAM
+
+		!
+		! Read in the temperature and amounts for each layer
+		!
+		! Note: read the layers in reverse order.
+		DO L = MAXLAY, 1, -1
+			! Layer number, altitude, thickness, pressure, temperature,
+			! fixed, H2O, O3, CO, and CH4 amounts
+			READ(IOUNIT, *, IOSTAT = IERR) &
+				IJUNK, &
+				REF_LAYER_ALTITUDE_PROFILE(L), &
+				REF_LAYER_THICKNESS_PROFILE(L), &
+				REF_LAYER_PRESSURE_PROFILE(L), &
+				REF_TEMPERATURE_PROFILE(L), &
+				REF_CO2_PROFILE(L), &
+				REF_H2O_PROFILE(L), &
+				REF_O3_PROFILE(L), &
+				REF_CO_PROFILE(L), &
+				REF_CH4_PROFILE(L), &
+				REF_SO2_PROFILE(L), &
+				REF_HNO3_PROFILE(L), &
+				REF_N2O_PROFILE(L)
+
+			IF (IERR .NE. 0) THEN
+				! Go here if error
+				WRITE(6,1020) IERR, FNPREF
+1020			FORMAT('REF_PROFILES__READ_REF_PROFILES  Error ',I5,' in reading reference profile file:',/,A80)
+				STOP
+			ENDIF
+		ENDDO
+
+		! Close the profile file
+		CLOSE(IOUNIT)
+
+		RETURN
+	
+	END	SUBROUTINE REF_PROFILES__READ_REF_PROFILES
+
+END MODULE REF_PROFILES

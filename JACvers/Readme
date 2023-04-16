@@ -1,0 +1,193 @@
+http : git clone https://github.com/strow/sarta.git
+ssh  : git clone git@github.com:strow/sarta.git
+goes into sarta
+
+cd /home/sergio/sartagit
+/bin/rm -R *
+git remote --v
+  origin   git@github.com:strow/sarta.git (fetch)
+origin	   git@github.com:strow/sarta.git (push)
+/bin/rm -Rf .git
+/bin/rm -R .gitignore
+/bin/rm -R .gitattributes
+git remote --v
+  fatal: not a git repository (or any parent up to mount point /umbc/xfs2)
+  Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+YAYAYA
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+git clone git@github.com:strow/sarta.git
+git remote --v
+  fatal: not a git repository (or any parent up to mount point /umbc/xfs2)
+  Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+So I still am not at a  repo, but not can go ... to sarta
+YAYAYAYA
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[sergio@taki-usr2 sarta]$ git remote --v
+origin		  git@github.com:strow/sarta.git (fetch)
+origin		  git@github.com:strow/sarta.git (push)
+YAYAYAYAYAYA
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+git branch
+  *master
+
+[sergio@taki-usr2 sarta]$ ls
+docs  readme.org  src  test
+[sergio@taki-usr2 sarta]$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+YAYAYAYAYA
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+git log
+  will include this blurb
+  commit 9b61719af3e27e65f9e5be35cff13fde81719540
+  Author: Christopher Hepplewhite <chepplew@strow-interact.cm.cluster>
+  Date:   Mon Jun 20 16:55:14 2022 -0400
+    included swch4, esp for IASI as originally developed by Scott
+
+So do
+  git branch checkJune20_2022commit 9b61719af3e27e65f9e5be35cff13fde81719540 
+
+[sergio@taki-usr2 sarta]$ git branch
+  checkJune20_2022commit
+* master
+ and git log still shows newwer stuff
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[sergio@taki-usr2 sarta]$ git checkout checkJune20_2022commit
+Switched to branch 'checkJune20_2022commit'
+[sergio@taki-usr2 sarta]$ git branch
+* checkJune20_2022commit
+  master
+
+and git log shows most recent stuff is June 20, 2022
+
+cd src
+cp src/* /home/sergio/SARTA_CLOUDY/F90vers/src/.                  THIS IS THE ONE I WILL MUCK WITH TO CHECK AGAINST eg srcF77_jac,F77tof90
+cp src/* /home/sergio/SARTA_CLOUDY/F90vers/srcOrig_June20_2022/.  THIS IS JUST THE COPY FROM THE GITHUB REPO
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+cd /home/sergio/SARTA_CLOUDY/F90vers/src/
+cd ..
+mkdir F77tof90
+cd F77tof90
+
+cp /home/sergio/KCARTA/F77toF90/TO_F90/to_f90_loop.f90 .
+do the blah blah ... toooooo time consuming
+
+So first, in /home/sergio/SARTA_CLOUDY/F90vers/srcF77_jac
+  rewrite /home/sergio/SARTA_CLOUDY/F90vers/src/sarta_pclsam.f so it LOOPS OVER ICHAN!!!!!!!!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+April 12, 2023
+I have rewritten src_f77 so that you can also send in a channel list of IDs (in addition to profile list)
+so you can debug the code nicely
+
+so for example the following rtp file has 2645 chans x 12150 profiles, but now sarta can process only
+one profile (11760) and 4 chans (chanID 445,449,1291,2333) which are the IDs for 791 cm-1 Q branch, 1231 cm and 2616 c-1 window chans
+  time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp fout=new.rtp listp=11760 listc=445,449,1291,2333
+  1  445    1  445   790.32074  445    1  485
+  2  449    2  449   791.74121  449    2  489
+  3 1291    3 1291  1231.32764 1291    3 1520
+  4 2333    4 2333  2616.38672 2333    4 2600
+
+[sergio@strow-interact srcF77_jac]$ ls -lt *.f | head -20
+lrwxrwxrwx 1 sergio pi_strow    39 Apr 11 20:13 fnmie.f -> fnmie_iceGHMbaum_waterdrop_desertdust.f
+lrwxrwxrwx 1 sergio pi_strow    26 Apr 11 20:13 incFTC.f -> incFTC_airs_may19_pclsam.f
+-rw-rw-r-- 1 sergio pi_strow 59215 Apr 11 20:13 sarta_pclsam.f
+-rw-rw-r-- 1 sergio pi_strow  4775 Apr 11 17:44 wrtrtp.f
+-rw-rw-r-- 1 sergio pi_strow 20415 Apr 11 17:43 opnrtp_pclsam.f
+-rw-rw-r-- 1 sergio pi_strow 29510 Apr 11 14:59 rdcoef.f
+-rw-rw-r-- 1 sergio pi_strow 11597 Apr 11 07:36 rdinfo.f
+-rw-rw-r-- 1 sergio pi_strow 13834 Apr 10 22:58 ycalt7_od.f
+-rw-rw-r-- 1 sergio pi_strow 22586 Apr 10 22:33 ycalt1_od.f
+-rw-rw-r-- 1 sergio pi_strow 17896 Apr 10 08:44 sunpar.f
+-rw-rw-r-- 1 sergio pi_strow 35219 Apr 10 08:44 calpar.f
+-rw-rw-r-- 1 sergio pi_strow 18957 Apr 10 08:28 ycalt2_od.f
+-rw-rw-r-- 1 sergio pi_strow 20112 Apr 10 08:28 ycalt3_od.f
+-rw-rw-r-- 1 sergio pi_strow 15350 Apr 10 08:28 ycalt4_od.f
+-rw-rw-r-- 1 sergio pi_strow 13350 Apr 10 08:28 ycalt5_od.f
+-rw-rw-r-- 1 sergio pi_strow 16476 Apr 10 08:27 ycalt6_od.f
+-rw-rw-r-- 1 sergio pi_strow   687 Apr  7 23:07 intersect.f
+-rw-rw-r-- 1 sergio pi_strow 19682 Apr  7 11:07 incFTC_airs_may19_pclsam.f
+-rw-rw-r-- 1 sergio pi_strow  9256 Apr  7 08:45 ysetems_pclsam.f
+-rw-rw-r-- 1 sergio pi_strow  5580 Apr  6 02:34 vaconv.f
+
+%% now check the orig code in src_f77 looks EXACTLY like the one in ../src on April 12 2023 at 7 am %% 
+%% now check the orig code in src_f77 looks EXACTLY like the one in ../src on April 12 2023 at 7 am %%
+%% now check the orig code in src_f77 looks EXACTLY like the one in ../src on April 12 2023 at 7 am %%
+[sergio@strow-interact srcF77_jac]$ mv WORKS_Apr09_2023 WORKS_Apr09A_2023
+[sergio@strow-interact srcF77_jac]$ diff WORKS_Apr09A_2023/wrtrtp.f ../src/.
+[sergio@strow-interact srcF77_jac]$ diff WORKS_Apr09A_2023/opnrtp_pclsam.f ../src/.
+[sergio@strow-interact srcF77_jac]$ diff WORKS_Apr09A_2023/rdcoef.f ../src/.
+[sergio@strow-interact srcF77_jac]$ diff WORKS_Apr09A_2023/rdinfo.f ../src/.
+[sergio@strow-interact srcF77_jac]$ diff WORKS_Apr09A_2023/sunpar.f ../src/.
+526d525
+<           print *,'SUNPAR CONPRD(1,L) = ',L,WJUNKA,TJUNKS,CONPRD(1,L)
+[sergio@strow-interact srcF77_jac]$ diff WORKS_Apr09A_2023/calpar.f ../src/.
+888c888
+<           print *,'CALPAR CONPRD(1,L) = ',L,WJUNKA,TJUNKS,CONPRD(1,L)
+---
+> C          print *,'CONPRD(1,L) = ',L,WJUNKA,TJUNKS,CONPRD(1,L)
+[sergio@strow-interact srcF77_jac]$ diff WORKS_Apr09A_2023/intersect.f ../src/.
+diff: ../src/./intersect.f: No such file or directory
+[sergio@strow-interact srcF77_jac]$
+
+%% now copy the new code from src_f77 to ../src %%
+%% now copy the new code from src_f77 to ../src %% 
+%% now copy the new code from src_f77 to ../src %%
+mkdir ../src/WORKS_Apr11_2023
+cp -a ../src/*.f ./src/WORKS_Apr11_2023 (or actually use backup.sc)
+
+/bin/cp -a wrtrtp.f        ../src
+/bin/cp -a opnrtp_pclsam.f ../src
+/bin/cp -a rdcoef.f        ../src
+/bin/cp -a rdinfo.f        ../src
+/bin/cp -a intersect.f     ../src
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+then edit ../src/sarta_pclsam.f so that it can handle the extra arguments etc
+this is done by
+(a) search for listp declaration
+
+(b) then add in 
+       INTEGER NWANTC         ! number of wanted channels (-1=all)
+       INTEGER  LISTC(MAXPRO) ! list of wanted channels
+
+  also add in this array        
+       INTEGER RINDCHN(MXCHAN) ! list of locations of chans eg chID1291 = 1231 cm-1 but this is location 1520 in L1C
+
+(c) now search for listp, and add these to opnrtp
+      CALL RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC)
+
+(d) arguments to rdcoef remain the same, so don't worry about it in sarta_pclam.f
+
+(e) add nwantc etc to opnrtp
+       CALL OPNRTP(FIN, VCLOUD, LRHOT, PTYPE, NCHAN, FCHAN, LSTCHN,
+     $    INDCHN, IH2O, IO3, ICO, ICH4, ICO2, ISO2, IHNO3, IN2O,
+     $    INH3, IOPCI, HEAD, HATT, PATT, LCO2PM, NWANTC, LISTC, RINDCHN)
+
+(f) add in pront statements eg after opnrtp, or after rdinfo
+       IF (NWANTC .GT. 0) THEN
+       END IF
+(g) finally modify call to wrtrtp
+       CALL WRTRTP(IPROF, IOPCO, NCHAN, RAD, PROF, NWANTC, RINDCHN)
+
+edit make_sarta_pclsam so it also compiles intersect.f
+%%%%%%%%%%%%%%%%%%%%%%%%%

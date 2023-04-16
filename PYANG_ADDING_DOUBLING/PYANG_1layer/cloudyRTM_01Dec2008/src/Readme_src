@@ -1,0 +1,11 @@
+these are basically PingYang's files (originals in ORIG)
+-rw-r--r-- 1 sergio users 5738 2009-01-24 14:02 CloudyIR_BT.f
+-rw-r--r-- 1 sergio users 8185 2009-01-24 13:17 interpolation_rt.f
+-rw-r--r-- 1 sergio users 1034 2009-01-24 13:16 sumfit.f
+-rw-r--r-- 1 sergio users  372 2009-01-24 13:10 wnbrit.f
+-rw-r--r-- 1 sergio users  358 2009-01-24 13:08 wnplan.f
+-rw-r--r-- 1 sergio users 5463 2009-01-24 10:39 read_fitted_database.f
+-rw-r--r-- 1 sergio users 3807 2009-01-24 09:53 read_fitted_database_convert.f
+
+the rest are from taro://asl/packages/sartaV108/Src_rtpV105_pclsam_slabcloud_hg3
+

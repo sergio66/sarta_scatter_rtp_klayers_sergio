@@ -1,0 +1,99 @@
+#
+# Makefile make_sarta_pclsam
+#
+#
+# ------------
+# Object files
+# ------------
+OBJS = rdprof.o  vaconv.o  calpar.o  qikexp.o  hg2.o  setems.o  getbot.o \
+       calt1_od.o  calt2_od.o  calt3_od.o  calt4_od.o  calt5_od.o \
+       calt6_od.o  calt7_od.o  doattr.o \
+       faketz.o  sunpar.o   rdsun.o  saconv.o  calowp.o  calokw.o  tunmlt.o \
+       util.o  opnrtp.o  rdrtp.o  wrtrtp.o  mean_t.o  calnte.o  bkprep.o \
+       rdinfo.o  cbplev.o  calrad0.o  calrad1.o  calrad2.o  getcld.o \
+       getmie.o  fnmie.o  rdcoef_pclsam.o  ccprep.o  sarta_pclsam.o
+
+
+# --------
+# HDF info
+# --------
+# set HDFHOME to point to the local HDF installation
+#HDFHOME = /usr/local/hdf
+HDFHOME = /asl/opt
+
+# HDF libraries
+HDFLIB   = -L$(HDFHOME)/lib -lmfhdf -ldf -ljpeg -lz
+
+ 
+# --------
+# RTP info
+# --------
+# set RTPHOME to point to the local RTP installation
+#RTPHOME = /asl/packages/rtpV105_4500
+RTPHOME = /asl/packages/rtpV201
+
+# RTP library
+RTPLIB = -L$(RTPHOME)/lib -lrtp
+
+# RTP include
+RTPINC = -I$(RTPHOME)/include
+
+
+# -------------
+# Compiler info
+# -------------
+# OPT : compiler options
+# FLIB : fortran libraries (most compilers will not require any)
+# F77 : fortran compiler
+
+# -------
+# Generic:
+#
+OPT = -O
+FLIB =
+F77 = f77
+
+# ---
+# Sun:
+#
+# OPT= -e -fast -w
+# FLIB =
+# F77 = f77
+
+# ------------
+# Linux absoft:
+#    -f    fold variables to lower case
+#    -C    array bounds checking
+#    -O    moderate optimization
+#    -s    static allocation
+#    -g    include symbol table info
+#    -N26  read big-endian binary files (needed for coefficient files)
+#    -N3   use embedded record lengths in binary files 
+OPT = -s -O -N3 -N26
+#OPT = -s -N3 -N26 -C -g
+# Absoft requires the U77 library
+FLIB = -lU77
+F77 = /asl/opt/absoft/absoft10.0/bin/af77
+
+
+# ---
+# SGI:
+#    -O       turn on default optimization (same as -O2)
+#    -O0      turn off all optimization
+#    -static
+#    -check_bounds
+#OPT = -O -64
+#FLIB = -64
+#F77 = f77
+
+
+# -----
+# Build
+# -----
+sarta: $(OBJS)
+	$(F77) $(OBJS) $(RTPLIB) $(HDFLIB) $(FLIB)
+
+# Compile source to object files
+.f.o:
+	$(F77) -c $(OPT) $(RTPINC) $*.f
+

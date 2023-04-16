@@ -1,0 +1,141 @@
+Read.me Version 1.01
+
+INSTALLATION:
+
+1. copy from /salsify/packages/HFFP/Version_1.01/
+   to your source code directory the files:
+
+	Read.me   (this file)      
+	hffp.tar
+
+   the command "tar -xvf hffp.tar" will extract the following files:
+
+	hffp_main.f            source code file (main program)
+	hffp_aux_dec.f         source code file (declarations)
+	hffp_glob_dec.f        source code file (declarations)
+	hffp_init_dec.f        source code file (declarations)
+	hffp_ref_dec.f         source code file (declarations)
+	hffp_tau.f             source code file (subroutines)
+	hffp_util.f            source code file (subroutines)
+	Makefile               make file
+	sample.ctl             sample control file
+	sample2.ctl            another sample control file
+
+   compile the code by "make hffp.x" which will create
+         
+        hffp.x                 the executable
+
+   Note: the executable is in the same directory as the source 
+   code. (Even though that is not necessary.)
+  
+3. copy from /salsify/packages/HFFP/Version_1.01/INPUT/ to your
+   data base directory the files and un-tar the tar-files
+
+	CENTERFRQ.tar       center wave numbers of the channels
+	COEF.tar            fast coefficients
+	PRED.tar            fast predictor identifiers
+	SOLRAD.tar          solar radiances
+	prof1               sample atmosphere (input) file
+	prof6               sample atmosphere (input) file
+
+   These files contain the data base for the forward model.
+   (In the sample file sample.ctl and sample2.ctl we assume
+   that the data directory is ./INPUT relative to the 
+   directory where the executable is.)
+
+4. Edit the path names in the file hffp_aux_dec.f
+   You have to choose a name for your output directory.
+
+5. Edit hffp_glob_dec.f, if you want. 
+	MAXJOB   is the maximum number of jobs per run
+	VERBOS   switches monitor output on/off
+        MATLAB   set it to zero unless you know what you're doing
+
+6. Make a test run, either interactively by calling
+	hffp.x   and say "sample.ctl" when asked for name 
+                 of control file
+   or use something like
+        echo "sample.ctl" | hffp.x
+
+   IF program completes successfully and writes stuff to
+      your output directory goto step 7
+   ELSE check everything again or send me email
+
+7. Create your own control files after the template sample.ctl
+   (or sample2.ctl) and have fun.
+
+NOTES:
+
+1. The program reads instructions and some data from the control 
+   file (e.g. sample.ctl). The sample.ctl should sufficiently 
+   explain its information content.
+
+2. You can run different atmospheres (jobs) in one program
+   execution. This refers to the parameter NUMBER OF ATMOSPHERES
+   and the following parameters.
+
+3. The atmosphere files MUST have the same format as the
+   sample file "prof1" and "prof2". Lines at the beginning of
+   the file starting with "!" or "r" are treated as comment
+   lines. The first 3 rows (no, altitude, thickness) are
+   dummies and not used by the program.
+
+   If you do not like that, simply change the subroutine
+   which reads in the atmosphere. This is SUBROUTINE GETATM
+   in hffp_util.f.
+
+   The UNITS of fixed, water and ozone is 1000moles/cm**2.
+
+4. OUTPUT:
+   you will get output only if you set the variable WRITE 
+   OUTPUT TO FILE (1=YES, 0=NO) to 1. 
+
+   The name of the output files is
+	<control file name>.rad.<job number>
+   That means you will get N files for N evaluated atmosphere
+   per program run.
+
+   The output files are written to your output directory and
+   contains in the first line the number of processed channels.
+   The following lines contains the results:
+   channel number, radiance, brightness temperature, center wave no.
+
+   The brightness temperature is only calculated optionally, if
+   CALCULATE BRIGHTNESS TEMPERATURES (1=YES, 0=NO) in the control
+   file is set to 1. If it is set to 0 BOTH the brightness
+   temperatures and the center wave numbers are -1 in the 
+   output file
+
+5. brightness temperatures: 
+   The problem with the brightness temperatures is the center 
+   wave number of a certain channel. You can calculate the
+   brightness temperature from the radiance only, if you know
+   the right center wave number of the channel. We determine
+   the center wave number by convolution of the filter curve
+   and the Planck function. Since the Planck function is 
+   temperature dependent, we have a layer (temperature) 
+   dependent channel center wave number. This doesn't bother
+   us for the radiative transfer (we just have a different 
+   center wave number for each layer), but if we go from
+   radiances to brightness temperatures we have to pick a
+   center wavenumber. We just take the mean value of all
+   layers of the respective atmosphere and write the so derived
+   center wave numbers in the output file.
+
+6. Run multiple jobs in one control file!
+   If the only thing that changes is your atmosphere, it is
+   highly recommended to do many jobs in one control file, since
+   you would save (some) time of loading coefficients et al.
+   Remember: set MAXJOB in hffp_glob_dec.f
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Questions and comments to:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Tobias Wehr     
+University of Maryland Baltimore County, Department of Physics
+1000 Hilltop Circle, Baltimore, MD 21250, USA
+phone: (410) 455 3001, fax: 1072
+email: wehr@umbc.edu, www: http://beet.umbc.edu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

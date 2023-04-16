@@ -1,0 +1,24 @@
+c       real*8 b,c,h,c1,c2
+cc * Boltzmann Constant
+c	parameter (b = 1.380658d-16)
+cc * Velocity of Light
+c	parameter (c = 2.99792458d+10)
+cc * Planck Constant
+c	parameter (h = 6.6260755d-27)
+c	parameter (c1 = 2.d0*h*c*c)
+c	parameter (c2 = h*c/b)
+
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        integer Nwl,Ntcld,MM
+        parameter (Nwl=251,Ntcld=50, MM=4)
+
+c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        integer mlev
+        !!!maxlay is set in incFTC.f
+ 	!!!parameter (mlev=maxlay+1)
+        !parameter (mlev=101)
+
+ 	!!!parameter (mlev=maxlay+1) as expected, +1 for being able to subdivide the layer
+ 	!!!so parameter (mlev=maxlay+2)
+        parameter (mlev=102)
+
