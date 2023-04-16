@@ -1063,14 +1063,12 @@ C
               end if
             end do
             print *,'  '
-            print *,'  '
   
             do I = 1,NCHNTE
               write(*,'(A,I5,I5,I5,F12.4)') 
      $           'NTE CHECK(2) : I,CLISTN(I)=h.ichan --> LSTCHN(I),FREQ(CLISTN(I))',
      $           I,CLISTN(I),INDCHN(CLISTN(I)),FREQ(INDCHN(CLISTN(I)))
             end do
-            print *,'  '
             print *,'  '
           END IF
   
