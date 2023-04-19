@@ -1059,8 +1059,7 @@ C
           IF (DEBUG) THEN
             do I = 1,MXCHAN
               if (LSTCHN(I) .GT. 0) THEN
-                write(*,'(A,I5,I5,F12.5,F12.5)') 'NTE CHECK(1) : I,LSTCHN(I)=h.ichan,FREQ(I) = ',
-     $                I,LSTCHN(I),FREQ(I),FREQ(INDCHN(LSTCHN(I)))
+                write(*,'(A,I5,I5,F12.5,F12.5)') 'NTE CHECK(1) : I,LSTCHN(I)=h.ichan,FREQ(I) = ',I,LSTCHN(I),FREQ(I),FREQ(INDCHN(LSTCHN(I)))
               end if
             end do
             print *,'  '

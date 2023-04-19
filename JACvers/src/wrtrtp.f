@@ -18,7 +18,7 @@ C    Write a profile to a previously openned RTP file
 
 
 !CALL PROTOCOL:
-C    WRTRTP(IP, IOPCO, NCHAN, RAD, PROF)
+C    WRTRTP(IP, IOPCO, NCHAN, RAD, PROF, NWANTC, RINDCHN)
 
 
 !INPUT PARAMETERS:

@@ -482,6 +482,7 @@ C
          HEAD%ICHAN = 0
          HEAD%VCHAN(1:NCHAN) = FCHAN
          HEAD%ICHAN(1:NCHAN) = IACHANNEW(1:NCHAN)
+         HEAD%NCHAN = NCHAN;
        END IF
 
 C      --------------
