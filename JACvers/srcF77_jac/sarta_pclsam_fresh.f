@@ -460,19 +460,19 @@ C      for SETEMS
 C
 C      for CALRAD(0,1)
        REAL SUNFAC         ! sun solid angles times cosine at surface
-       REAL RPLNCK(MAXLAY) ! layer Planck
-       REAL RSURFE         ! surface emission
-       REAL RSURFC         ! black cloud surface emission
-       REAL  TRANL(MAXLAY) ! clear air layer transmittance
-       REAL  TRANZ(MXCHAN) ! clear air layer-to-space transmittance
-       REAL  TRANS(MXCHAN) ! clear air total reflected solar trans
+c       REAL RPLNCK(MAXLAY) ! layer Planck
+c       REAL RSURFE         ! surface emission
+c       REAL RSURFC         ! black cloud surface emission
+c       REAL  TRANL(MAXLAY) ! clear air layer transmittance
+c       REAL  TRANZ(MXCHAN) ! clear air layer-to-space transmittance
+c       REAL  TRANS(MXCHAN) ! clear air total reflected solar trans
        REAL  TSURF         ! surface temperature
        REAL    RAD(MXCHAN) ! chan radiance
 C      For clear/cloudy radiances
-       REAL   RAD0         ! radiance no clouds
-       REAL  RADC1         ! radiance cloud1
-       REAL  RADC2         ! radiance cloud2
-       REAL RADC12         ! radiance cloud1+cloud2
+c       REAL   RAD0         ! radiance no clouds
+c       REAL  RADC1         ! radiance cloud1
+c       REAL  RADC2         ! radiance cloud2
+c       REAL RADC12         ! radiance cloud1+cloud2
 C
 C      for RDSUN
        REAL   HSUN(MXCHAN) ! sun radiance (direct from sun)
@@ -571,9 +571,10 @@ c       REAL ANGMAX         ! maximum allowed viewing angle
        REAL RJUNK2         ! another junk/work
        REAL CO2PPM         ! Profile mean dry air CO2 mixing ratio
        REAL PLAY(MAXLAY)   ! layer mean pressure
-       REAL C1V3           ! rad constant c1 times freq^3
-       REAL C2V            ! rad constant c2 times freq
-       REAL VSTORE(6)      ! temporary storage for various variables
+c       REAL C1V3           ! rad constant c1 times freq^3
+c       REAL C2V            ! rad constant c2 times freq
+c       REAL VSTORE(6)      ! temporary storage for various variables
+
 C
 C      Profile data structure
        INTEGER  ISTAT
@@ -827,6 +828,7 @@ C         Skip this profile
 
 C      -----------------------------------
 C      Calculate the fast trans predictors
+C      which directly use T(z),WV(z),O3(z) 
 C      -----------------------------------
 C
        CALL CALPAR (LBOT,
@@ -893,202 +895,45 @@ C      Loop over the channels
 C      ----------------------
        DO I=1,NCHAN
 
+C        indirectly uses T(z),WV(z),O3(z) through the PREDS, to get TAU, TAUZ, TAUZSN
          CALL CALC_LAYER_TRANS_CALTODX_1_7(
-     $ I,DOSUN, NCHAN, LSTCHN, FREQ, INDCHN, LBOT, 
-     $ QUICKCLIST1, QUICKCLIST2, QUICKCLIST3, QUICKCLIST4, 
-     $ QUICKCLIST5, QUICKCLIST6, QUICKCLIST7, 
-     $ NCHN1,  NCHN2,  NCHN3,  NCHN4,  NCHN5,  NCHN6,  NCHN7, 
-     $ CLIST1, CLIST2, CLIST3, CLIST4, CLIST5, CLIST6, CLIST7, 
-     $ FIXMUL, CONPRD, SUNCONPRD, TRCPRD, SUNTRCPRD, 
-     $ DPRED, SUNDPRED, 
-     $ INDCO2, COFCO2, INDSO2, COFSO2, INDHDO, COFHDO, 
-     $ INDHNO, COFHNO, INDN2O, COFN2O, INDNH3, COFNH3,
-     $ CO2MLT, SO2MLT, HNOMLT, N2OMLT, NH3MLT, HDOMLT, 
-     $ INDH2O, H2OPRD, COFH2O,
-     $ WAANG, LOPMIN, LOPMAX, LOPUSE, LOPLOW, DAOP, WAOP, 
-     $ NFAKE, INDFAK, QUICKINDFAK, CO2TOP,
-     $ COEF1, COEF2, COEF3, COEF4, COEF5, COEF6, COEF7, COEFF, 
-     $ WPRED1, WPRED2, WPRED3, WPRED4, WPRED5, WPRED6, WPRED7, 
-     $                     SUNWPRED4, SUNWPRED5, SUNWPRED6, SUNWPRED7, 
-     $ OPRED1, OPRED2,         OPRED4, OPRED5, OPRED6, OPRED7, 
-     $                     SUNOPRED4, SUNOPRED5, SUNOPRED6, SUNOPRED7, 
-     $ FPRED1, FPRED2, FPRED3, FPRED4, FPRED5, FPRED6, FPRED7, 
-     $                     SUNFPRED4, SUNFPRED5, SUNFPRED6, SUNFPRED7, 
-     $ MPRED3, CPRED4, SUNCPRED4, SECANG, SECSUN, SUNFDG, SUNCOS,
-     $ TAU, TAUZ, TAUZSN)
+     $     I,DOSUN, NCHAN, LSTCHN, FREQ, INDCHN, LBOT, 
+     $     QUICKCLIST1, QUICKCLIST2, QUICKCLIST3, QUICKCLIST4, 
+     $     QUICKCLIST5, QUICKCLIST6, QUICKCLIST7, 
+     $     NCHN1,  NCHN2,  NCHN3,  NCHN4,  NCHN5,  NCHN6,  NCHN7, 
+     $     CLIST1, CLIST2, CLIST3, CLIST4, CLIST5, CLIST6, CLIST7, 
+     $     FIXMUL, CONPRD, SUNCONPRD, TRCPRD, SUNTRCPRD, 
+     $     DPRED, SUNDPRED, 
+     $     INDCO2, COFCO2, INDSO2, COFSO2, INDHDO, COFHDO, 
+     $     INDHNO, COFHNO, INDN2O, COFN2O, INDNH3, COFNH3,
+     $     CO2MLT, SO2MLT, HNOMLT, N2OMLT, NH3MLT, HDOMLT, 
+     $     INDH2O, H2OPRD, COFH2O,
+     $     WAANG, LOPMIN, LOPMAX, LOPUSE, LOPLOW, DAOP, WAOP, 
+     $     NFAKE, INDFAK, QUICKINDFAK, CO2TOP,
+     $     COEF1, COEF2, COEF3, COEF4, COEF5, COEF6, COEF7, COEFF, 
+     $     WPRED1, WPRED2, WPRED3, WPRED4, WPRED5, WPRED6, WPRED7, 
+     $                         SUNWPRED4, SUNWPRED5, SUNWPRED6, SUNWPRED7, 
+     $     OPRED1, OPRED2,         OPRED4, OPRED5, OPRED6, OPRED7, 
+     $                         SUNOPRED4, SUNOPRED5, SUNOPRED6, SUNOPRED7, 
+     $     FPRED1, FPRED2, FPRED3, FPRED4, FPRED5, FPRED6, FPRED7, 
+     $                         SUNFPRED4, SUNFPRED5, SUNFPRED6, SUNFPRED7, 
+     $     MPRED3, CPRED4, SUNCPRED4, SECANG, SECSUN, SUNFDG, SUNCOS,
+     $     TAU, TAUZ, TAUZSN)
 
 c************************************************************************
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C        Calculate cloudy radiance
-c         CALL docloudyTwoSlab_RT()
-
-C         Radiation constants for current channel
-          C1V3=C1*(FREQ(I)**3)
-          C2V=C2*FREQ(I)
-
-c          IF (NWANTC .GT. 0) THEN
-c            write(*,'(A,I5,7(F12.4))') 'start rads/tau',I,FREQ(I),TSURF,TEMP(LBOT),
-c     $             TAU(LBOT,I),TAUZ(LBOT-1,I),TAUZSN(LBOT,I),TAUZSN(LBOT-1,I)
-c          END IF
-
-C         Calculate Planck & clear airs trans for full layers
-          DO L=1,LBOT-1
-             RPLNCK(L)=C1V3/( EXP( C2V/TEMP(L) ) - 1.0 )
-             TRANL(L)=QIKEXP( -TAU(L,I) )
-          ENDDO
-C         Note: TEMP(LBOT) already adjusted for bottom fractional layer
-          RPLNCK(LBOT)=C1V3/( EXP( C2V/TEMP(LBOT) ) - 1.0 )
-
-C         Calculate clear airs trans for bottom fractional layer
-          RJUNK1=-TAU(LBOT,I)*BLMULT
-          TRANL(LBOT)=QIKEXP( RJUNK1 )
-          TRANL(LBOT)=QIKEXP( RJUNK1 )
-          TRANZ(I)=QIKEXP( RJUNK1 - TAUZ(LBOT-1,I) )
-          TRANS(I)=QIKEXP( BLMULT*(TAUZSN(LBOT-1,I)-TAUZSN(LBOT,I)) -
-     $       TAUZSN(LBOT-1,I) )
-
-C         Planck for surface
-          RSURFE=EMIS(I)*C1V3/( EXP( C2V/TSURF ) - 1.0 )
-
-C         Calculate clear radiance
-          IF (FCLEAR .GT. 0.0) THEN
-             CALL CALRAD0( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
-     $       TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $       RHOTHR, LABOVE, COEFF, RAD0 )
-          ELSE
-             RAD0=0.0
-          ENDIF
-
-C         Store original values
-          VSTORE(1)=TRANL(LCTOP2)
-          VSTORE(2)=TRANZ(I)
-          VSTORE(3)=TRANS(I)
-          VSTORE(4)=RHOTHR(I)
-          VSTORE(5)=RHOSUN(I)
-          VSTORE(6)=RPLNCK(LCTOP2)
-C         Updates for new surface if bottom cloud2 is black
-          IF (CFRAC2 .GT. 0.0 .AND. LBLAC2) THEN
-             RJUNK1=-TAU(LCTOP2,I)*CLRT2
-             TRANL(LCTOP2)=QIKEXP( RJUNK1 )
-             TRANZ(I)=QIKEXP( RJUNK1 - TAUZ(LCTOP2-1,I) )
-             TRANS(I)=QIKEXP( CLRT2*(TAUZSN(LCTOP2-1,I)-
-     $          TAUZSN(LCTOP2,I)) - TAUZSN(LCTOP2-1,I) )
-             RSURFC=CEMIS2(I)*C1V3/( EXP( C2V/TCTOP2 ) - 1.0 )
-             RHOTHR(I)=CRHOT2(I)
-             RHOSUN(I)=CRHOS2(I)
-             RPLNCK(LCTOP2)=C1V3/( EXP( C2V/TEMPC2 ) - 1.0 )
-c             RSURFC=C1V3/( EXP( C2V/TEMPC2 ) - 1.0 )
-          ENDIF
-
-C         Calculate bottom cloud2 radiance
-          IF (CFRA2X .GT. 0.0) THEN
-             IF (LBLAC2) THEN
-                CALL CALRAD0( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
-     $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC2 )
-             ELSE
-                CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
-     $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, CFRCL2, MASEC2, MASUN2, COSDAZ,
-     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC2 )
-             ENDIF
-          ELSE
-             RADC2=0.0
-          ENDIF
-
-C         Calculate combined cloud1+cloud2 radiance
-          IF (CFRA12 .GT. 0.0) THEN
-             IF (LBLAC2) THEN
-                CALL CALRAD1( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
-     $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12 )
-             ELSE
-                CALL CALRAD2( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
-     $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, NEXTO1,
-     $          NSCAO1, G_ASY1, LCTOP1, LCBOT1, CFRCL2, MASEC2, MASUN2,
-     $          COSDAZ, NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC12 )
-             ENDIF
-          ELSE
-             RADC12=0.0
-          ENDIF
-
-C         Restore original values
-          TRANL(LCTOP2)=VSTORE(1)
-          TRANZ(I)=VSTORE(2)
-          TRANS(I)=VSTORE(3)
-          RHOTHR(I)=VSTORE(4)
-          RHOSUN(I)=VSTORE(5)
-          RPLNCK(LCTOP2)=VSTORE(6)
-C         Updates for new surface if top cloud1 is black
-          IF (CFRAC1 .GT. 0.0 .AND. LBLAC1) THEN
-             RJUNK1=-TAU(LCTOP1,I)*CLRT1
-             TRANL(LCTOP1)=QIKEXP( RJUNK1 )
-             TRANZ(I)=QIKEXP( RJUNK1 - TAUZ(LCTOP1-1,I) )
-             TRANS(I)=QIKEXP( CLRT1*(TAUZSN(LCTOP1-1,I)-
-     $          TAUZSN(LCTOP1,I)) - TAUZSN(LCTOP1-1,I) )
-             RSURFC=CEMIS1(I)*C1V3/( EXP( C2V/TCTOP1 ) - 1.0 )
-             RHOTHR(I)=CRHOT1(I)
-             RHOSUN(I)=CRHOS1(I)
-             RPLNCK(LCTOP1)=C1V3/( EXP( C2V/TEMPC1 ) - 1.0 )
-c             RSURFC=C1V3/( EXP( C2V/TEMPC1 ) - 1.0 )
-          ENDIF
-
-C         Calculate top cloud1 radiance
-          IF (CFRA1X .GT. 0.0) THEN
-             IF (LBLAC1) THEN
-                CALL CALRAD0( DOSUN, I, LCTOP1, RPLNCK, RSURFC, SECANG,
-     $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC1 )
-             ELSE
-                CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
-     $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC1 )
-             ENDIF
-          ELSE
-             RADC1=0.0
-          ENDIF
-
-C         Total the clear & various cloudy radiances
-          RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X +
-     $       RADC12*CFRA12
-
-          IF (NWANTC .GT. 0) THEN
-            write(*,'(A,I5,7(F12.4),6(ES12.4))') 'rads',I,FREQ(I),EMIS(I),TSURF,
-     $           FCLEAR,CFRA1X,CFRA2X,CFRA12,
-     $           RSURFE,RAD0,RADC1,RADC2,RADC12,RAD(I)
-          END IF
-
-ccc this block for testing
-C       IF (I .EQ. 1291) THEN
-c         print *,'chan1291 : iPROF,rad0,radc1,radc2,radc12,FINAL=',
-c     $      IPROF,RAD0,RADC1,RADC2,RADC12,RAD(I)
-C         print *,'chan1291 : IPROF,rad0,FCLEAR,CFRA1X,CFRA2X,CFRA12=',
-C     $      IPROF,RAD0,FCLEAR,CFRA1X,CFRA2X,CFRA12
-c         PRINT *,'CLOUD1 emis,temp = ',CEMIS1(I),TCTOP1
-c         PRINT *,'CLOUD2 emis,temp = ',CEMIS2(I),TCTOP2
-c       endif
-ccc
-
-C         -----------------
-C         Calculate non-LTE
-C         -----------------
-C         comment: the nonLTE calculation does not consider cloud effects,
-C         but clouds are generally below the altitude where nonLTE occurs.
-          IF (DOSUN) THEN
-CC FORGET THIS  III = INTERSECT(I,CLISTN(1:NCHNTE),NCHNTE)
-            III = QUICKINDNTE(I)
-            IF (III .GT. 0) THEN
-              RADNTE = RAD(I)
-              CALL YCALNTE ( INDCHN, TEMP, SUNCOS, SCOS1, SECANG(1),
-     $                        NCHNTE, CLISTN, COEFN, CO2TOP, RADNTE, III )
-              IF (NWANTC .GT. 0) print *,'NLTE',I,III,RAD(I),RADNTE
-              RAD(I) = RADNTE
-            END IF
-          ENDIF
+         CALL docloudyTwoSlab_RT(I, FREQ, LBOT, NWANTC, INDCHN, 
+     $  TEMP,TSURF,TAU,TAUZ, TAUZSN, 
+     $  BLMULT, EMIS, FCLEAR, COSDAZ, SECANG, SECSUN, DOSUN, SUNFAC, HSUN, RHOSUN, 
+     $  RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,
+     $  TCBOT1, TCTOP1, TCBOT2, TCTOP2, CFRAC1, CFRAC2, CLRB1, CLRT1, CLRB2, CLRT2,
+     $  CFRA12, CFRA1X, CFRA2X, 
+     $  CEMIS1, CRHOS1, CRHOT1, CEMIS2, CRHOS2, CRHOT2, TEMPC1, TEMPC2,
+     $  MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
+     $  MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
+     $  QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
+     $  RAD)
 
        ENDDO ! channels
 

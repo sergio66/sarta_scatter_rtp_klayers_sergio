@@ -76,8 +76,8 @@ OPTEXEC = -pg
 ## speedy, no profiling
 ##OPT = -O0 -convert big_endian -extend-source 132 -check all -g -cpp -traceback -fp-stack-check -warn interface
 #OPT = -O2 -convert big_endian -extend-source 132 -check bounds -g -traceback -debug -gen-interfaces -warn interfaces
-#OPT = -O2 -convert big_endian -extend-source 132
-#OPTEXEC =
+OPT = -O2 -convert big_endian -extend-source 132
+OPTEXEC =
 
 # Portland Group F77:
 # ------------------------------------------------------------------------
