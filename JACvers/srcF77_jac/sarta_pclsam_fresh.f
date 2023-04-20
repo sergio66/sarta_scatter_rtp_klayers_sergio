@@ -182,12 +182,11 @@ C-----------------------------------------------------------------------
        include 'incFTC.f'
        include 'rtpdefs.f'
 
-
 C-----------------------------------------------------------------------
 C      EXTERNAL FUNCTIONS
 C-----------------------------------------------------------------------
-       REAL VACONV
-       REAL SACONV
+C       REAL VACONV
+C       REAL SACONV
 
 
 C-----------------------------------------------------------------------
@@ -302,13 +301,13 @@ C      for RDCOEF             ! Info for selected channels only
        INTEGER INDNH3(MXCHAN)            ! chan indices for NH3 pert
        REAL COFNH3(  NNH3,MAXLAY,MXCHNA) ! coefs for NH3 pert
        INTEGER INDH2O(MXCHAN)            ! chan indices for OPTRAN H2O
-       REAL   WAZOP(MXOWLY)              ! OPTRAN water l-to-s amounts
-       REAL  WAVGOP(NOWAVG,MXOWLY)       ! OPTRAN raw predictor averages
        REAL COFH2O(  NH2O,MXOWLY,MXCHNW) ! coefs for OPTRAN H2O
        REAL     FX(MAXLAY)               ! fixed gases adjustment
+       REAL   WAZOP(MXOWLY)              ! OPTRAN water l-to-s amounts
+       REAL  WAVGOP(NOWAVG,MXOWLY)       ! OPTRAN raw predictor averages
        
-       INTEGER QUICKINDNTE(MXCHAN)       ! list of non-LTE channels
        REAL RADNTE                       ! temporary NLTE rad                        
+       INTEGER QUICKINDNTE(MXCHAN)       ! list of non-LTE channels
        INTEGER NCHNTE                    ! number of non-LTE channels
        INTEGER CLISTN(MXCNTE)            ! non-LTE channel list
        REAL  COEFN(NNCOEF,MXCNTE)        ! non-LTE coefficients
@@ -364,7 +363,7 @@ C      for surface
        REAL   XRHO(MXEMIS)        ! reflec pts
 C
 C      for MEAN_T
-       REAL TPSEUD(MAXLAY)
+c       REAL TPSEUD(MAXLAY)
 C
 C      for CALPAR
        LOGICAL   LCO2             ! CO2 profile switch
@@ -404,6 +403,7 @@ C      for CALPAR
        REAL SUNWPRED7( N7H2O,MAXLAY) ! set7 "fixed" predictors
 
        REAL  DPRED(  NHDO,MAXLAY) ! HDO perturbation predictors
+       REAL  SUNDPRED(  NHDO,MAXLAY) ! HDO perturbation predictors
 
        REAL OPRED1(  N1O3,MAXLAY) ! set1 ozone predictors
        REAL OPRED2(  N2O3,MAXLAY) ! set2 ozone predictors
@@ -479,7 +479,7 @@ C      for RDSUN
 C      Other variables for the sun
        REAL SUNANG         ! solar zenith angle (at 0 altitude)
        REAL COSDAZ         ! cosine(solazi - satazi) {COS Delta AZimuth}
-       REAL SZALAY         ! solar zenith angle in some layer
+c       REAL SZALAY         ! solar zenith angle in some layer
        REAL SUNCOS         ! cosine of sun zenith angle
        REAL SCOS1          ! cosine of sun zenith angle at layer1
        REAL SUNFDG         ! fudge factor for large solar angles
@@ -527,8 +527,8 @@ C
 C      for GETMIE
        LOGICAL LBLAC1  ! black cloud1? {Mie cloud if false}
        LOGICAL LBLAC2  ! black cloud2? {Mie cloud if false}
-       INTEGER INDMI1  ! index in MIETYP for CTYPE1
-       INTEGER INDMI2  ! index in MIETYP for CTYPE2
+c       INTEGER INDMI1  ! index in MIETYP for CTYPE1
+c       INTEGER INDMI2  ! index in MIETYP for CTYPE2
        INTEGER  IERR1  ! error level of CTYPE1/MIETYP match
        INTEGER  IERR2  ! error level of CTYPE2/MIETYP match
 C
@@ -564,9 +564,9 @@ C      used locally only
        INTEGER  I,II,III   ! loop counter
        INTEGER      L      ! loop counter
        INTEGER rtpclose    ! for call to RTP close interface routine
-       REAL    EVA         ! (Earth) local viewing angle
-       REAL   CONV         ! degrees to radians conversion factor
-       REAL ANGMAX         ! maximum allowed viewing angle
+c       REAL    EVA         ! (Earth) local viewing angle
+c       REAL   CONV         ! degrees to radians conversion factor
+c       REAL ANGMAX         ! maximum allowed viewing angle
        REAL RJUNK1         ! junk/work
        REAL RJUNK2         ! another junk/work
        REAL CO2PPM         ! Profile mean dry air CO2 mixing ratio
@@ -603,9 +603,6 @@ C                    EXECUTABLE CODE
 C***********************************************************************
 C***********************************************************************
 C
-C      CONV = pi/180 = degrees to radians conversion factor
-       CONV=1.7453292E-02
-
 C      --------------------------
 C      Assign the I/O unit number
 C      --------------------------
@@ -669,256 +666,6 @@ C      ---------------------------
   
 C       print*, 'sarta_cloudy: completed opnrtp'
 ccc
-C      ------------------------
-C      Read cloud lookup tables
-C      ------------------------
-       CALL RDCLDT( IOUN, INDCHN, MIETYP, FNMIEA, FNMIEE, FNMIEG,
-     $    MIENPS, MIEPS, MIEABS, MIEEXT, MIEASY )       
-
-C      ------------------------
-C      Read the coef data files
-C      ------------------------
-       CALL RDCOEF( IOUN, NCHAN, INDCHN, SETCHN,
-     $  NCHN1,  NCHN2,  NCHN3,  NCHN4,  NCHN5,  NCHN6,  NCHN7,
-     $ CLIST1, CLIST2, CLIST3, CLIST4, CLIST5, CLIST6, CLIST7,
-     $  COEF1,  COEF2,  COEF3,  COEF4,  COEF5,  COEF6,  COEF7,
-     $   FREQ, LABOVE,  COEFF, INDCO2, COFCO2, INDSO2, COFSO2,
-     $ INDHNO, COFHNO, INDN2O, COFN2O, INDNH3, COFNH3, 
-     $ INDHDO, COFHDO,
-     $ INDH2O,  WAZOP, WAVGOP, COFH2O, FX, NCHNTE, CLISTN, COEFN)
-C
-C      Get and apply multipler tuning to coefficients {note: ignores HNO3}
-       CALL TUNMLT( IOUN, NCHAN, INDCHN, SETCHN,
-     $  NCHN1,  NCHN2,  NCHN3,  NCHN4,  NCHN5,  NCHN6,  NCHN7,
-     $ CLIST1, CLIST2, CLIST3, CLIST4, CLIST5, CLIST6, CLIST7,
-     $  COEF1,  COEF2,  COEF3,  COEF4,  COEF5,  COEF6,  COEF7,
-     $   FREQ, LABOVE,  COEFF, INDCO2, COFCO2, INDSO2, COFSO2,
-     $ INDHNO, COFHNO, INDN2O, COFN2O,
-     $ INDH2O,  WAZOP, WAVGOP, COFH2O, FX, NCHNTE, CLISTN, COEFN )
-
-       IF (NWANTC .GT. 0) THEN
-         write(*,'(A)') '     ---------------------------------------------------------------------------------------------'
-         write(*,'(A,I5,A)') 'after opnrtp, NCHAN = ',NCHAN,' .... here are the channels after opnrtp .... '
-         write(*,'(A)') '              I          LSTCHN(I)      RINDCHN(I)    INDCHN(LSTCHN(I))  BREAKOUT     FCHAN(I) '
-         write(*,'(A)') '                                                                     SETCHN(LSTCHN(I)          '
-         write(*,'(A)') '     ---------------------------------------------------------------------------------------------'
-         DO I = 1,NCHAN
-           write(*,'(5(I15),F20.7)') I,LSTCHN(I),RINDCHN(I),INDCHN(LSTCHN(I)),SETCHN(LSTCHN(I)),FCHAN(I)
-         END DO
-         write(*,'(A)') '     ---------------------------------------------------------------------------------------------'
-       END IF
-
-      !!!! suppose this is AIRS and there are 2834 chans
-      !!! see incFTC.f : so if you want all 2834 chans computed, then NCHN1 == MXCHN1 = 1461 for FWO, NCHN2 = MXCHN2 = 325 for FOW etc etc etc
-      !!!      ie 1461   325     396     85    210    217    140     which sums to 2834
-      !!!
-      !!! but eg in my retrieval code CRODGERS_FAST_CLOUD, I have chose LW chnas only about 420 between 15 um, window, O3, WV
-      !!! ie h.nchan = 426, h.ichan = >> h.ichan(1:15)' = 25 52 62 69 70 71 73 75 77 78 79 80 82 83 84 ...
-      !!! then NCHNX will say of the ODs in setX, how many of these IDs should be computed!!!!!
-      !!! but in the example from retrievals, this ends up being 277 56 69 67 7 0 0   which sums to 476     since no SW channels (set 6,7 = none chose) 
-!      print *,NCHN1,NCHN2,NCHN3,NCHN4,NCHN5,NCHN6,NCHN7
-      !!! and NCHAN witll b the sum of above == 476 = h.ichan
-!      print *,NCHAN
-
-      !!!! so there will be ZEROS where h.ichan does not exist, and the index where it does so for example this will look like
-      !!!!                       0           0           0           0           0
-      !!!!           0           0           0           0           0           0
-      !!!!           0           0           0           0           0           0
-      !!!!           0           0           0           0           0           0
-      !!!!           0           1           0           0           0           0     index 25
-      !!!!           0           0           0           0           0           0
-      !!!!           0           0           0           0           0           0
-      !!!!           0           0           0           0           0           0
-      !!!!           0           0           0           0           2           0     index 52
-      !!!!           0           0           0           0           0           0
-      !!!!           0           0           3           0           0           0     index 62
-      !!!!           0           0           0           4           5           6     index 69 70 71
-      !!!!           0           7           0           8           0           9     index 73 75 77
-      !!!!          10          11          12           0          13          14     index 78 79 80 82 83 ... 
-
-      QUICKCLIST1(INDCHN(CLIST1(1:NCHN1))) = (/(I,I=1,NCHN1)/)
-      QUICKCLIST2(INDCHN(CLIST2(1:NCHN2))) = (/(I,I=1,NCHN2)/)
-      QUICKCLIST3(INDCHN(CLIST3(1:NCHN3))) = (/(I,I=1,NCHN3)/)
-      QUICKCLIST4(INDCHN(CLIST4(1:NCHN4))) = (/(I,I=1,NCHN4)/)
-      QUICKCLIST5(INDCHN(CLIST5(1:NCHN5))) = (/(I,I=1,NCHN5)/)
-      QUICKCLIST6(INDCHN(CLIST6(1:NCHN6))) = (/(I,I=1,NCHN6)/)
-      QUICKCLIST7(INDCHN(CLIST7(1:NCHN7))) = (/(I,I=1,NCHN7)/)
-
-       if (DEBUG) then
-         print *,'NCHN4 = ',NCHN4
-         print *,'SETCHN(CLIST4(1:NCHN4)) = ',SETCHN(CLIST4(1:NCHN4))
-         print *,'CLIST4(1:NCHN4) = ',CLIST4(1:NCHN4)
-         print *,'INDCHN(CLIST4(1:NCHN4)) = ',INDCHN(CLIST4(1:NCHN4))
-         print *,'QLIST4(INDCHN(CLIST4(1:NCHN4))) = ',QUICKCLIST4(INDCHN(CLIST4(1:NCHN4)))
-         do I = 1,NCHN4
-           print *,I,CLIST4(I),INDCHN(CLIST4(I)),QUICKCLIST4(INDCHN(CLIST4(I)))
-         end do
-       end if
-
-      if (DEBUG) then
-        print *,NCHN1,NCHN2,NCHN3,NCHN4,NCHN5,NCHN6,NCHN7
-        print *,NCHAN
-        print *,'INDCHN(1:NCHAN) = ',INDCHN(1:NCHAN)
-        DO I = 1,NCHAN
-           !! print i,h.ichan(i),h.vchan(i)
-           print *,I,LSTCHN(I),SETCHN(I),FREQ(I)
-         END DO
-         print *,'CLIST1 = ',CLIST1
-         print *,'CLIST2 = ',CLIST2
-!        print *,'CLIST3 = ',CLIST3
-!        print *,'CLIST4 = ',CLIST4
-!        print *,'CLIST5 = ',CLIST5
-!        print *,'CLIST6 = ',CLIST6
-!        print *,'CLIST7 = ',CLIST7
-       END IF
-
-       if (DEBUG) then
-         print *,'CLIST2 = ',CLIST2(1:NCHN2)
-         print *,'INDCHN(CLIST2) = ',INDCHN(CLIST2(1:NCHN2))
-         DO I = 1,NCHAN
-           III = intersect(I,INDCHN(CLIST2(1:NCHN2)), NCHN2)
-           IF (III .GT. 0) print *,I,III,INDCHN(CLIST2(III))
-         END DO
-         STOP
-       end if
-
-      !!! of the above INDCHN, which match up with set OD1
-      !!! CLIST1 = 25 52 62 69 70 71 73 75 77 78 79 80 82 83 84 .... 1785
-      !!! CLIST2 = 149 150 196 203 206 207 217 220 221 223 224 ... 1221 1236
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!    SO print *,INDCHN(CLIST1) should be INDCHN([25 52 62 69 70 71 73 75 77 ...]) = 1 2 3 4 5 6 ....
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!       print *,INDCHN(CLIST2(1:NCHN2))
-!         63  64  110 117 120 121
-!         131 134 135 137 138 139
-!         142 143 144 145 146 147
-!         148 149 150 164 166 167
-!         168 169 170 172 179 180
-!         242 243 244 245 246 247
-!         248 249 250 251 252 253
-!         254 255 256 257 259 260
-!         261 262 263 264 265 266
-!         267 268            
-
-C      Calc OPTRAN absorption coefficient scaling factor WAOP
-       WAOP(1)=WAZOP(1)
-       DO L=2,MXOWLY
-          WAOP(L)=WAZOP(L) - WAZOP(L-1)
-       ENDDO
-
-C      --------------------------
-C      Read in the solar radiance
-C      --------------------------
-       CALL RDSUN(IOUN, INDCHN, HSUN)
-C
-       DISTES=1.496E+11  ! distance Earth to Sun
-
-C      --------------------
-C      Check FREQ and FCHAN
-C      --------------------
-C      Note: FREQ comes the coef data, while FCHAN comes
-C      from the input RTP file read by OPNRTP.  It is possible
-C      that FCHAN is "nodata", so we check the first element.
-       IF (FCHAN(1) .GT. 640.0 .AND. FCHAN(1) .LT. 2670.0) THEN
-          DO I=1,NCHAN
-             RJUNK1=ABS(FREQ(I) - FCHAN(I))
-             RJUNK2=0.01*FREQ(I)/1200.0   ! ~1% of a channel fullwidth
-             IF (RJUNK1 .GT. RJUNK2) THEN
-                WRITE(IOINFO,1010) I, LSTCHN(I), FREQ(I), FCHAN(I)
- 1010           FORMAT('Warning! index=',I4,', chan ID=',I4,
-     $          ', fastmodel freq=',F8.3,', RTP freq=',F8.3)
-             ENDIF
-             HEAD%vchan(I)=FREQ(I)
-          ENDDO
-       ELSE
-          DO I=1,NCHAN
-             HEAD%vchan(I)=FREQ(I)
-          ENDDO
-       ENDIF
-
-C      ------------------------
-C      Open the output RTP file
-C      ------------------------
-       MODE='c'
-       ISTAT=rtpopen(FOUT, MODE, HEAD, HATT, PATT, IOPCO)
-
-ccc
-       if (DEBUG)  print *, 'read open status = ', ISTAT
-ccc
-
-C      -----------------------------------------------
-C      All channels from sets 1, 2, and 3 are to use a
-C      fake effective sun angle layer-to-space trans
-c      at the end, NFAKE = NCHN1 + NCHN2 + NCHN3
-C      -----------------------------------------------
-       NFAKE=0
-C 
-       DO I=1,NCHN1
-          NFAKE=NFAKE + 1
-          INDFAK(NFAKE)=INDCHN( CLIST1(I) )
-       ENDDO
-C
-       DO I=1,NCHN2
-          NFAKE=NFAKE + 1
-          INDFAK(NFAKE)=INDCHN( CLIST2(I) )
-       ENDDO
-C
-       DO I=1,NCHN3
-          NFAKE=NFAKE + 1
-          INDFAK(NFAKE)=INDCHN( CLIST3(I) )
-       ENDDO
-
-      DO I = 1,NFAKE
-        III = intersect(I,INDFAK(1:NFAKE), NFAKE)  !! so I = INDFAK(III)
-        QUICKINDFAK(I) = III
-      END DO
-
-C      ---------------------------
-C      Start of loop over profiles
-C      ---------------------------
-       IPROF=1  ! initialize profile counter
-C      Do you want this profile?
- 10    LWANT=.TRUE.
-       IF (NWANTP .GT. 0) THEN
-C         Look for current profile on list of wanted profiles
-          LWANT=.FALSE.
-          DO I=1,NWANTP
-             IF (IPROF .EQ. LISTP(I)) LWANT=.TRUE.
-          ENDDO
-       ENDIF
-
-C      --------------
-C      Read input RTP
-C      --------------
-       CALL RDRTP( LWANT, IPROF, IOPCI,
-     $    IH2O, IO3, ICO, ICH4, ICO2, ISO2, IHNO3, IN2O, PTYPE,
-     $    RALT, LCO2PM, NLAY, NEMIS, LAT, LON, SATANG, SATZEN,
-     $    SALT, SUNANG, COSDAZ, PSURF, TSURF, CO2PPM,
-     $    FEMIS, XEMIS, XRHO,
-     $    TEMP, WAMNT, OAMNT, CAMNT, MAMNT, FAMNT, SAMNT, HAMNT, NAMNT,
-     $     ALT, PROF, ISTAT )
-C
-       IF (ISTAT .EQ. -1) GOTO 9999  ! reached End Of File
-C
-       IF (.NOT. LWANT) THEN
-C         Skip this profile
-          IPROF=IPROF+ 1 
-          GOTO 10
-       ENDIF
-
-C      -------------------------------------
-C      Determine bottom layer, CO2, & angles
-C      -------------------------------------
-       CALL GETBOT(NLAY, PLEV, PSURF, LBOT, BLMULT)
-
-C      Calc the fractional bottom layer air temperature
-ccc
-c       TEMP(LBOT)=TEMP(LBOT-1) + BLMULT*( TEMP(LBOT) - TEMP(LBOT-1) )
-c Above line commented out & replaced by Scott Hannon, 24 July 2003.
-c Mistakenly treats T at the center of the layer above as T at the
-c bottom of the layer above.
-ccc
 
 C      CO2 profile switch
        IF (ICO2 .LT. 1) THEN
@@ -952,133 +699,131 @@ C      HNO3 profile switch
        ENDIF
 C      HDO switch (default .TRUE. from water)
        LHDO=.FALSE.
-C
-C
-       IF (PTYPE .EQ. AIRSLAY) THEN
-C         Copy pseudo level temperatures to another array
-          DO I=1,LBOT
-             TPSEUD(I)=TEMP(I)
-          ENDDO
-C         Convert temperatures
-          CALL MEAN_T(LBOT, PLEV, PSURF, TPSEUD, TEMP)
-C
-       ELSE
-C         Calc mean pressure for bottom fractional layer
-          RJUNK1 = ( PSURF - PLEV(LBOT) )/LOG( PSURF/PLEV(LBOT) )
-C         Do interpolation for fractional bottom layer mean temperature
-C         assuming T is in linear in log(P)
-          RJUNK2=( TEMP(LBOT) - TEMP(LBOT-1) )/
-     $       LOG( PLAY(LBOT)/PLAY(LBOT-1) )             ! slope
-          TEMP(LBOT)=RJUNK2*LOG( RJUNK1/PLAY(LBOT-1) ) + TEMP(LBOT - 1)
-       ENDIF
-C
-C      Check satellite elevation
-       IF (SALT .GT. 0.0) THEN
-C         Warn and use default if invalid
-          IF (SALT .LT. XSALT-50 .OR. SALT .GT. XSALT+50) THEN
-             WRITE(IOINFO,1020) IPROF, SALT, XSALT
- 1020        FORMAT('Warning! Profile',I5,
-     $          ': replacing invalid input satellite altitude ',
-     $          1PE11.4,' with default ',1PE11.4,' km')
-             SALT=XSALT
-          ENDIF
-       ELSE
-          SALT=XSALT
-       ENDIF
-C
-C      Convert SATZEN or SATANG to viewing angle
-       IF (SATZEN .GE. 0.0 .AND. SATZEN .LT. 63.0) THEN
-C         Convert zenith angle at surface to view angle at satellite
-          SVA=SACONV( SATZEN, SALT*1000.0 )/CONV
-       ELSE
-C         Check if scan angle is valid
-          IF (SATANG .GT. -49.6 .AND. SATANG .LT. 49.6) THEN
-C            View angle should be within a few degrees of scan angle
-             SVA=ABS( SATANG )
-          ELSE
-             WRITE(IOERR,1030) IPROF, SATZEN, SATANG
- 1030        FORMAT('Error! Profile',I5,
-     $          ': invalid angles for SATZEN ',1PE11.4,
-     $          ' and SATANG ',E11.4) 
-             STOP
-          ENDIF
-       ENDIF
 
-       ANGMAX=53  ! max satellite view angle (49.5 scan + 3.5 spacecraft)
-       IF (SVA .GT. ANGMAX) THEN
-C         Truncate angle if too big
-          WRITE(IOINFO,1040) IPROF, SVA
- 1040     FORMAT('Warning! Profile',I5,': truncating view angle ',
-     $       1PE11.4,' to 53 degrees')
-          SVA=ANGMAX
-       ENDIF
+C      ------------------------
+C      Read cloud lookup tables
+C      ------------------------
+       CALL RDCLDT( IOUN, INDCHN, MIETYP, FNMIEA, FNMIEE, FNMIEG,
+     $    MIENPS, MIEPS, MIEABS, MIEEXT, MIEASY )       
 
-C      Convert from satellite to earth viewing angle (in radians)
-       DO L=1,LBOT
-             EVA=VACONV(SVA, SALT, ALT(L))
-             SECANG(L)=1.0E+0/COS(EVA)
-ccccccccccccc
-c            for testing
-c             SECANG(L)=SVA
-ccccccccccccc
+C      --------------------------------------------------------------
+C      Read the coef data files and apply multiplier tuning to coeffs
+C      --------------------------------------------------------------
+       CALL RDCOEF_TUNMLT (IOUN, NCHAN, INDCHN, SETCHN, 
+     $  NCHN1,  NCHN2,  NCHN3,  NCHN4,  NCHN5,  NCHN6,  NCHN7,
+     $ CLIST1, CLIST2, CLIST3, CLIST4, CLIST5, CLIST6, CLIST7,
+     $  COEF1,  COEF2,  COEF3,  COEF4,  COEF5,  COEF6,  COEF7,
+     $   FREQ, LABOVE,  COEFF, INDCO2, COFCO2, INDSO2, COFSO2,
+     $ INDHNO, COFHNO, INDN2O, COFN2O, INDNH3, COFNH3, 
+     $ INDHDO, COFHDO,
+     $ INDH2O,  WAZOP, WAVGOP, COFH2O, FX, NCHNTE, CLISTN, COEFN,
+     $ QUICKCLIST1, QUICKCLIST2, QUICKCLIST3, QUICKCLIST4, QUICKCLIST5, 
+     $ QUICKCLIST6, QUICKCLIST7,
+     $ NWANTC, LISTC, LSTCHN, RINDCHN)
+
+C      Calc OPTRAN absorption coefficient scaling factor WAOP
+       WAOP(1)=WAZOP(1)
+       DO L=2,MXOWLY
+          WAOP(L)=WAZOP(L) - WAZOP(L-1)
        ENDDO
 
-C      Calc total sun angle secant
-       DOSUN=.FALSE.
-       SECSUN = 1.0
-       SUNFDG = 1.0
-       IF (SUNANG .GE. 0.0 .AND. SUNANG .LT. 89.9) DOSUN=.TRUE.
-       IF (DOSUN) THEN
-          SUNCOS=COS(CONV*SUNANG)
-          SZALAY=SACONV(SUNANG,ALT(1))
-          SCOS1=COS(SZALAY)
-          RJUNK2=SECANG(LBOT) + 1.0/SUNCOS ! Total secant
+C      --------------------------
+C      Read in the solar radiance
+C      --------------------------
+       CALL RDSUN_SET_NFAKE(IOUN, INDCHN, HSUN, 
+     $         NCHN1,NCHN2,NCHN3,CLIST1,CLIST2,CLIST3,
+     $         NFAKE,INDFAK,QUICKINDFAK)
 
-C         Calc non-unity fudge factor if total secant > 9
-          IF (RJUNK2 .GT. 9.0) THEN
-C            fudge factor = true_total_secant/calc_total_secant
-             SUNFDG=RJUNK2/9.0
-C            truncated solar angle to use to calc SECSUN
-             RJUNK1=ACOS( 1.0/(9.0 - SECANG(LBOT)) )/CONV
-          ELSE
-             SUNFDG=1.0
-             RJUNK1=SUNANG
-          ENDIF
-c Should I change SUNFDG to SUNFDG(MAXLAY)?
-C
-          DO L=1,LBOT
-             SZALAY=SACONV(RJUNK1,ALT(L))
-             SECSUN(L)=SECANG(L) + 1.0E+0/COS(SZALAY)
+       DISTES=1.496E+11  ! distance Earth to Sun
+
+C      --------------------
+C      Check FREQ and FCHAN
+C      --------------------
+C      Note: FREQ comes the coef data, while FCHAN comes
+C      from the input RTP file read by OPNRTP.  It is possible
+C      that FCHAN is "nodata", so we check the first element.
+       IF (FCHAN(1) .GT. 640.0 .AND. FCHAN(1) .LT. 2670.0) THEN
+          DO I=1,NCHAN
+             RJUNK1=ABS(FREQ(I) - FCHAN(I))
+             RJUNK2=0.01*FREQ(I)/1200.0   ! ~1% of a channel fullwidth
+             IF (RJUNK1 .GT. RJUNK2) THEN
+                WRITE(IOINFO,1010) I, LSTCHN(I), FREQ(I), FCHAN(I)
+ 1010           FORMAT('Warning! index=',I4,', chan ID=',I4,
+     $          ', fastmodel freq=',F8.3,', RTP freq=',F8.3)
+             ENDIF
+             HEAD%vchan(I)=FREQ(I)
           ENDDO
-         
-          QUICKINDNTE = 0
-          !! LSTCHN = h.ichan
-          !! so eg if I = 1520, h.ichan(1520) = listchn(1520) = 1291; h.vchan(1520) = freq(1520) = 1231.3 cm-1
-          !! so eg if I = 2600, h.ichan(2600) = listchn(2600) = 2333; h.vchan(2600) = freq(2600) = 2616.4 cm-1
-          !! so eg if I = 2371, h.ichan(2371) = listchn(2371) = 2100; h.vchan(2371) = freq(2371) = 2379.4 cm-1
-          IF (DEBUG) THEN
-            do I = 1,MXCHAN
-              if (LSTCHN(I) .GT. 0) THEN
-                write(*,'(A,I5,I5,F12.5,F12.5)') 'NTE CHECK(1) : I,LSTCHN(I)=h.ichan,FREQ(I) = ',
-     $ I,LSTCHN(I),FREQ(I),FREQ(INDCHN(LSTCHN(I)))
-              end if
-            end do
-            print *,'  '
-  
-            do I = 1,NCHNTE
-              write(*,'(A,I5,I5,I5,F12.4)') 
-     $           'NTE CHECK(2) : I,CLISTN(I)=h.ichan --> LSTCHN(I),FREQ(CLISTN(I))',
-     $           I,CLISTN(I),INDCHN(CLISTN(I)),FREQ(INDCHN(CLISTN(I)))
-            end do
-            print *,'  '
-          END IF
-  
-          DO I = 1,NCHNTE
-            QUICKINDNTE(INDCHN(CLISTN(I))) = I
-C            print *,'MIAOW MIAOW',I,III,INDCHN(CLISTN(I)),QUICKINDNTE(INDCHN(CLISTN(I)))
-          END DO
-
+       ELSE
+          DO I=1,NCHAN
+             HEAD%vchan(I)=FREQ(I)
+          ENDDO
        ENDIF
+
+C      ------------------------
+C      Open the output RTP file
+C      ------------------------
+       MODE='c'
+       ISTAT=rtpopen(FOUT, MODE, HEAD, HATT, PATT, IOPCO)
+ccc
+       if (DEBUG)  print *, 'read open status = ', ISTAT
+ccc
+
+C************************************************************************
+C   this is end of generic stuff eg read in HEAD = nchan,ichan,vchan, predictors
+C************************************************************************
+
+C      ---------------------------
+C      Start of loop over profiles
+C      ---------------------------
+       IPROF=1  ! initialize profile counter
+C      Do you want this profile?
+ 10    LWANT=.TRUE.
+       IF (NWANTP .GT. 0) THEN
+C         Look for current profile on list of wanted profiles
+          LWANT=.FALSE.
+          DO I=1,NWANTP
+             IF (IPROF .EQ. LISTP(I)) LWANT=.TRUE.
+          ENDDO
+       ENDIF
+
+C      --------------
+C      Read input RTP
+C      --------------
+       CALL RDRTP( LWANT, IPROF, IOPCI,
+     $    IH2O, IO3, ICO, ICH4, ICO2, ISO2, IHNO3, IN2O, PTYPE,
+     $    RALT, LCO2PM, NLAY, NEMIS, LAT, LON, SATANG, SATZEN,
+     $    SALT, SUNANG, COSDAZ, PSURF, TSURF, CO2PPM,
+     $    FEMIS, XEMIS, XRHO,
+     $    TEMP, WAMNT, OAMNT, CAMNT, MAMNT, FAMNT, SAMNT, HAMNT, NAMNT,
+     $     ALT, PROF, ISTAT )
+C
+
+C        Get basic cloud parameters from input RTP
+       CALL GETCLD( IPROF, HEAD, PROF,
+     $    LBLAC1, CTYPE1, CFRAC1, CPSIZ1, CPRTO1, CPRBO1, CNGWA1,
+     $    XCEMI1, XCRHO1, CSTMP1,
+     $    LBLAC2, CTYPE2, CFRAC2, CPSIZ2, CPRTO2, CPRBO2, CNGWA2,
+     $    XCEMI2, XCRHO2, CSTMP2, CFRA12, FCLEAR, CFRA1X, CFRA2X )
+         if (DEBUG) then
+           print *,'getcld ',IPROF,CTYPE1, CFRAC1, CPSIZ1, CPRTO1,
+     $                          CPRBO1, CNGWA1,CFRA1X     
+         endif
+
+       IF (ISTAT .EQ. -1) GOTO 9999  ! reached End Of File
+C
+       IF (.NOT. LWANT) THEN
+C         Skip this profile
+          IPROF=IPROF+ 1 
+          GOTO 10
+       ENDIF
+
+       CALL get_lbot_fix_salt_temp(
+     $   NLAY, PLEV, PLAY, PSURF, LBOT, BLMULT,                 !!! for getbot
+     $   TEMP, SALT, IPROF, AIRSLAY)
+ 
+       CALL CALC_SVA_SECANG_SECSUN(SALT,SATZEN,SATANG,SUNANG,LBOT,ALT,
+     $      IPROF,LSTCHN,NCHNTE,CLISTN,FREQ,INDCHN,
+     $      SVA,SECANG,SECSUN,SUNFDG,SUNCOS,SCOS1,DOSUN,QUICKINDNTE)
 
 C      -----------------------------------
 C      Calculate the fast trans predictors
@@ -1112,279 +857,71 @@ C      -----------------------------------
        CALL CALOWP ( LBOT, WAMNT, RPRES, TEMP, SECANG, WAZOP, WAVGOP,
      $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP )
 
-C        Get basic cloud parameters from input RTP
-         CALL GETCLD( IPROF, HEAD, PROF,
-     $    LBLAC1, CTYPE1, CFRAC1, CPSIZ1, CPRTO1, CPRBO1, CNGWA1,
-     $    XCEMI1, XCRHO1, CSTMP1,
-     $    LBLAC2, CTYPE2, CFRAC2, CPSIZ2, CPRTO2, CPRBO2, CNGWA2,
-     $    XCEMI2, XCRHO2, CSTMP2, CFRA12, FCLEAR, CFRA1X, CFRA2X )
-         if (DEBUG) then
-           print *,'getcld ',IPROF,CTYPE1, CFRAC1, CPSIZ1, CPRTO1,
-     $                          CPRBO1, CNGWA1,CFRA1X     
-         endif
-
-C        ---------------------------------------------------
-C        Set the emissivity & reflectivity for every channel
-C        ---------------------------------------------------
-         CALL SETEMS( NCHAN, NEMIS, FREQ, FEMIS, XEMIS, XRHO,
+C      -----------------------------------
+C      Calculate the CLOUD, EMIS, REFL param
+C      -----------------------------------
+C      ---------------------------------------------------
+C      Set the emissivity & reflectivity for every channel
+C      ---------------------------------------------------
+       CALL SETEMS( NCHAN, NEMIS, FREQ, FEMIS, XEMIS, XRHO,
      $    XCEMI1, XCRHO1, XCEMI2, XCRHO2, LRHOT,
      $    EMIS, RHOSUN, RHOTHR, CEMIS1, CRHOS1, CRHOT1,
      $    CEMIS2, CRHOS2, CRHOT2) 
 c        print *,CFRAC1,CFRAC2,CFRA12,LBLAC1,LBLAC2
 
-C        Check and prepare (top) cloud1
-         IF (CFRAC1 .GT. 0.0) THEN
-           IF (LBLAC1) THEN
-             CALL BKPREP(IPROF, 1, CTYPE1, CFRAC1, CPRTO1,
-     $          LBOT, PSURF, PLEV, PLAY, TEMP, LCTOP1, TCTOP1,
-     $          TEMPC1, CLRT1)
-             IF (CSTMP1 .GT. 0.0) TCTOP1=CSTMP1
-           ELSE
-C             Determine which lookup table to use
-              CALL GETMIE(CTYPE1,MIETYP,INDMI1,IERR1)
-C             Prepare selected lookup table for given cpsize
-              CALL CCPREP( NCHAN, LBOT, INDMI1, MIENPS,
-     $          CNGWA1, CPSIZ1, CPRTO1, CPRBO1, PLEV, TEMP, SECANG,
-     $          SECSUN, MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT1, LCTOP1,
-     $          CLRB1, CLRT1, TCBOT1, TCTOP1, MASEC1, MASUN1,
-     $          CFRCL1, G_ASY1, NEXTO1, NSCAO1 )
-            ENDIF
-         ENDIF
+       CALL prepare_clds(
+     $    LBLAC1, CTYPE1, CFRAC1, CPSIZ1, CPRTO1, CPRBO1, CNGWA1,  ! from GETCLD
+     $    XCEMI1, XCRHO1, CSTMP1,                                  ! from GETCLD
+     $    LBLAC2, CTYPE2, CFRAC2, CPSIZ2, CPRTO2, CPRBO2, CNGWA2,  ! from GETCLD
+     $    XCEMI2, XCRHO2, CSTMP2, CFRA12, FCLEAR, CFRA1X, CFRA2X,  ! from GETCLD
+     $    NCHAN, IPROF, LBOT, PSURF, PLEV, PLAY, TEMP, SECANG, SECSUN,
+     $    MIETYP, MIENPS, MIEPS, MIEABS, MIEEXT, MIEASY,
+     $    LCBOT1, LCTOP1, CLRB1, CLRT1, TCBOT1, TCTOP1, MASEC1, MASUN1,
+     $    CFRCL1, G_ASY1, NEXTO1, NSCAO1, TEMPC1, 
+     $    LCBOT2, LCTOP2, CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2,
+     $    CFRCL2, G_ASY2, NEXTO2, NSCAO2, TEMPC2
+     $    )
 
-C        Check and prepare (bottom) cloud2
-         IF (CFRAC2 .GT. 0.0) THEN
-            IF (LBLAC2) THEN
-               CALL BKPREP(IPROF, 2, CTYPE2, CFRAC2, CPRTO2,
-     $          LBOT, PSURF, PLEV, PLAY, TEMP, LCTOP2, TCTOP2,
-     $          TEMPC2, CLRT2)
-             IF (CSTMP2 .GT. 0.0) TCTOP2=CSTMP2
-            ELSE
-C            Determine which lookup table to use
-             CALL GETMIE(CTYPE2,MIETYP,INDMI2,IERR2)
-C            Prepare lookup data for cloud2
-             CALL CCPREP( NCHAN, LBOT, INDMI2, MIENPS,
-     $          CNGWA2, CPSIZ2, CPRTO2, CPRBO2, PLEV, TEMP, SECANG,
-     $          SECSUN, MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT2, LCTOP2,
-     $          CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2,
-     $          CFRCL2, G_ASY2, NEXTO2, NSCAO2 )
-           ENDIF
-         ELSE
-C           Safe default for non-existant cloud2
-            LCTOP2=1
-         ENDIF
+       SUNFAC=SUNCOS*PI*(RADSUN/DISTES)**2
+C      Note: PI*(RADSUN/DISTES)^2 = solid angle [steradians] of
+C      the sun as seen from Earth for the case DISTES >> RADSUN.
 
-         SUNFAC=SUNCOS*PI*(RADSUN/DISTES)**2
-C        Note: PI*(RADSUN/DISTES)^2 = solid angle [steradians] of
-C        the sun as seen from Earth for the case DISTES >> RADSUN.
-
+!SSM_SSM : END GENERIC PROFILE STUFF
 C------------------------------------------------------------------------
 C      ----------------------
 C      Loop over the channels
 C      ----------------------
        DO I=1,NCHAN
 
-C        ----------------------------------
-C        Calculate the layer transmittances
-C        ----------------------------------
-C        Calculate TAU for set 1 thru 7
+         CALL CALC_LAYER_TRANS_CALTODX_1_7(
+     $ I,DOSUN, NCHAN, LSTCHN, FREQ, INDCHN, LBOT, 
+     $ QUICKCLIST1, QUICKCLIST2, QUICKCLIST3, QUICKCLIST4, 
+     $ QUICKCLIST5, QUICKCLIST6, QUICKCLIST7, 
+     $ NCHN1,  NCHN2,  NCHN3,  NCHN4,  NCHN5,  NCHN6,  NCHN7, 
+     $ CLIST1, CLIST2, CLIST3, CLIST4, CLIST5, CLIST6, CLIST7, 
+     $ FIXMUL, CONPRD, SUNCONPRD, TRCPRD, SUNTRCPRD, 
+     $ DPRED, SUNDPRED, 
+     $ INDCO2, COFCO2, INDSO2, COFSO2, INDHDO, COFHDO, 
+     $ INDHNO, COFHNO, INDN2O, COFN2O, INDNH3, COFNH3,
+     $ CO2MLT, SO2MLT, HNOMLT, N2OMLT, NH3MLT, HDOMLT, 
+     $ INDH2O, H2OPRD, COFH2O,
+     $ WAANG, LOPMIN, LOPMAX, LOPUSE, LOPLOW, DAOP, WAOP, 
+     $ NFAKE, INDFAK, QUICKINDFAK, CO2TOP,
+     $ COEF1, COEF2, COEF3, COEF4, COEF5, COEF6, COEF7, COEFF, 
+     $ WPRED1, WPRED2, WPRED3, WPRED4, WPRED5, WPRED6, WPRED7, 
+     $                     SUNWPRED4, SUNWPRED5, SUNWPRED6, SUNWPRED7, 
+     $ OPRED1, OPRED2,         OPRED4, OPRED5, OPRED6, OPRED7, 
+     $                     SUNOPRED4, SUNOPRED5, SUNOPRED6, SUNOPRED7, 
+     $ FPRED1, FPRED2, FPRED3, FPRED4, FPRED5, FPRED6, FPRED7, 
+     $                     SUNFPRED4, SUNFPRED5, SUNFPRED6, SUNFPRED7, 
+     $ MPRED3, CPRED4, SUNCPRED4, SECANG, SECSUN, SUNFDG, SUNCOS,
+     $ TAU, TAUZ, TAUZSN)
 
-         IF (DEBUG) THEN
-           DO II = 1,NCHAN
-             !! print iI,h.ichan(iI),h.vchan(Ii)
-             print *,II,LSTCHN(II),FREQ(II)
-           END DO
-         END IF
-
-C      ---------------------------
-C      Loop on channel (frequency)
-C      eventually fills in matrix as    X=1,2,3,4,5,6,7
-C       DO I=1,NCHNX
-C          J=INDCHN( CLISTX(I) )
-C          DO L = 1,100
-C             Calc layer-to-space optical depth
-C             KZ=KZ + KLAYER
-C             TAUZ(ILAY,J)=KZ
-C           END DO
-C         END DO
-C      ---------------------------
-
-C        print *,INDCHN(CLIST1(1:NCHN1))
-C        stop
-!       DO II = 1,NCHN1
-!         !! print iI,h.ichan(iI),h.vchan(Ii)
-!         print *,II,LSTCHN(II),FREQ(II),CLIST1(II)
-!       END DO
-
-c         III = intersect(I,INDCHN(CLIST1(1:NCHN1)), NCHN1)
-         III = QUICKCLIST1(I)
-         IF (III .GT. 0) THEN
-           CALL YCALT1( INDCHN,  LBOT,   NCHN1, CLIST1,  COEF1,
-     $       FIXMUL, CONPRD, FPRED1, WPRED1, DPRED, OPRED1, TRCPRD,
-     $       INDCO2, COFCO2, CO2MLT, INDSO2, COFSO2, SO2MLT,
-     $       INDHNO, COFHNO, HNOMLT, INDN2O, COFN2O, N2OMLT,
-     $       INDNH3, COFNH3, NH3MLT, INDHDO, COFHDO, HDOMLT,
-     $       INDH2O, H2OPRD, COFH2O, LOPMIN, LOPMAX, LOPLOW,
-     $       LOPUSE,   WAOP,   DAOP, WAANG,     TAU,   TAUZ,  III)
-         END IF
-c         print *,'one  ',tau(10,1),tauz(10,1)
-
-c         III = intersect(I,INDCHN(CLIST2(1:NCHN2)), NCHN2)
-         III = QUICKCLIST2(I)
-         IF (III .GT. 0) THEN  
-           CALL YCALT2( INDCHN, LBOT,   NCHN2, CLIST2,  COEF2,
-     $      FIXMUL, CONPRD, FPRED2, OPRED2, WPRED2, DPRED, TRCPRD,
-     $      INDCO2, COFCO2, CO2MLT, INDSO2, COFSO2, SO2MLT,
-     $      INDHNO, COFHNO, HNOMLT, INDN2O, COFN2O, N2OMLT, 
-     $      INDNH3, COFNH3, NH3MLT, INDHDO, COFHDO, HDOMLT,TAU, TAUZ, 
-     $      III)
-         END IF
-c         print *,'two  ',tau(10,1),tauz(10,1)
-
-c         III = intersect(I,INDCHN(CLIST3(1:NCHN3)), NCHN3)
-         III = QUICKCLIST3(I)
-         IF (III .GT. 0) THEN  
-           CALL YCALT3( INDCHN,   LBOT,  NCHN3, CLIST3,  COEF3,
-     $       FIXMUL, CONPRD, FPRED3, MPRED3, WPRED3, DPRED, TRCPRD,
-     $       INDSO2, COFSO2, SO2MLT, INDHNO, COFHNO, HNOMLT,
-     $       INDN2O, COFN2O, N2OMLT, INDNH3, COFNH3, NH3MLT,
-     $       INDHDO, COFHDO, HDOMLT, INDH2O, H2OPRD, COFH2O, 
-     $       LOPMIN, LOPMAX, LOPLOW, LOPUSE,
-     $         WAOP,   DAOP,  WAANG,    TAU,   TAUZ, III)
-          END IF
-c         print *,'three  ',tau(10,1),tauz(10,1)
-
-c         III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4)
-         III = QUICKCLIST4(I)
-         IF (III .GT. 0) THEN  
-c           print *,'I,III,QUICKCLIST4(I) = ',I,III
-c           print *,'I,III,QUICKCLIST4(I) = ',I,III,QUICKCLIST4(I)
-           CALL YCALT4(INDCHN,   LBOT,  NCHN4, CLIST4,
-     $       COEF4, FIXMUL, CONPRD, FPRED4, CPRED4, OPRED4, WPRED4,
-     $       TRCPRD, INDCO2, COFCO2, CO2MLT, INDN2O, COFN2O, N2OMLT,
-     $       TAU,   TAUZ, III)
-         END IF
-c         print *,'four  ',tau(10,1),tauz(10,1)
-
-c         III = intersect(I,INDCHN(CLIST5(1:NCHN5)), NCHN5)
-         III = QUICKCLIST5(I)
-         IF (III .GT. 0) THEN  
-           CALL YCALT5(INDCHN,   LBOT,  NCHN5, CLIST5,
-     $       COEF5, FIXMUL, CONPRD, FPRED5, WPRED5, OPRED5, 
-     $       TRCPRD, INDCO2, COFCO2, CO2MLT, INDN2O, COFN2O, N2OMLT,
-     $       TAU,   TAUZ, III )
-         END IF
-c         print *,'five  ',tau(10,1),tauz(10,1)
-
-c         III = intersect(I,INDCHN(CLIST6(1:NCHN6)), NCHN6)
-         III = QUICKCLIST6(I)
-         IF (III .GT. 0) THEN  
-           CALL YCALT6(INDCHN,   LBOT,  NCHN6, CLIST6,
-     $       COEF6, FIXMUL, CONPRD, FPRED6, WPRED6, OPRED6, DPRED, TRCPRD,
-     $      INDCO2, COFCO2, CO2MLT, INDSO2, COFSO2, SO2MLT,
-     $      INDN2O, COFN2O, N2OMLT, INDHDO, COFHDO, HDOMLT,  TAU,  TAUZ, 
-     $      III )
-         END IF
-c         print *,'six  ',tau(10,1),tauz(10,1)
-
-c         III = intersect(I,INDCHN(CLIST7(1:NCHN7)), NCHN7)
-         III = QUICKCLIST7(I)
-         IF (III .GT. 0) THEN  
-           CALL YCALT7(INDCHN,   LBOT,  NCHN7, CLIST7,
-     $       COEF7, FIXMUL, CONPRD, FPRED7, WPRED7, OPRED7,
-     $       TRCPRD, INDCO2, COFCO2, CO2MLT, INDN2O, COFN2O, N2OMLT,
-     $       TAU,   TAUZ, III )
-         END IF
-c         print *,'seven  ',tau(10,1),tauz(10,1)
-
-c************************************************************************
-         IF (DOSUN) THEN
-c           CALL SUNPAR ( LBOT,
-c     $       RTEMP, RWAMNT, ROAMNT, RCAMNT,
-c     $        TEMP,  WAMNT,  OAMNT,  CAMNT,
-c     $       RPRES,  SECSUN, SUNCONPRD,
-c     $       SUNFPRED4, SUNFPRED5, SUNFPRED6, SUNFPRED7,
-c     $       SUNWPRED4, SUNWPRED5, SUNWPRED6, SUNWPRED7,
-c     $       SUNOPRED4, SUNOPRED5, SUNOPRED6, SUNOPRED7,
-c     $       SUNCPRED4, SUNTRCPRD )
-
-C           Calc fake TAUZSN for sets 1, 2, and 3
-c           III = intersect(I,INDFAK(1:NFAKE), NFAKE)  !! so I = INDFAK(III)
-           III = QUICKINDFAK(I)
-           IF (III .GT. 0) THEN
-c              print *,'indfak',I,III,INDFAK(I),INDFAK(III),QUICKINDFAK(I)
-              CALL FAKETZ( NFAKE, INDFAK, LBOT, TAUZ, SECANG,
-     $         SECSUN, TAUZSN, III)
-           END IF
-
-c           III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4) !! so I = INDCHN(CLIST4(III))
-           III = QUICKCLIST4(I)
-           IF (III .GT. 0) THEN  
-             CALL YCALT4(INDCHN,   LBOT,  NCHN4, CLIST4,
-     $         COEF4, FIXMUL, SUNCONPRD, SUNFPRED4, SUNCPRED4, SUNOPRED4, SUNWPRED4,
-     $         SUNTRCPRD, INDCO2, COFCO2, CO2MLT, INDN2O, COFN2O, N2OMLT,
-     $         TAUZSN, TAUZSN, III )
-           END IF
-C            ^^^^^^  ^^^^^^
-C            dummy   actual
-
-c           III = intersect(I,INDCHN(CLIST5(1:NCHN5)), NCHN5)
-           III = QUICKCLIST5(I)
-           IF (III .GT. 0) THEN  
-             CALL YCALT5(INDCHN,   LBOT,  NCHN5, CLIST5,
-     $         COEF5, FIXMUL, SUNCONPRD, SUNFPRED5, SUNWPRED5, SUNOPRED5,
-     $         SUNTRCPRD, INDCO2, COFCO2, CO2MLT, INDN2O, COFN2O, N2OMLT,
-     $         TAUZSN, TAUZSN, III )
-           END IF
-
-c           III = intersect(I,INDCHN(CLIST6(1:NCHN6)), NCHN6)
-           III = QUICKCLIST6(I)
-           IF (III .GT. 0) THEN  
-             CALL YCALT6(INDCHN,   LBOT,  NCHN6, CLIST6,
-     $          COEF6, FIXMUL, SUNCONPRD, SUNFPRED6, SUNWPRED6, SUNOPRED6, DPRED,
-     $          SUNTRCPRD, INDCO2, COFCO2, CO2MLT, INDSO2, COFSO2, SO2MLT,
-     $          INDN2O, COFN2O, N2OMLT, INDHDO, COFHDO, HDOMLT, TAUZSN, 
-     $          TAUZSN, III )
-           END IF
-
-c           III = intersect(I,INDCHN(CLIST7(1:NCHN7)), NCHN7)
-           III = QUICKCLIST7(I)
-           IF (III .GT. 0) THEN  
-             CALL YCALT7(INDCHN,   LBOT,  NCHN7, CLIST7,
-     $          COEF7, FIXMUL, SUNCONPRD, SUNFPRED7, SUNWPRED7, SUNOPRED7,
-     $          SUNTRCPRD, INDCO2, COFCO2, CO2MLT, INDN2O, COFN2O, N2OMLT,
-     $          TAUZSN, TAUZSN, III )
-           END IF
-c           print *,'sun 7',TAU(LBOT,I),TAUZ(LBOT-1,I),TAUZSN(LBOT,I),TAUZSN(LBOT-1,I)
-
-            IF (SUNFDG .GT. 1.0001) THEN
-               DO II=1,NCHAN
-                  DO L=1,LBOT
-                     TAUZSN(L,II)=TAUZSN(L,II)*SUNFDG
-                  ENDDO
-               ENDDO
-            ENDIF
-         ELSE
-C           DOSUN = 'FALSE'; No sun; set the sun surface-to-space trans to zero
-            SUNCOS=0.0
-C            DO II=1,NCHAN
-C              DO L=1,LBOT
-C                TAUZSN(L,II)=0.0
-C              ENDDO
-C            ENDDO
-
-C            DO L=1,LBOT      !!! outer loop is slowest
-C              DO II=1,NCHAN  !!! inner loop is fastest
-C                TAUZSN(L,II)=0.0
-C              ENDDO
-C            ENDDO
-C           TAUZSN(1:LBOT,1:NCHAN) = 0.0
-           TAUZSN(1:LBOT,I) = 0.0
-
-         ENDIF
 c************************************************************************
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C        Calculate cloudy radiance
+c         CALL docloudyTwoSlab_RT()
 
 C         Radiation constants for current channel
           C1V3=C1*(FREQ(I)**3)
@@ -1548,7 +1085,7 @@ CC FORGET THIS  III = INTERSECT(I,CLISTN(1:NCHNTE),NCHNTE)
               RADNTE = RAD(I)
               CALL YCALNTE ( INDCHN, TEMP, SUNCOS, SCOS1, SECANG(1),
      $                        NCHNTE, CLISTN, COEFN, CO2TOP, RADNTE, III )
-C              print *,'NLTE',I,III,RAD(I),RADNTE
+              IF (NWANTC .GT. 0) print *,'NLTE',I,III,RAD(I),RADNTE
               RAD(I) = RADNTE
             END IF
           ENDIF

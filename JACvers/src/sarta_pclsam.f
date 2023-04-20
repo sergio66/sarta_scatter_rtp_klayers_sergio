@@ -1282,8 +1282,10 @@ C      -----------------
 C      comment: the nonLTE calculation does not consider cloud effects,
 C      but clouds are generally below the altitude where nonLTE occurs.
        IF (DOSUN) THEN
+          IF (NWANTC .GT. 0) print *, 'NLTE BEFORE, chan 1',rad(1)
           CALL CALNTE ( INDCHN, TEMP, SUNCOS, SCOS1, SECANG(1),
      $       NCHNTE, CLISTN, COEFN, CO2TOP, RAD )
+          IF (NWANTC .GT. 0) print *,'NLTE AFTER, chan 1',rad(1)
        ENDIF
 C
 
