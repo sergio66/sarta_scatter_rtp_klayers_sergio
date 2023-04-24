@@ -204,11 +204,14 @@ C
 C      for RDINFO
        CHARACTER*120 FIN       ! input RTP filename
        CHARACTER*120 FOUT      ! output RTP filename
-       LOGICAL  LRHOT         ! force refl therm rho=(1-emis)/pi?
-       INTEGER NWANTP         ! number of wanted profiles (-1=all)
-       INTEGER  LISTP(MAXPRO) ! list of wanted profiles
-       INTEGER NWANTC         ! number of wanted channels (-1=all)
-       INTEGER  LISTC(MAXPRO) ! list of wanted channels
+       LOGICAL  LRHOT          ! force refl therm rho=(1-emis)/pi?
+       INTEGER NUMPROF,NUMCHAN ! number of channels, profiles in rtp file
+       INTEGER NWANTP          ! number of wanted profiles (default -1=all)
+       INTEGER  LISTP(MAXPRO)  ! list of wanted profiles
+       INTEGER NWANTC          ! number of wanted channels (default -1=all)
+       INTEGER  LISTC(MAXPRO)  ! list of wanted channels
+       INTEGER NWANTJ          ! number of wanted jacs (default 0=none)
+       INTEGER  LISTJ(MAXPRO)  ! list of wanted channels
 
 C
 C      for FNMIE
@@ -593,6 +596,16 @@ C      for function QIKEXP
 C      for function intersect
        INTEGER intersect
 
+C      for jacobians
+       REAL JAC_ST_C(MXCHAN),        JAC_ST_1(MXCHAN),        JAC_ST_2(MXCHAN),        JAC_ST_12(MXCHAN)
+       REAL JAC_TZ_C(MXCHAN,MAXLAY), JAC_TZ_1(MXCHAN,MAXLAY), JAC_TZ_2(MXCHAN,MAXLAY), JAC_TZ_12(MXCHAN,MAXLAY)
+       REAL JAC_G1_C(MXCHAN,MAXLAY), JAC_G1_1(MXCHAN,MAXLAY), JAC_G1_2(MXCHAN,MAXLAY), JAC_G1_12(MXCHAN,MAXLAY)
+       REAL JAC_G3_C(MXCHAN,MAXLAY), JAC_G3_1(MXCHAN,MAXLAY), JAC_G3_2(MXCHAN,MAXLAY), JAC_G3_12(MXCHAN,MAXLAY)
+       REAL L2S(MXCHAN,MAXLAY)
+       INTEGER IOUNTZ,IOUNG1,IOUNG3,iFileErr
+       LOGICAL DOJAC
+       CHARACTER*180 caJacTZ,caJACG1,caJACG3
+
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
 C-----------------------------------------------------------------------
@@ -630,7 +643,8 @@ C      -----------------------------
 C      ---------------------
 C      Get command-line info
 C      ---------------------
-       CALL RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC)
+       CALL RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC, 
+     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3)
 ccc
        if (DEBUG) then
          print *, 'nwantp=', NWANTP
@@ -652,6 +666,38 @@ ccc
        else
          print *,'nwantc = -1 (all chans)'
        end if
+
+       DOJAC = .FALSE.
+       IF (NWANTJ .GT. 0) THEN
+         DOJAC = .TRUE.
+         print *,'for NUMPROF = ',numprof,' profiles with NUMCHAN = ',numchan,' channels '
+         print *, 'want this # jacs nwantj = ',nwantj,' followed by list ....'
+         print *,listj(1:nwantj)
+         IOUNTZ = 200
+         IOUNG1 = 21
+         IOUNG3 = 23
+
+         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           print *,'caJacTZ = ',caJacTZ
+           OPEN(UNIT=IOUNTZ,FILE=caJacTZ,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
+           WRITE(IOUNTZ) NUMPROF
+           WRITE(IOUNTZ) NUMCHAN
+         END IF
+         IF (INTERSECT(1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           print *,'caJacG1 = ',caJacG1
+           OPEN(UNIT=IOUNG1,FILE=caJacG1,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
+           WRITE(IOUNG1) NUMPROF
+           WRITE(IOUNG1) NUMCHAN
+         END IF
+         IF (INTERSECT(3,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           print *,'caJacG3 = ',caJacG3
+           OPEN(UNIT=IOUNG3,FILE=caJacG3,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
+           WRITE(IOUNG3) NUMPROF
+           WRITE(IOUNG3) NUMCHAN
+         END IF
+       END IF
+
+       print *,' did i stop here'
 
 C      -------------------------
 C      Get cloud table filenames
@@ -826,10 +872,14 @@ C         Skip this profile
      $      IPROF,LSTCHN,NCHNTE,CLISTN,FREQ,INDCHN,
      $      SVA,SECANG,SECSUN,SUNFDG,SUNCOS,SCOS1,DOSUN,QUICKINDNTE)
 
-C      -----------------------------------
-C      Calculate the fast trans predictors
+c************************************************************************
+
+C      ---------------------------------------------------------
+C      ---------------------------------------------------------
+C      Calculate the fast trans predictors and OPTRAN predictors
 C      which directly use T(z),WV(z),O3(z) 
-C      -----------------------------------
+C      ---------------------------------------------------------
+C      ---------------------------------------------------------
 C
        CALL CALPAR (LBOT,
      $    RTEMP,RFAMNT,RWAMNT,ROAMNT,RCAMNT,RMAMNT,RSAMNT,RHAMNT,RNAMNT,
@@ -859,9 +909,14 @@ C      -----------------------------------
        CALL CALOWP ( LBOT, WAMNT, RPRES, TEMP, SECANG, WAZOP, WAVGOP,
      $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP )
 
+c************************************************************************
+
+C      -----------------------------------
 C      -----------------------------------
 C      Calculate the CLOUD, EMIS, REFL param
 C      -----------------------------------
+C      -----------------------------------
+
 C      ---------------------------------------------------
 C      Set the emissivity & reflectivity for every channel
 C      ---------------------------------------------------
@@ -871,6 +926,9 @@ C      ---------------------------------------------------
      $    CEMIS2, CRHOS2, CRHOT2) 
 c        print *,CFRAC1,CFRAC2,CFRA12,LBLAC1,LBLAC2
 
+C      --------------------------------------
+C      Set the cloud fractions and mie tables
+C      --------------------------------------
        CALL prepare_clds(
      $    LBLAC1, CTYPE1, CFRAC1, CPSIZ1, CPRTO1, CPRBO1, CNGWA1,  ! from GETCLD
      $    XCEMI1, XCRHO1, CSTMP1,                                  ! from GETCLD
@@ -888,14 +946,15 @@ c        print *,CFRAC1,CFRAC2,CFRA12,LBLAC1,LBLAC2
 C      Note: PI*(RADSUN/DISTES)^2 = solid angle [steradians] of
 C      the sun as seen from Earth for the case DISTES >> RADSUN.
 
-!SSM_SSM : END GENERIC PROFILE STUFF
-C------------------------------------------------------------------------
+c************************************************************************
+c************************************************************************
+c************************************************************************
 C      ----------------------
 C      Loop over the channels
 C      ----------------------
        DO I=1,NCHAN
 
-C        indirectly uses T(z),WV(z),O3(z) through the PREDS, to get TAU, TAUZ, TAUZSN
+C        compute OD : indirectly uses T(z),WV(z),O3(z) through the PREDS, to get TAU, TAUZ, TAUZSN
          CALL CALC_LAYER_TRANS_CALTODX_1_7(
      $     I,DOSUN, NCHAN, LSTCHN, FREQ, INDCHN, LBOT, 
      $     QUICKCLIST1, QUICKCLIST2, QUICKCLIST3, QUICKCLIST4, 
@@ -920,31 +979,50 @@ C        indirectly uses T(z),WV(z),O3(z) through the PREDS, to get TAU, TAUZ, T
      $     MPRED3, CPRED4, SUNCPRED4, SECANG, SECSUN, SUNFDG, SUNCOS,
      $     TAU, TAUZ, TAUZSN)
 
-c************************************************************************
 
-C        Calculate cloudy radiance
+C        Calculate cloudy radiance; also no NLTE if needed
          CALL docloudyTwoSlab_RT(I, FREQ, LBOT, NWANTC, INDCHN, 
-     $  TEMP,TSURF,TAU,TAUZ, TAUZSN, 
-     $  BLMULT, EMIS, FCLEAR, COSDAZ, SECANG, SECSUN, DOSUN, SUNFAC, HSUN, RHOSUN, 
-     $  RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,
-     $  TCBOT1, TCTOP1, TCBOT2, TCTOP2, CFRAC1, CFRAC2, CLRB1, CLRT1, CLRB2, CLRT2,
-     $  CFRA12, CFRA1X, CFRA2X, 
-     $  CEMIS1, CRHOS1, CRHOT1, CEMIS2, CRHOS2, CRHOT2, TEMPC1, TEMPC2,
-     $  MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
-     $  MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
-     $  QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
-     $  RAD)
+     $      TEMP,TSURF,TAU,TAUZ, TAUZSN, 
+     $      BLMULT, EMIS, FCLEAR, COSDAZ, SECANG, SECSUN, DOSUN, SUNFAC, HSUN, RHOSUN, 
+     $      RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,
+     $      TCBOT1, TCTOP1, TCBOT2, TCTOP2, CFRAC1, CFRAC2, CLRB1, CLRT1, CLRB2, CLRT2,
+     $      CFRA12, CFRA1X, CFRA2X, 
+     $      CEMIS1, CRHOS1, CRHOT1, CEMIS2, CRHOS2, CRHOT2, TEMPC1, TEMPC2,
+     $      MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
+     $      MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
+     $      QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
+     $      RAD)
 
        ENDDO ! channels
 
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-C      -------------------
-C      Output the radiance
-C      -------------------
+C      ----------------------------
+C      Output the radiance and jacs
+C      ----------------------------
        CALL WRTRTP(IPROF, IOPCO, NCHAN, RAD, PROF, NWANTC, RINDCHN)
-C
+       IF (DOJAC) THEN 
+         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           JAC_ST_C = FCLEAR*JAC_ST_C + CFRA1X*JAC_ST_1 + CFRA2X*JAC_ST_2 + CFRA12*JAC_ST_12
+           JAC_ST_C = JAC_ST_C * L2S(1:NUMCHAN,NLAY)
+           JAC_TZ_C = FCLEAR*JAC_TZ_C + CFRA1X*JAC_TZ_1 + CFRA2X*JAC_TZ_2 + CFRA12*JAC_TZ_12
+           JAC_TZ_C(1:NUMCHAN,1:NLAY) = JAC_TZ_C(1:NUMCHAN,1:NLAY) * L2S(1:NUMCHAN,1:NLAY)
+           CALL WRTJAC_T(IOUNTZ,IPROF,NLAY,NUMCHAN,JAC_ST_C,JAC_TZ_C)
+         END IF   
+
+         IF (INTERSECT(1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           JAC_G1_C = FCLEAR*JAC_G1_C + CFRA1X*JAC_G1_1 + CFRA2X*JAC_G1_2 + CFRA12*JAC_G1_12
+           JAC_G1_C(1:NUMCHAN,1:NLAY) = JAC_G1_C(1:NUMCHAN,1:NLAY) * L2S(1:NUMCHAN,1:NLAY)
+           CALL WRTJAC_GAS(IOUNG1,IPROF,NLAY,NUMCHAN,1,JAC_G1_C)
+         END IF   
+
+         IF (INTERSECT(3,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           JAC_G3_C = FCLEAR*JAC_G3_C + CFRA1X*JAC_G3_1 + CFRA2X*JAC_G3_2 + CFRA12*JAC_G3_12
+           JAC_G3_C(1:NUMCHAN,1:NLAY) = JAC_G3_C(1:NUMCHAN,1:NLAY) * L2S(1:NUMCHAN,1:NLAY)
+           CALL WRTJAC_GAS(IOUNG3,IPROF,NLAY,NUMCHAN,3,JAC_G3_C)
+         END IF   
+       END IF
 
 C      ----------------------
 C      End loop over profiles
@@ -958,6 +1036,12 @@ C      Close the RTP files
 C      -------------------
  9999  ISTAT=rtpclose(IOPCI)
        ISTAT=rtpclose(IOPCO)
+
+       IF (DOJAC) THEN
+         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNTZ)
+         IF (INTERSECT(  1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG1)
+         IF (INTERSECT(  3,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG3)
+       END IF
 C
        STOP
        END

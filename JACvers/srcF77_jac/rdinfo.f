@@ -1,6 +1,6 @@
 c rdinfo processes command line arguments
 c
-c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3
+c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3 listc=445,449,1291,2333 listj=-1
 c
 c
 c to compile
@@ -28,7 +28,7 @@ C    files, the channel list, and list of profile numbers.
 
 !CALL PROTOCOL:
 C    RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC)
-
+C     $             NWANTJ, LISTJ, caJacTZ, caJacG1, caJacG3)
 
 !INPUT PARAMETERS:
 C    none
@@ -44,7 +44,8 @@ C    INTEGER   NWANTP  Number of desired profiles  none
 C    INT arr   LISTP   List of desired prof nums   none
 C    INTEGER   NWANTC  Number of desired channels  none
 C    INT arr   LISTC   List of desired channels nums   none
-
+C    INTEGER   NWANTJ  Number of desired jacs      none
+C    INT arr   LISTJ   List of desired jac nums    none
 
 !INPUT/OUTPUT PARAMETERS: none
 
@@ -110,6 +111,18 @@ C          listc='1 2 3 4 5'
 C       Due to the 80 char limit, the maximum number of entries
 C       in listc is limited.  (Eg 15 four digit numbers, or
 C       25 two digit numbers.  MAXPRO is the hardcoded limit.)
+C
+C    listj : list of desired jacs (default 0 = none)
+C
+C       The listj profile numbers may be specified either as a
+C       sequence of integers separated by a comma, or alternately as
+C       a quoted string containing integers separated by a blank space.
+C       Examples:
+C          listj= -1,1,2,3,4,5
+C          listj='-1 1 2 3 4 5'
+C       Due to the 80 char limit, the maximum number of entries
+C       in listc is limited.  (Eg 15 four digit numbers, or
+C       25 two digit numbers.  MAXPRO is the hardcoded limit.)
 
 !ALGORITHM REFERENCES: see DESCRIPTION
 
@@ -132,7 +145,8 @@ C 06 Feb 2004 Scott Hannon      Add LRHOT argument and associated code
 
 
 C      =================================================================
-       SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC)
+       SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
+     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3)
 C      =================================================================
 
 C      use unix_library
@@ -170,6 +184,9 @@ C      Output:
        INTEGER  LISTP(MAXPRO)
        INTEGER NWANTC
        INTEGER  LISTC(MAXPRO)
+       INTEGER NWANTJ,NUMPROF,NUMCHAN
+       INTEGER  LISTJ(MAXPRO)
+       CHARACTER*180 caJacTZ,caJACG1,caJACG3
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -189,6 +206,11 @@ C-----------------------------------------------------------------------
 
        LOGICAL LLISTP
        LOGICAL LLISTC
+       LOGICAL LLISTJ
+
+       INTEGER NWANTJX
+       INTEGER  LISTJX(MAXPRO)
+       
        LOGICAL STR2BO
 
 C-----------------------------------------------------------------------
@@ -208,8 +230,15 @@ C      Set defaults
 C      ------------
        FIN='sarta_in.rtp'                 ! input filename
        FOUT='sarta_out.rtp'               ! output filename
-       NWANTP=-1   ! do sarta for all profiles found in input file
-       NWANTC=-1   ! do sarta for all channels found in input file
+       NWANTP = -1   ! do sarta for all profiles found in input file
+       NWANTC = -1   ! do sarta for all channels found in input file
+       NWANTJ = 0    ! do sarta rads only (no jacs)
+
+       NUMPROF = NWANTP
+       NUMCHAN = NWANTC
+       caJacTZ = ' '
+       caJacG1 = ' '
+       caJacG3 = ' '
        LRHOT=.FALSE. ! use input rho for reflected thermal
 C
 C      -----------------------------------------------------------------
@@ -291,6 +320,27 @@ C               Read the indices of the desired channels
                 ENDDO
                 NWANTC=K
 
+             ELSEIF (VAR(1:5) .EQ. 'LISTJ') THEN
+                LLISTJ=.TRUE.
+
+C               Read the indices of the desired channels
+                K=1
+ 30             IF (K .GT. MAXPRO) THEN
+                   WRITE(6,3017)
+ 3017              FORMAT('ERROR! bad LISTJ, ',
+     $             'either an unrecognized value or too many entries')
+                   STOP
+                ENDIF
+                READ(VAL,*,END=39) (IPJUNK(IP),IP=1,K)
+                K=K + 1  ! increment count of profiles
+                GOTO 30  ! loop to next entry
+ 39             CONTINUE
+                K=K - 1  ! number of profiles
+                DO IP=1,K
+                   LISTJ(IP)=IPJUNK(IP)
+                ENDDO
+                NWANTJ=K
+
              ELSE
                 WRITE(6,1020) VAR(1:6)
  1020           FORMAT('Unknown command-line argument: ',A6)
@@ -310,7 +360,7 @@ C      -------------------------------------
 C
 C         Sort in ascending order
           SORTED=1  ! initialize flag for first pass
- 30       IF (SORTED .EQ. 1) THEN
+ 120       IF (SORTED .EQ. 1) THEN
              SORTED=0  ! initialize flag for this loop
              DO K=1,NWANTP-1
                 IF (LISTP(K) .GT. LISTP(K+1)) THEN
@@ -320,7 +370,7 @@ C         Sort in ascending order
                    SORTED=1  ! set flag to indicate ordering was altered
                 ENDIF
              ENDDO
-             GOTO 30
+             GOTO 120
           ENDIF
 C
 C         Check for repeats
@@ -367,6 +417,67 @@ C         Check for repeats
           ENDDO
 
        ENDIF
+
+C      -------------------------------------
+C      Sort jac numbers & check for repeats
+C      -------------------------------------
+       IF (NWANTJ .GT. 0) THEN
+C
+C         Sort in ascending order
+          SORTED=1  ! initialize flag for first pass
+ 90       IF (SORTED .EQ. 1) THEN
+             SORTED=0  ! initialize flag for this loop
+             DO K=1,NWANTJ-1
+                IF (LISTJ(K) .GT. LISTJ(K+1)) THEN
+                   IP=LISTJ(K)
+                   LISTJ(K)=LISTJ(K+1)
+                   LISTJ(K+1)=IP
+                   SORTED=1  ! set flag to indicate ordering was altered
+                ENDIF
+             ENDDO
+             GOTO 90
+          ENDIF
+C
+C         Check for repeats
+          DO K=1,NWANTJ-1
+             IF (LISTJ(K) .EQ. LISTJ(K+1)) THEN
+                WRITE(6,3045) LISTJ(K)
+ 3045           FORMAT('ERROR! channel ',I2,
+     $          ' appears more than once in LISTJ')
+                STOP
+             ENDIF
+          ENDDO
+
+          NUMPROF = NWANTP
+          NUMCHAN = NWANTC
+          IF ((NWANTP .EQ. -1) .OR. (NWANTC .EQ. -1)) THEN
+            CALL find_num_prof(FIN,NUMCHAN,NUMPROF)
+            IF ((NWANTP .EQ. -1) .AND. (NWANTC .EQ. -1)) THEN
+              NUMPROF = NWANTP
+              NUMCHAN = NWANTC
+            ELSEIF ((NWANTP .EQ. -1) .AND. (NWANTC .GT. 0)) THEN
+              NUMPROF = NWANTP              
+            ELSEIF ((NWANTC .EQ. -1) .AND. (NWANTP .GT. 0)) THEN
+              NUMCHAN = NWANTP
+            END IF
+          ENDIF
+
+C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 or G3, 100 = only T+ST
+          NWANTJX = NWANTJ
+          LISTJX  = LISTJ
+          caJacTZ = trim(trim(FOUT) // '_jacTZ')
+          caJACG1 = trim(trim(FOUT) // '_jacG1')
+          caJACG3 = trim(trim(FOUT) // '_jacG3')
+
+          IF ((NWANTJX .EQ. 1) .AND. (LISTJX(1) .EQ. -1)) THEN
+            LISTJ = 0
+            NWANTJ = 3
+            LISTJ(1) = 100
+            LISTJ(2) = 1
+            LISTJ(3) = 3
+          END IF            
+       ENDIF
+
 
        RETURN
        END

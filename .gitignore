@@ -28,6 +28,7 @@ bin
 *.gif
 *.tar
 *.dat
+*.pdf
 
 disk_space*
 ugh*
