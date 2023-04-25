@@ -597,14 +597,19 @@ C      for function intersect
        INTEGER intersect
 
 C      for jacobians
-       REAL JAC_ST_C(MXCHAN),        JAC_ST_1(MXCHAN),        JAC_ST_2(MXCHAN),        JAC_ST_12(MXCHAN)
-       REAL JAC_TZ_C(MXCHAN,MAXLAY), JAC_TZ_1(MXCHAN,MAXLAY), JAC_TZ_2(MXCHAN,MAXLAY), JAC_TZ_12(MXCHAN,MAXLAY)
-       REAL JAC_G1_C(MXCHAN,MAXLAY), JAC_G1_1(MXCHAN,MAXLAY), JAC_G1_2(MXCHAN,MAXLAY), JAC_G1_12(MXCHAN,MAXLAY)
-       REAL JAC_G3_C(MXCHAN,MAXLAY), JAC_G3_1(MXCHAN,MAXLAY), JAC_G3_2(MXCHAN,MAXLAY), JAC_G3_12(MXCHAN,MAXLAY)
-       REAL L2S(MXCHAN,MAXLAY)
-       INTEGER IOUNTZ,IOUNG1,IOUNG3,iFileErr
+       REAL JAC_ST_C(MXCHAN),         JAC_ST_1(MXCHAN),         JAC_ST_2(MXCHAN),         JAC_ST_12(MXCHAN)
+       REAL JAC_TZ_C(MAXLAY,MXCHAN),  JAC_TZ_1(MAXLAY,MXCHAN),  JAC_TZ_2(MAXLAY,MXCHAN),  JAC_TZ_12(MAXLAY,MXCHAN)
+       REAL JAC_G1_C(MAXLAY,MXCHAN),  JAC_G1_1(MAXLAY,MXCHAN),  JAC_G1_2(MAXLAY,MXCHAN),  JAC_G1_12(MAXLAY,MXCHAN)
+       REAL JAC_G3_C(MAXLAY,MXCHAN),  JAC_G3_1(MAXLAY,MXCHAN),  JAC_G3_2(MAXLAY,MXCHAN),  JAC_G3_12(MAXLAY,MXCHAN)
+       REAL JAC_WGT_C(MAXLAY,MXCHAN), JAC_WGT_1(MAXLAY,MXCHAN), JAC_WGT_2(MAXLAY,MXCHAN), JAC_WGT_12(MAXLAY,MXCHAN)
+       REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12
+       REAL RAD4(4,MAXLAY,MXCHAN) ! chan radiance                      for CLR,CLD1,CLD2,CLD12
+       REAL L2S4(4,MAXLAY,MXCHAN),WGT4(4,MAXLAY,MXCHAN)
+       REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
+       INTEGER IOUNTZ,IOUNG1,IOUNG3,IOUNWGT,iFileErr
        LOGICAL DOJAC
-       CHARACTER*180 caJacTZ,caJACG1,caJACG3
+       INTEGER JACUNITS           ! 0 for drad/dT and drad/dq, 1 for dBT/dT and dBT/d(log q) = q dBT/dq
+       CHARACTER*180 caJacTZ,caJACG1,caJACG3,caJACWGT
 
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
@@ -644,7 +649,7 @@ C      ---------------------
 C      Get command-line info
 C      ---------------------
        CALL RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC, 
-     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3)
+     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3, caJacWgt)
 ccc
        if (DEBUG) then
          print *, 'nwantp=', NWANTP
@@ -671,33 +676,38 @@ ccc
        IF (NWANTJ .GT. 0) THEN
          DOJAC = .TRUE.
          print *,'for NUMPROF = ',numprof,' profiles with NUMCHAN = ',numchan,' channels '
-         print *, 'want this # jacs nwantj = ',nwantj,' followed by list ....'
+         print *, 'want this # jacs nwantj = ',nwantj,' followed by list (100=ST/T, 200=WGT, 1,3 = WV/OZ)....'
          print *,listj(1:nwantj)
-         IOUNTZ = 200
-         IOUNG1 = 21
-         IOUNG3 = 23
+         IOUNWGT = 400
+         IOUNTZ  = 200
+         IOUNG1  = 21
+         IOUNG3  = 23
 
-         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
-           print *,'caJacTZ = ',caJacTZ
-           OPEN(UNIT=IOUNTZ,FILE=caJacTZ,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
-           WRITE(IOUNTZ) NUMPROF
-           WRITE(IOUNTZ) NUMCHAN
-         END IF
          IF (INTERSECT(1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
-           print *,'caJacG1 = ',caJacG1
+           write(*,'(A,A)') 'opening jac file caJacG1 = ',caJacG1
            OPEN(UNIT=IOUNG1,FILE=caJacG1,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
            WRITE(IOUNG1) NUMPROF
            WRITE(IOUNG1) NUMCHAN
          END IF
          IF (INTERSECT(3,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
-           print *,'caJacG3 = ',caJacG3
+           write(*,'(A,A)') 'opening jac file caJacG3 = ',caJacG3
            OPEN(UNIT=IOUNG3,FILE=caJacG3,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
            WRITE(IOUNG3) NUMPROF
            WRITE(IOUNG3) NUMCHAN
          END IF
+         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           write(*,'(A,A)') 'opening jac file caJacTZ = ',caJacTZ
+           OPEN(UNIT=IOUNTZ,FILE=caJacTZ,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
+           WRITE(IOUNTZ) NUMPROF
+           WRITE(IOUNTZ) NUMCHAN
+         END IF
+         IF (INTERSECT(200,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           write(*,'(A,A)') 'opening jac file caJacWGT = ',caJacWGT
+           OPEN(UNIT=IOUNWGT,FILE=caJacWGT,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
+           WRITE(IOUNWGT) NUMPROF
+           WRITE(IOUNWGT) NUMCHAN
+         END IF
        END IF
-
-       print *,' did i stop here'
 
 C      -------------------------
 C      Get cloud table filenames
@@ -756,7 +766,7 @@ C      ------------------------
 C      --------------------------------------------------------------
 C      Read the coef data files and apply multiplier tuning to coeffs
 C      --------------------------------------------------------------
-       CALL RDCOEF_TUNMLT (IOUN, NCHAN, INDCHN, SETCHN, 
+       CALL RDCOEF_TUNMLT (IOUN, NCHAN, INDCHN, SETCHN, FCHAN, 
      $  NCHN1,  NCHN2,  NCHN3,  NCHN4,  NCHN5,  NCHN6,  NCHN7,
      $ CLIST1, CLIST2, CLIST3, CLIST4, CLIST5, CLIST6, CLIST7,
      $  COEF1,  COEF2,  COEF3,  COEF4,  COEF5,  COEF6,  COEF7,
@@ -979,7 +989,6 @@ C        compute OD : indirectly uses T(z),WV(z),O3(z) through the PREDS, to get
      $     MPRED3, CPRED4, SUNCPRED4, SECANG, SECSUN, SUNFDG, SUNCOS,
      $     TAU, TAUZ, TAUZSN)
 
-
 C        Calculate cloudy radiance; also no NLTE if needed
          CALL docloudyTwoSlab_RT(I, FREQ, LBOT, NWANTC, INDCHN, 
      $      TEMP,TSURF,TAU,TAUZ, TAUZSN, 
@@ -991,36 +1000,74 @@ C        Calculate cloudy radiance; also no NLTE if needed
      $      MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $      MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $      QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
-     $      RAD)
+     $      RAD, DOJAC, TAU4, RAD4, DBTDT)
 
        ENDDO ! channels
 
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
+       IF (DOJAC) THEN
+         CALL L2Scalc(DOJAC,DOSUN,SECANG,SECSUN,NLAY,NCHAN,TAU4,L2S4,WGT4)
+       END IF
+
 C      ----------------------------
 C      Output the radiance and jacs
 C      ----------------------------
        CALL WRTRTP(IPROF, IOPCO, NCHAN, RAD, PROF, NWANTC, RINDCHN)
        IF (DOJAC) THEN 
-         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
-           JAC_ST_C = FCLEAR*JAC_ST_C + CFRA1X*JAC_ST_1 + CFRA2X*JAC_ST_2 + CFRA12*JAC_ST_12
-           JAC_ST_C = JAC_ST_C * L2S(1:NUMCHAN,NLAY)
-           JAC_TZ_C = FCLEAR*JAC_TZ_C + CFRA1X*JAC_TZ_1 + CFRA2X*JAC_TZ_2 + CFRA12*JAC_TZ_12
-           JAC_TZ_C(1:NUMCHAN,1:NLAY) = JAC_TZ_C(1:NUMCHAN,1:NLAY) * L2S(1:NUMCHAN,1:NLAY)
-           CALL WRTJAC_T(IOUNTZ,IPROF,NLAY,NUMCHAN,JAC_ST_C,JAC_TZ_C)
-         END IF   
-
+         JACUNITS = 1
          IF (INTERSECT(1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
-           JAC_G1_C = FCLEAR*JAC_G1_C + CFRA1X*JAC_G1_1 + CFRA2X*JAC_G1_2 + CFRA12*JAC_G1_12
-           JAC_G1_C(1:NUMCHAN,1:NLAY) = JAC_G1_C(1:NUMCHAN,1:NLAY) * L2S(1:NUMCHAN,1:NLAY)
-           CALL WRTJAC_GAS(IOUNG1,IPROF,NLAY,NUMCHAN,1,JAC_G1_C)
+c           JAC_G1_C = FCLEAR*JAC_G1_C + CFRA1X*JAC_G1_1 + CFRA2X*JAC_G1_2 + CFRA12*JAC_G1_12
+c           JAC_G1_C(1:NLAY,1:NCHAN) = JAC_G1_C(1:NLAY,1:NCHAN) * L2S(1:NLAY,1:NCHAN)
+           JAC_G1_C = FCLEAR*JAC_G1_C(1:NLAY,1:NCHAN)  * L2S4(1,1:NLAY,1:NCHAN) + 
+     $                CFRA1X*JAC_G1_1(1:NLAY,1:NCHAN)  * L2S4(2,1:NLAY,1:NCHAN) + 
+     $                CFRA2X*JAC_G1_2(1:NLAY,1:NCHAN)  * L2S4(3,1:NLAY,1:NCHAN) + 
+     $                CFRA12*JAC_G1_12(1:NLAY,1:NCHAN) * L2S4(4,1:NLAY,1:NCHAN)
+           CALL WRTJAC_GAS(IOUNG1,IPROF,NLAY,NCHAN,1,FREQ,RAD,JACUNITS,WAMNT,JAC_G1_C)
          END IF   
 
          IF (INTERSECT(3,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
-           JAC_G3_C = FCLEAR*JAC_G3_C + CFRA1X*JAC_G3_1 + CFRA2X*JAC_G3_2 + CFRA12*JAC_G3_12
-           JAC_G3_C(1:NUMCHAN,1:NLAY) = JAC_G3_C(1:NUMCHAN,1:NLAY) * L2S(1:NUMCHAN,1:NLAY)
-           CALL WRTJAC_GAS(IOUNG3,IPROF,NLAY,NUMCHAN,3,JAC_G3_C)
+c           JAC_G3_C = FCLEAR*JAC_G3_C + CFRA1X*JAC_G3_1 + CFRA2X*JAC_G3_2 + CFRA12*JAC_G3_12
+c           JAC_G3_C(1:NLAY,1:NCHAN) = JAC_G3_C(1:NLAY,1:NCHAN) * L2S(1:NLAY,1:NCHAN)
+           JAC_G3_C = FCLEAR*JAC_G3_C(1:NLAY,1:NCHAN)  * L2S4(1,1:NLAY,1:NCHAN) + 
+     $                CFRA1X*JAC_G3_1(1:NLAY,1:NCHAN)  * L2S4(2,1:NLAY,1:NCHAN) + 
+     $                CFRA2X*JAC_G3_2(1:NLAY,1:NCHAN)  * L2S4(3,1:NLAY,1:NCHAN) + 
+     $                CFRA12*JAC_G3_12(1:NLAY,1:NCHAN) * L2S4(4,1:NLAY,1:NCHAN)
+
+           CALL WRTJAC_GAS(IOUNG3,IPROF,NLAY,NCHAN,3,FREQ,RAD,JACUNITS,OAMNT,JAC_G3_C)
+         END IF   
+
+         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+c           JAC_ST_C = FCLEAR*JAC_ST_C + CFRA1X*JAC_ST_1 + CFRA2X*JAC_ST_2 + CFRA12*JAC_ST_12
+c           JAC_ST_C = JAC_ST_C * L2S(NLAY,1:NCHAN)
+           JAC_ST_C(1:NCHAN)  = EMIS(1:NCHAN) * DBTDT(NLAY+1,1:NCHAN)
+           JAC_ST_1(1:NCHAN)  = EMIS(1:NCHAN) * DBTDT(NLAY+1,1:NCHAN)
+           JAC_ST_2(1:NCHAN)  = EMIS(1:NCHAN) * DBTDT(NLAY+1,1:NCHAN)
+           JAC_ST_12(1:NCHAN) = EMIS(1:NCHAN) * DBTDT(NLAY+1,1:NCHAN)
+           JAC_ST_C = FCLEAR*JAC_ST_C(1:NCHAN)  * L2S4(1,NLAY,1:NCHAN) + 
+     $                CFRA1X*JAC_ST_1(1:NCHAN)  * L2S4(2,NLAY,1:NCHAN) +  
+     $                CFRA2X*JAC_ST_2(1:NCHAN)  * L2S4(3,NLAY,1:NCHAN) + 
+     $                CFRA12*JAC_ST_12(1:NCHAN) * L2S4(4,NLAY,1:NCHAN)
+c           JAC_TZ_C = FCLEAR*JAC_TZ_C + CFRA1X*JAC_TZ_1 + CFRA2X*JAC_TZ_2 + CFRA12*JAC_TZ_12
+c           JAC_TZ_C(1:NLAY,1:NCHAN) = JAC_TZ_C(1:NLAY,1:NCHAN) * L2S(1:NLAY,1:NCHAN)
+           JAC_TZ_C = FCLEAR*JAC_TZ_C(1:NLAY,1:NCHAN)  * L2S4(1,1:NLAY,1:NCHAN) + 
+     $                CFRA1X*JAC_TZ_1(1:NLAY,1:NCHAN)  * L2S4(2,1:NLAY,1:NCHAN) + 
+     $                CFRA2X*JAC_TZ_2(1:NLAY,1:NCHAN)  * L2S4(3,1:NLAY,1:NCHAN) + 
+     $                CFRA12*JAC_TZ_12(1:NLAY,1:NCHAN) * L2S4(4,1:NLAY,1:NCHAN)
+C           JAC_TZ_C(1:NLAY,1:NCHAN) = L2S(1,1:NLAY,1:NCHAN)
+           CALL WRTJAC_T(IOUNTZ,IPROF,NLAY,NCHAN,FREQ,RAD,JACUNITS,JAC_ST_C,JAC_TZ_C)
+         END IF   
+
+         IF (INTERSECT(200,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+C           JAC_WGT_C(1:NLAY,1:NCHAN) = JAC_WGT_C(1:NLAY,1:NCHAN) 
+C           JAC_WGT_C(1:NLAY,1:NCHAN) = WGT(1:NLAY,1:NCHAN) * L2S(1:NLAY,1:NCHAN)
+           JAC_WGT_C  = WGT4(1,1:NLAY,1:NCHAN) * L2S4(1,1:NLAY,1:NCHAN)
+           JAC_WGT_1  = WGT4(2,1:NLAY,1:NCHAN) * L2S4(2,1:NLAY,1:NCHAN)
+           JAC_WGT_2  = WGT4(3,1:NLAY,1:NCHAN) * L2S4(3,1:NLAY,1:NCHAN)
+           JAC_WGT_12 = WGT4(4,1:NLAY,1:NCHAN) * L2S4(4,1:NLAY,1:NCHAN)
+           JAC_WGT_C = FCLEAR*JAC_WGT_C + CFRA1X*JAC_WGT_1 + CFRA2X*JAC_WGT_2 + CFRA12*JAC_WGT_12
+           CALL WRTJAC_GAS(IOUNWGT,IPROF,NLAY,NCHAN,200,FREQ,RAD,JACUNITS,WAMNT,JAC_WGT_C)
          END IF   
        END IF
 
@@ -1038,9 +1085,10 @@ C      -------------------
        ISTAT=rtpclose(IOPCO)
 
        IF (DOJAC) THEN
-         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNTZ)
          IF (INTERSECT(  1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG1)
          IF (INTERSECT(  3,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG3)
+         IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNTZ)
+         IF (INTERSECT(200,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNWGT)
        END IF
 C
        STOP

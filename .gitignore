@@ -29,6 +29,7 @@ bin
 *.tar
 *.dat
 *.pdf
+*.ps
 
 disk_space*
 ugh*

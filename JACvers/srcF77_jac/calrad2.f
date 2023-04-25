@@ -27,7 +27,7 @@ C       ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
 C       RHOTHR, LABOVE, COEFF,
 C       CFRCL1, MASEC1, MASUN1, NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1,
 C       CFRCL2, MASEC2, MASUN2, COSDAZ,
-C       NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RAD2 )
+C       NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RAD2, DOJAC, CLDTAU, RADLAY )
 
 
 !INPUT PARAMETERS:
@@ -71,7 +71,8 @@ C    INTEGER   LCBOT2  cloud bottom layer index    none
 C    type      name    purpose                     units
 C    --------  ------  --------------------------  ---------------------
 C    REAL arr  RAD2    radiance                    mW/(m^2 cm^-1 sterad)
-
+C    REAL arr  CLDTAU  ODs with clouds             none
+C    REAL arr  RADLAY  rads at each layer          mW/(m^2 cm^-1 sterad)
 
 !INPUT/OUTPUT PARAMETERS:
 C    none
@@ -147,7 +148,7 @@ C      =================================================================
      $    RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1,
      $    NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1,
      $    CFRCL2, MASEC2, MASUN2, COSDAZ,
-     $    NEXTO2, NSCAO2, G_ASY2, LCTOP2,LCBOT2, RAD2 )
+     $    NEXTO2, NSCAO2, G_ASY2, LCTOP2,LCBOT2, RAD2, DOJAC, CLDTAU, RADLAY )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -207,9 +208,12 @@ C      Cloud2 info
        REAL G_ASY2(MXCHAN) ! cloud2 asymmetry
        INTEGER LCTOP2      ! cloud2 top layer index
        INTEGER LCBOT2      ! cloud2 bottom layer index
+       LOGICAL DOJAC
 C
 C      Output
        REAL   RAD2         ! upwelling radiance at satellite
+       REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
+       REAL RADLAY(MAXLAY)        ! chan layer radiance                for CLDONLY
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -267,6 +271,11 @@ C                    EXECUTABLE CODE
 C***********************************************************************
 C***********************************************************************
 
+       IF (DOJAC) THEN 
+         CLDTAU = 0.0
+         RADLAY = 0.0
+       END IF
+
        PI4INV = 1.0/(4.0*PI)
 C
 C      Cloud optical depths adjusted for scattering
@@ -319,7 +328,7 @@ C
           IF (LCLOUD) THEN
              ODTOTL(L)=KAIR + K1L + K2L
 C replaced 03Feb2006             ODSUM=ODSUM + ODTOTL(L)
-             ODSUM=ODSUM +KAIR +CFRCL1(L)*NEXTO1(I) +CFRCL2(L)*NEXTO2(I)
+             ODSUM=ODSUM +KAIR +CFRCL1(L)*NEXTO1(I) +CFRCL2(L)*NEXTO2(I)         
              TAULX(L)=QIKEXP( -ODTOTL(L)*SECANG(L) )
              XFUDGE(L)=KAIR +CFRCL1(L)*NEXTO1(I) +CFRCL2(L)*NEXTO2(I)
              WTILDE(L)=( CFRCL1(L)*NSCAO1(I) + CFRCL2(L)*NSCAO2(I) ) /
@@ -332,6 +341,8 @@ C replaced 03Feb2006             ODSUM=ODSUM + ODTOTL(L)
           ENDIF
 c removed 28 Mar 2006; layer-to-space
 c          ODTOTZ(L)=ODSUM
+
+         IF (DOJAC) CLDTAU(L) = ODTOTL(L)*SECANG(L)
 
        ENDDO ! downward loop over layers
 
@@ -370,6 +381,7 @@ C         Calc the downward radiance from this layer
           TDOWNN=TDOWNF
 C
           RADUP=RADUP*TAULX(L) + RPLNCK(L)*(1.0 - TAULX(L)) + RSUNSC
+          IF (DOJAC) RADLAY(L) = RADUP
        ENDDO
 C
 

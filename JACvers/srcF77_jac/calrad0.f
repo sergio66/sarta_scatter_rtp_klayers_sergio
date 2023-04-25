@@ -22,7 +22,7 @@ C    Calculate channel radiance for a clear atmosphere above a surface.
 !CALL PROTOCOL:
 C    CALRAD0(DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
 C       TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
-C       RHOTHR, LABOVE, COEFF, RAD0 )
+C       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY )
 
 
 !INPUT PARAMETERS:
@@ -50,6 +50,8 @@ C    REAL arr  COEFF   "F" factor coefficients     various
 C    type      name    purpose                     units
 C    --------  ------  --------------------------  ---------------------
 C    REAL arr  RAD0    radiance                    mW/(m^2 cm^-1 sterad)
+C    REAL arr  CLDTAU  ODs with clouds             none
+C    REAL arr  RADLAY  rads at each layer          mW/(m^2 cm^-1 sterad)
 
 
 !INPUT/OUTPUT PARAMETERS:
@@ -103,7 +105,7 @@ C    29 Mar 2006 Scott Hannon   Updated RTHERM for sartaV107
 C      =================================================================
        SUBROUTINE CALRAD0( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $    TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
-     $    RHOTHR, LABOVE, COEFF, RAD0 )
+     $    RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -142,9 +144,12 @@ C      Downwelling thermal info
        REAL RHOTHR(MXCHAN) ! surface reflectivity for downwelling thermal
        INTEGER LABOVE(MXCHAN) ! representative layer above surface
        REAL  COEFF(NFCOEF,MXCHAN) ! "F" factor coefficients
+       LOGICAL DOJAC
 C
 C      Output
        REAL   RAD0                ! upwelling radiance at satellite
+       REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
+       REAL RADLAY(MAXLAY)        ! chan layer radiance                for CLDONLY
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -173,6 +178,13 @@ C                    EXECUTABLE CODE
 C***********************************************************************
 C***********************************************************************
 
+       IF (DOJAC) THEN 
+         CLDTAU = 0.0
+         RADLAY = 0.0
+         !CLDTAU = -log(TAUL)
+       END IF
+
+
 C      -----------------------------------------------------------------
 C      Loop upward over layers
 C      -----------------------------------------------------------------
@@ -181,6 +193,7 @@ C      -----------------------------------------------------------------
        TDOWNN=1.0
        DO L=LBOT,1,-1
           RADUP=RADUP*TAUL(L) + RPLNCK(L)*(1.0 - TAUL(L))
+          IF (DOJAC) RADLAY(L) = RADUP
 
 C         Calc the downward radiance from this layer
           TDOWNF=TDOWNN*TAUL(L)

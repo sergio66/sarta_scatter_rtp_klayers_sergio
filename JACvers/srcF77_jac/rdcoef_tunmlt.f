@@ -1,4 +1,4 @@
-      SUBROUTINE RDCOEF_TUNMLT(IOUN, NCHAN, INDCHN, SETCHN, 
+      SUBROUTINE RDCOEF_TUNMLT(IOUN, NCHAN, INDCHN, SETCHN, FCHAN, 
      $  NCHN1,  NCHN2,  NCHN3,  NCHN4,  NCHN5,  NCHN6,  NCHN7,
      $ CLIST1, CLIST2, CLIST3, CLIST4, CLIST5, CLIST6, CLIST7,
      $  COEF1,  COEF2,  COEF3,  COEF4,  COEF5,  COEF6,  COEF7,
@@ -112,7 +112,7 @@ C      Get and apply multipler tuning to coefficients {note: ignores HNO3}
          write(*,'(A)') '     ---------------------------------------------------------------------------------------------'
          write(*,'(A,I5,A)') 'after opnrtp, NCHAN = ',NCHAN,' .... here are the channels after opnrtp .... '
          write(*,'(A)') '              I          LSTCHN(I)      RINDCHN(I)    INDCHN(LSTCHN(I))  BREAKOUT     FCHAN(I) '
-         write(*,'(A)') '                                                                     SETCHN(LSTCHN(I)          '
+         write(*,'(A)') '                                                                     SETCHN(LSTCHN(I))          '
          write(*,'(A)') '     ---------------------------------------------------------------------------------------------'
          DO I = 1,NCHAN
            write(*,'(5(I15),F20.7)') I,LSTCHN(I),RINDCHN(I),INDCHN(LSTCHN(I)),SETCHN(LSTCHN(I)),FCHAN(I)

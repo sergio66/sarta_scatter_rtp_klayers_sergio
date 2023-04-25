@@ -8,7 +8,7 @@
      $  MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $  MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $  QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
-     $  RAD)
+     $  RAD, DOJAC, TAU4, RAD4, DBTDT)
 
       IMPLICIT NONE
       include "incFTC.f"
@@ -93,9 +93,13 @@ c input
 
 c output
        REAL    RAD(MXCHAN) ! chan radiance
-
+       LOGICAL DOJAC       ! are we planning on jacs???
+       REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12       
+       REAL RAD4(4,MAXLAY,MXCHAN) ! chan layer radiance                for CLR,CLD1,CLD2,CLD12       
+       REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
 
 c local
+       REAL C1C2V4         ! rad constant c1c2 times freq^4
        REAL C1V3           ! rad constant c1 times freq^3
        REAL C2V            ! rad constant c2 times freq
        INTEGER L, III
@@ -113,6 +117,8 @@ c local
        REAL  RADC2         ! radiance cloud2
        REAL RADC12         ! radiance cloud1+cloud2
 
+       REAL RADLAY(MAXLAY)          ! chan layer radiance                for CLDONLY
+       REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
        REAL VSTORE(6)      ! temporary storage for various variables
        REAL QIKEXP, RJUNK1, RJUNK2
 
@@ -121,6 +127,8 @@ c************************************************************************
 C     Radiation constants for current channel
       C1V3=C1*(FREQ(I)**3)
       C2V=C2*FREQ(I)
+
+      IF (DOJAC) C1C2V4=C1*C2*(FREQ(I)**4)
 
 c     IF (NWANTC .GT. 0) THEN
 c         write(*,'(A,I5,7(F12.4))') 'start rads/tau',I,FREQ(I),TSURF,TEMP(LBOT),
@@ -132,8 +140,18 @@ C     Calculate Planck & clear airs trans for full layers
          RPLNCK(L)=C1V3/( EXP( C2V/TEMP(L) ) - 1.0 )
          TRANL(L)=QIKEXP( -TAU(L,I) )
       ENDDO
+
 C     Note: TEMP(LBOT) already adjusted for bottom fractional layer
       RPLNCK(LBOT)=C1V3/( EXP( C2V/TEMP(LBOT) ) - 1.0 )
+
+      IF (DOJAC) THEN
+C       calculate planck derivatives        
+        DO L=1,LBOT
+           DBTDT(L,I)=C1C2V4 * EXP( C2V/TEMP(L) ) / ((TEMP(L)*( EXP( C2V/TEMP(L) ) - 1.0 ))**2)
+        END DO
+        L = LBOT+1
+        DBTDT(L,I)=C1C2V4 * EXP( C2V/TSURF ) / ((TSURF*( EXP( C2V/TSURF ) - 1.0 ))**2)
+      END IF
 
 C     Calculate clear airs trans for bottom fractional layer
       RJUNK1=-TAU(LBOT,I)*BLMULT
@@ -150,10 +168,14 @@ C     Calculate clear radiance
       IF (FCLEAR .GT. 0.0) THEN
          CALL CALRAD0( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $       TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $       RHOTHR, LABOVE, COEFF, RAD0 )
+     $       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY )
       ELSE
         RAD0=0.0
       ENDIF
+      IF (DOJAC) THEN
+        TAU4(1,:,I) = TAU(:,I)   !!! CLDTAU is a dummy
+        RAD4(1,:,I) = RADLAY
+      END IF
 
 C     Store original values
       VSTORE(1)=TRANL(LCTOP2)
@@ -181,16 +203,20 @@ C    Calculate bottom cloud2 radiance
          IF (LBLAC2) THEN
             CALL CALRAD0( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
      $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC2 )
+     $          RHOTHR, LABOVE, COEFF, RADC2, DOJAC, RADLAY )
          ELSE
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL2, MASEC2, MASUN2, COSDAZ,
-     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC2 )
+     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC2, DOJAC, CLDTAU, RADLAY )
          ENDIF
       ELSE
          RADC2=0.0
       ENDIF
+      IF (DOJAC) THEN
+        TAU4(3,:,I) = CLDTAU
+        RAD4(3,:,I) = RADLAY
+      END IF
 
 C      Calculate combined cloud1+cloud2 radiance
       IF (CFRA12 .GT. 0.0) THEN
@@ -198,17 +224,21 @@ C      Calculate combined cloud1+cloud2 radiance
             CALL CALRAD1( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12 )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12, DOJAC, CLDTAU )
          ELSE
             CALL CALRAD2( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, NEXTO1,
      $          NSCAO1, G_ASY1, LCTOP1, LCBOT1, CFRCL2, MASEC2, MASUN2,
-     $          COSDAZ, NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC12 )
+     $          COSDAZ, NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC12, DOJAC, CLDTAU, RADLAY )
          ENDIF
       ELSE
          RADC12=0.0
       ENDIF
+      IF (DOJAC) THEN
+        TAU4(4,:,I) = CLDTAU
+        RAD4(4,:,I) = RADLAY
+      END IF
 
 C     Restore original values
       TRANL(LCTOP2)=VSTORE(1)
@@ -241,11 +271,15 @@ C     Calculate top cloud1 radiance
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC1 )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC1, DOJAC, CLDTAU, RADLAY )
          ENDIF
       ELSE
          RADC1=0.0
       ENDIF
+      IF (DOJAC) THEN
+        TAU4(2,:,I) = CLDTAU
+        RAD4(2,:,I) = RADLAY
+      END IF
 
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12

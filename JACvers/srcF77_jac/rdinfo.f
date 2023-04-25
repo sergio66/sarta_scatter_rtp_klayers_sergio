@@ -27,8 +27,8 @@ C    files, the channel list, and list of profile numbers.
 
 
 !CALL PROTOCOL:
-C    RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC)
-C     $             NWANTJ, LISTJ, caJacTZ, caJacG1, caJacG3)
+C       SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
+C     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3, caJacWgt)
 
 !INPUT PARAMETERS:
 C    none
@@ -146,7 +146,7 @@ C 06 Feb 2004 Scott Hannon      Add LRHOT argument and associated code
 
 C      =================================================================
        SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
-     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3)
+     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3, caJacWgt)
 C      =================================================================
 
 C      use unix_library
@@ -184,9 +184,9 @@ C      Output:
        INTEGER  LISTP(MAXPRO)
        INTEGER NWANTC
        INTEGER  LISTC(MAXPRO)
-       INTEGER NWANTJ,NUMPROF,NUMCHAN
+       INTEGER NWANTJ,NUMPROF,NUMCHAN,XNUMPROF,XNUMCHAN
        INTEGER  LISTJ(MAXPRO)
-       CHARACTER*180 caJacTZ,caJACG1,caJACG3
+       CHARACTER*180 caJacTZ,caJACG1,caJACG3,CaJACWGT
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -236,9 +236,10 @@ C      ------------
 
        NUMPROF = NWANTP
        NUMCHAN = NWANTC
-       caJacTZ = ' '
-       caJacG1 = ' '
-       caJacG3 = ' '
+       caJacTZ  = ' '
+       caJacG1  = ' '
+       caJacG3  = ' '
+       caJacWGT = ' '
        LRHOT=.FALSE. ! use input rho for reflected thermal
 C
 C      -----------------------------------------------------------------
@@ -451,30 +452,32 @@ C         Check for repeats
           NUMPROF = NWANTP
           NUMCHAN = NWANTC
           IF ((NWANTP .EQ. -1) .OR. (NWANTC .EQ. -1)) THEN
-            CALL find_num_prof(FIN,NUMCHAN,NUMPROF)
+            CALL find_num_prof(FIN,XNUMCHAN,XNUMPROF)
             IF ((NWANTP .EQ. -1) .AND. (NWANTC .EQ. -1)) THEN
-              NUMPROF = NWANTP
-              NUMCHAN = NWANTC
+               NUMPROF = XNUMPROF
+               NUMCHAN = XNUMCHAN
             ELSEIF ((NWANTP .EQ. -1) .AND. (NWANTC .GT. 0)) THEN
-              NUMPROF = NWANTP              
-            ELSEIF ((NWANTC .EQ. -1) .AND. (NWANTP .GT. 0)) THEN
-              NUMCHAN = NWANTP
+              NUMPROF = XNUMPROF            
+            ELSEIF ((NWANTP .GT. 0) .AND. (NWANTC .EQ. -1)) THEN
+              NUMCHAN = XNUMCHAN
             END IF
           ENDIF
 
 C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 or G3, 100 = only T+ST
-          NWANTJX = NWANTJ
-          LISTJX  = LISTJ
-          caJacTZ = trim(trim(FOUT) // '_jacTZ')
-          caJACG1 = trim(trim(FOUT) // '_jacG1')
-          caJACG3 = trim(trim(FOUT) // '_jacG3')
+          NWANTJX  = NWANTJ
+          LISTJX   = LISTJ
+          caJacTZ  = trim(trim(FOUT) // '_jacTZ')
+          caJACG1  = trim(trim(FOUT) // '_jacG1')
+          caJACG3  = trim(trim(FOUT) // '_jacG3')
+          caJACWGT = trim(trim(FOUT) // '_WGTFCN')
 
           IF ((NWANTJX .EQ. 1) .AND. (LISTJX(1) .EQ. -1)) THEN
             LISTJ = 0
-            NWANTJ = 3
-            LISTJ(1) = 100
-            LISTJ(2) = 1
-            LISTJ(3) = 3
+            NWANTJ = 4
+            LISTJ(1) = 1
+            LISTJ(2) = 3
+            LISTJ(3) = 100
+            LISTJ(4) = 200
           END IF            
        ENDIF
 

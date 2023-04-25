@@ -26,7 +26,7 @@ C    CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
 C       ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
 C       RHOTHR, LABOVE, COEFF,
 C       CFRCL1, MASEC1, MASUN1, COSDAZ,
-C       NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RAD1 )
+C       NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RAD1, DOJAC, CLDTAU, RADLAY )
 
 
 !INPUT PARAMETERS:
@@ -63,6 +63,8 @@ C    INTEGER   LCBOT1  cloud bottom layer index    none
 C    type      name    purpose                     units
 C    --------  ------  --------------------------  ---------------------
 C    REAL arr  RAD1    radiance                    mW/(m^2 cm^-1 sterad)
+C    REAL arr  CLDTAU  ODs with clouds             none
+C    REAL arr  RADLAY  rads at each layer          mW/(m^2 cm^-1 sterad)
 
 
 !INPUT/OUTPUT PARAMETERS:
@@ -136,7 +138,7 @@ C      =================================================================
        SUBROUTINE CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $    ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
      $    RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $    NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1, RAD1 )
+     $    NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1, RAD1, DOJAC, CLDTAU, RADLAY )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -187,9 +189,12 @@ C      Cloud1 info
        REAL G_ASY1(MXCHAN) ! cloud asymmetry
        INTEGER LCTOP1      ! cloud top layer index
        INTEGER LCBOT1      ! cloud bottom layer index
+       LOGICAL DOJAC
 C
 C      Output
        REAL   RAD1         ! upwelling radiance at satellite
+       REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
+       REAL RADLAY(MAXLAY)        ! chan layer radiance                for CLDONLY
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -243,6 +248,11 @@ C                    EXECUTABLE CODE
 C***********************************************************************
 C***********************************************************************
 
+       IF (DOJAC) THEN 
+         CLDTAU = 0.0
+         RADLAY = 0.0
+       END IF
+
        PI4INV = 1.0/(4.0*PI)
 C
 C      Optical depth of cloud1 including scattering adjustment
@@ -275,6 +285,8 @@ C replaced 03Feb2006          ODSUM=ODSUM + ODTOTL(L)
              ODTOTL(L)=KAIR
              ODSUM=ODSUM + KAIR
           ENDIF
+
+         IF (DOJAC) CLDTAU(L) = ODTOTL(L)*SECANG(L)
 C
 c removed 28 Mar 2006; layer-to-space
 c          ODTOTZ(L)=ODSUM
@@ -317,6 +329,7 @@ C scattering term is increased.
              RSUNSC=0.0
           ENDIF
           RADUP=RADUP*TAULX(L) + RPLNCK(L)*(1.0 - TAULX(L)) + RSUNSC
+          IF (DOJAC) RADLAY(L) = RADUP
 
 C         Calc the downward radiance from this layer
           TDOWNF=TDOWNN*TAULX(L)
