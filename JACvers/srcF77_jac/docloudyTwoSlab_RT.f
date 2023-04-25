@@ -95,7 +95,7 @@ c output
        REAL    RAD(MXCHAN) ! chan radiance
        LOGICAL DOJAC       ! are we planning on jacs???
        REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12       
-       REAL RAD4(4,MAXLAY,MXCHAN) ! chan layer radiance                for CLR,CLD1,CLD2,CLD12       
+       REAL RAD4(4,MAXLAY,MXCHAN) ! -chan radiance + planck(TL)         for CLR,CLD1,CLD2,CLD12
        REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
 
 c local
@@ -128,7 +128,9 @@ C     Radiation constants for current channel
       C1V3=C1*(FREQ(I)**3)
       C2V=C2*FREQ(I)
 
-      IF (DOJAC) C1C2V4=C1*C2*(FREQ(I)**4)
+      IF (DOJAC) THEN 
+        C1C2V4=C1*C2*(FREQ(I)**4)
+      END IF
 
 c     IF (NWANTC .GT. 0) THEN
 c         write(*,'(A,I5,7(F12.4))') 'start rads/tau',I,FREQ(I),TSURF,TEMP(LBOT),
@@ -174,7 +176,7 @@ C     Calculate clear radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(1,:,I) = TAU(:,I)   !!! CLDTAU is a dummy
-        RAD4(1,:,I) = RADLAY
+        RAD4(1,:,I) = -RADLAY + RPLNCK
       END IF
 
 C     Store original values
@@ -215,7 +217,7 @@ C    Calculate bottom cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(3,:,I) = CLDTAU
-        RAD4(3,:,I) = RADLAY
+        RAD4(3,:,I) = -RADLAY + RPLNCK
       END IF
 
 C      Calculate combined cloud1+cloud2 radiance
@@ -237,7 +239,7 @@ C      Calculate combined cloud1+cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(4,:,I) = CLDTAU
-        RAD4(4,:,I) = RADLAY
+        RAD4(4,:,I) = -RADLAY + RPLNCK
       END IF
 
 C     Restore original values
@@ -278,7 +280,7 @@ C     Calculate top cloud1 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(2,:,I) = CLDTAU
-        RAD4(2,:,I) = RADLAY
+        RAD4(2,:,I) = -RADLAY + RPLNCK
       END IF
 
 c      Total the clear & various cloudy radiances
@@ -317,6 +319,13 @@ CC FORGET THIS  III = INTERSECT(I,CLISTN(1:NCHNTE),NCHNTE)
           RAD(I) = RADNTE
         END IF
       ENDIF
+
+      IF (DOJAC) THEN 
+        RAD4(1,:,I) = RAD4(1,:,I)/SECANG
+        RAD4(2,:,I) = RAD4(2,:,I)/SECANG
+        RAD4(3,:,I) = RAD4(3,:,I)/SECANG
+        RAD4(4,:,I) = RAD4(4,:,I)/SECANG
+      END IF
 
       RETURN
       END

@@ -17,7 +17,8 @@
       INTEGER iC,iL
       REAL     raDeriv_Rad(MXCHAN),a(MXCHAN),b(MXCHAN),c(MXCHAN),d(MXCHAN)
 
-      WRITE(IOUNTZ) IPROF,NLAY+1,NCHAN,100  !! prof number, number of layers to write, number of chans to write,100 = TZ/ST JAC
+      !! prof number, number of layers to write, number of chans to write,100 = TZ/ST JAC
+      WRITE(IOUNTZ) IPROF,NLAY+1,NCHAN,100  
 
       IF (JACUNITS .EQ. 0) THEN
         !! JACUNITS = 0  ==> output drad/dT
@@ -62,7 +63,8 @@ c************************************************************************
       INTEGER iC,iL
       REAL     raDeriv_Rad(MXCHAN),a(MXCHAN),b(MXCHAN),c(MXCHAN),d(MXCHAN)
 
-      WRITE(IOUNG1) IPROF,NLAY,NCHAN,iGASID  !! prof number, number of layers to write, number of chans to write, what jac being done
+      !! prof number, number of layers to write, number of chans to write, what jac being done
+      WRITE(IOUNG1) IPROF,NLAY,NCHAN,iGASID  
       IF ((IGASID .EQ. 200) .OR. (JACUNITS .EQ. 0)) THEN
         !! IGASID == 200 ==> weighting function = no units
         !! JACUNITS = 0  ==> output drad/dq
