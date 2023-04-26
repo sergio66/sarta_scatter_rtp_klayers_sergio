@@ -21,7 +21,7 @@ C    and the fast transmittance coefficients.
 
 !CALL PROTOCOL:
 C    YCALT1 ( INDCHN, NLAY, NCHN1, CLIST1, COEF1,
-C      FIXMUL, CONPD1, FPRED1, WPRED1, DPRED, OPRED1, TRCPRD,
+C      FIXMUL, CONPRD1, FPRED1, WPRED1, DPRED, OPRED1, TRCPRD,
 C      INDCO2, COFCO2, CO2MLT, INDSO2, COFSO2, SO2MLT,
 C      INDHNO, COFHNO, HNOMLT, INDN2O, COFN2O, N2OMLT,
 C      INDNH3, COFNH3, NH3MLT, INDHDO, COFHDO, HDOMLT,
@@ -34,7 +34,7 @@ C    type      name    purpose                     units
 C    --------  ------  --------------------------  ---------------------
 C    INT arr   CLIST1  set channel list            none
 C    REAL arr  COEF1   set1 fast trans coefs       various
-C    REAL arr  CONPD1  set1 H2O continuum preds    various
+C    REAL arr  CONPRD1  set1 H2O continuum preds    various
 C    REAL arr  FIXMUL  fixed amount mult (~1.0)    none
 C    REAL arr  FPRED1  set1 fixed gases preds      various
 C    INT arr   INDCHN  channel indices             none
@@ -183,12 +183,17 @@ C    1  Feb 2019 C Hepplewhite  Add HDO
 
 C      =================================================================
        SUBROUTINE YCALT1 ( INDCHN, NLAY, NCHN1, CLIST1, COEF1,
-     $    FIXMUL, CONPD1, FPRED1, WPRED1, DPRED, OPRED1, TRCPRD,
+     $    FIXMUL, CONPRD1, FPRED1, WPRED1, DPRED, OPRED1, TRCPRD,
      $    INDCO2, COFCO2, CO2MLT, INDSO2, COFSO2, SO2MLT,
      $    INDHNO, COFHNO, HNOMLT, INDN2O, COFN2O, N2OMLT,
      $    INDNH3, COFNH3, NH3MLT, INDHDO, COFHDO, HDOMLT,
      $    INDH2O, H2OPRD, COFH2O, LOPMIN, LOPMAX, LOPLOW, LOPUSE,
-     $      WAOP,   DAOP,  WAANG,    TAU,   TAUZ, IY)
+     $      WAOP,   DAOP,  WAANG,    TAU,   TAUZ, IY, 
+     $    DOJAC,LISTJ,NWANTJ,CONJACPRD,DJACPRED, 
+     $    FJACPRED1,FJACPRED2,FJACPRED3,FJACPRED4,FJACPRED5,FJACPRED6,FJACPRED7,
+     $    WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
+     $    OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,
+     $    MJACPRED3,CJACPRED4,TRCJACPRD,DTAU_DTZ,DTAU_DG1,DTAU_DG3)
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -220,7 +225,7 @@ C      Input
        INTEGER CLIST1(MXCHN1)
        REAL  COEF1(N1COEF,MAXLAY,MXCHN1)
        REAL FIXMUL(MAXLAY)
-       REAL CONPD1( N1CON,MAXLAY)
+       REAL CONPRD1( N1CON,MAXLAY)
        REAL FPRED1( N1FIX,MAXLAY)
        REAL WPRED1( N1H2O,MAXLAY)
        REAL DPRED(   NHDO,MAXLAY)
@@ -258,11 +263,43 @@ C
 C      Output
        REAL    TAU(MAXLAY,MXCHAN)
        REAL   TAUZ(MAXLAY,MXCHAN)
+       REAL DTAU_DTZ(MAXLAY,MXCHAN),DTAU_DG1(MAXLAY,MXCHAN),DTAU_DG3(MAXLAY,MXCHAN)
 
+c input
+       LOGICAL DOJAC
+       INTEGER NWANTJ          ! number of wanted jacs (default 0=none)
+       INTEGER  LISTJ(MAXPRO)  ! list of wanted channels
+       !!! first index is the d/dT   second deriv is the d/dQ
+       REAL CONJACPRD(3, N1CON,MAXLAY)
+       REAL FJACPRED1(3, N1FIX,MAXLAY)
+       REAL FJACPRED2(3, N2FIX,MAXLAY)
+       REAL FJACPRED3(3, N3FIX,MAXLAY)
+       REAL FJACPRED4(3, N4FIX,MAXLAY)
+       REAL FJACPRED5(3, N5FIX,MAXLAY)
+       REAL FJACPRED6(3, N6FIX,MAXLAY)
+       REAL FJACPRED7(3, N7FIX,MAXLAY)
+       REAL WJACPRED1(3, N1H2O,MAXLAY)
+       REAL WJACPRED2(3, N2H2O,MAXLAY)
+       REAL WJACPRED3(3, N3H2O,MAXLAY)
+       REAL WJACPRED4(3, N4H2O,MAXLAY)
+       REAL WJACPRED5(3, N5H2O,MAXLAY)
+       REAL WJACPRED6(3, N6H2O,MAXLAY)
+       REAL WJACPRED7(3, N7H2O,MAXLAY)
+       REAL OJACPRED1(3,  N1O3,MAXLAY)
+       REAL OJACPRED2(3,  N2O3,MAXLAY)
+       REAL OJACPRED4(3,  N4O3,MAXLAY)
+       REAL OJACPRED5(3,  N5O3,MAXLAY)
+       REAL OJACPRED6(3,  N6O3,MAXLAY)
+       REAL OJACPRED7(3,  N7O3,MAXLAY)
+       REAL  DJACPRED(3,  NHDO,MAXLAY)
+       REAL MJACPRED3(3, N3CH4,MAXLAY)
+       REAL CJACPRED4(3,  N4CO,MAXLAY)
+       REAL TRCJACPRD(3,NTRACE,MAXLAY)
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
+       INTEGER      IWHICHJAC,ITRYJAC
        INTEGER      I
        INTEGER   ICO2
        INTEGER  IHNO3
@@ -293,6 +330,7 @@ C-----------------------------------------------------------------------
        LOGICAL   LNH3
        LOGICAL   LHDO
        LOGICAL   LSO2
+       INTEGER INTERSECT
 C
 C      for CALOKW
        INTEGER   IH2O
@@ -394,10 +432,11 @@ C
              LH2O=.TRUE.
           ENDIF
 C
+c************************************************************************
 C         Initialize the layer-to-space optical depth
           KZ=0.0E+0
           KZFW=0.0E+0
-C
+
 C         ------------------------------
 C         Loop on layers (top to bottom)
 C         ------------------------------
@@ -406,18 +445,18 @@ C         ------------------------------
 C            ---------------------------
 C            Compute the water continuum
 C            ---------------------------
-             KCON=( COEF1(1,ILAY,I)*CONPD1(1,ILAY) ) +
-     $            ( COEF1(2,ILAY,I)*CONPD1(2,ILAY) ) +
-     $            ( COEF1(3,ILAY,I)*CONPD1(3,ILAY) ) +
-     $            ( COEF1(4,ILAY,I)*CONPD1(4,ILAY) ) +
-     $            ( COEF1(5,ILAY,I)*CONPD1(5,ILAY) ) +
-     $            ( COEF1(6,ILAY,I)*CONPD1(6,ILAY) ) +
-     $            ( COEF1(7,ILAY,I)*CONPD1(7,ILAY) )
+             KCON=( COEF1(1,ILAY,I)*CONPRD1(1,ILAY) ) +
+     $            ( COEF1(2,ILAY,I)*CONPRD1(2,ILAY) ) +
+     $            ( COEF1(3,ILAY,I)*CONPRD1(3,ILAY) ) +
+     $            ( COEF1(4,ILAY,I)*CONPRD1(4,ILAY) ) +
+     $            ( COEF1(5,ILAY,I)*CONPRD1(5,ILAY) ) +
+     $            ( COEF1(6,ILAY,I)*CONPRD1(6,ILAY) ) +
+     $            ( COEF1(7,ILAY,I)*CONPRD1(7,ILAY) )
 
               IF (DEBUG) THEN
                 IF (I .EQ. 2) THEN
                   print *, COEF1(1:7,ILAY,I)
-                  print *, CONPD1(1:7,ILAY)
+                  print *, CONPRD1(1:7,ILAY)
                   STOP
                 END IF
               END IF
@@ -643,6 +682,264 @@ C         IF (J .EQ. 2) STOP
 C       ENDDO       !!! DO I = IY,IY
 C      End loops on channel number (frequency)
 C
+
+c************************************************************************
+
+          
+          IF (DOJAC) THEN
+            DO IWHICHJAC = 1,3
+              IF (IWHICHJAC .EQ. 1) THEN 
+                ITRYJAC = 100  !! TZ
+              ELSEIF (IWHICHJAC .EQ. 2) THEN 
+                ITRYJAC = 1    !! GID 1
+              ELSEIF (IWHICHJAC .EQ. 3) THEN 
+                ITRYJAC = 3    !! GID 3
+              END IF
+              IF (INTERSECT(ITRYJAC,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+C               Initialize the layer-to-space optical depth
+                KZ=0.0E+0
+                KZFW=0.0E+0
+          
+C               ------------------------------
+C               Loop on layers (top to bottom)
+C               ------------------------------
+                DO ILAY=1,NLAY
+          
+C                  ---------------------------
+C                  Compute the water continuum
+C                  ---------------------------
+                   KCON=( COEF1(1,ILAY,I)*CONJACPRD(IWHICHJAC,1,ILAY) ) +
+     $                  ( COEF1(2,ILAY,I)*CONJACPRD(IWHICHJAC,2,ILAY) ) +
+     $                  ( COEF1(3,ILAY,I)*CONJACPRD(IWHICHJAC,3,ILAY) ) +
+     $                  ( COEF1(4,ILAY,I)*CONJACPRD(IWHICHJAC,4,ILAY) ) +
+     $                  ( COEF1(5,ILAY,I)*CONJACPRD(IWHICHJAC,5,ILAY) ) +
+     $                  ( COEF1(6,ILAY,I)*CONJACPRD(IWHICHJAC,6,ILAY) ) +
+     $                  ( COEF1(7,ILAY,I)*CONJACPRD(IWHICHJAC,7,ILAY) )
+          
+                    IF (DEBUG) THEN
+                      IF (I .EQ. 2) THEN
+                        print *, COEF1(1:7,ILAY,I)
+                        print *, CONJACPRD(IWHICHJAC,1:7,ILAY)
+                        STOP
+                      END IF
+                    END IF
+          
+                   IF (KCON .LT. 0.0E+0) THEN
+                      KCON=0.0E+0
+                   ELSEIF (KCON .GT. 0.1E+0 .AND. ILAY .EQ. 1) THEN
+c  %%%    %%%%%                KCON=1.0E+1
+                     KCON=1.0E-10
+                   ENDIF
+C         
+          
+C                  -----------------------------
+C                  Calc the fixed gases abs coef
+C                  -----------------------------
+                   KFIX=
+     $                ( COEF1( 8,ILAY,I)*FJACPRED1(IWHICHJAC,1,ILAY) ) +
+     $                ( COEF1( 9,ILAY,I)*FJACPRED1(IWHICHJAC,2,ILAY) ) +
+     $                ( COEF1(10,ILAY,I)*FJACPRED1(IWHICHJAC,3,ILAY) ) +
+     $                ( COEF1(11,ILAY,I)*FJACPRED1(IWHICHJAC,4,ILAY) ) +
+     $                ( COEF1(12,ILAY,I)*FJACPRED1(IWHICHJAC,5,ILAY) ) +
+     $                ( COEF1(13,ILAY,I)*FJACPRED1(IWHICHJAC,6,ILAY) ) +
+     $                ( COEF1(14,ILAY,I)*FJACPRED1(IWHICHJAC,7,ILAY) ) +
+     $                ( COEF1(15,ILAY,I)*FJACPRED1(IWHICHJAC,8,ILAY) )
+C         
+                   KFIX=KFIX*FIXMUL(ILAY)
+C         
+                   IF (KFIX .LT. 0.0E+0) THEN
+                      KFIX=0.0E+0
+                   ELSEIF (KFIX .GT. 0.1E+0 .AND. ILAY .EQ. 1) THEN
+c  %%%    %                KFIX=1.0E+1
+                      KFIX=1.0E-10
+                   ENDIF
+C         
+          
+C                  --------------------------
+C                  Compute the water abs coef
+C                  --------------------------
+                   IF (LH2O) THEN
+C                     Not an OPTRAN water channel
+                      KW(ILAY)=
+     $                   ( COEF1(16,ILAY,I)*WJACPRED1(IWHICHJAC, 1,ILAY) ) +
+     $                   ( COEF1(17,ILAY,I)*WJACPRED1(IWHICHJAC, 2,ILAY) ) +
+     $                   ( COEF1(18,ILAY,I)*WJACPRED1(IWHICHJAC, 3,ILAY) ) +
+     $                   ( COEF1(19,ILAY,I)*WJACPRED1(IWHICHJAC, 4,ILAY) ) +
+     $                   ( COEF1(20,ILAY,I)*WJACPRED1(IWHICHJAC, 5,ILAY) ) +
+     $                   ( COEF1(21,ILAY,I)*WJACPRED1(IWHICHJAC, 6,ILAY) ) +
+     $                   ( COEF1(22,ILAY,I)*WJACPRED1(IWHICHJAC, 7,ILAY) ) +
+     $                   ( COEF1(23,ILAY,I)*WJACPRED1(IWHICHJAC, 8,ILAY) ) +
+     $                   ( COEF1(24,ILAY,I)*WJACPRED1(IWHICHJAC, 9,ILAY) ) +
+     $                   ( COEF1(25,ILAY,I)*WJACPRED1(IWHICHJAC,10,ILAY) ) +
+     $                   ( COEF1(26,ILAY,I)*WJACPRED1(IWHICHJAC,11,ILAY) )
+C         
+C                      IF (KW(ILAY) .LT. 0.0E+0) KW(ILAY)=0.0E+0
+                   ENDIF
+C         
+C                  --------------------------
+C                  Compute the HDO abs coef
+C                  --------------------------
+                   IF (LHDO) THEN
+                      KHDO=( COFHDO(1,ILAY,IHDO)*DJACPRED(IWHICHJAC, 1,ILAY) ) +
+     $                   ( COFHDO(2,ILAY,IHDO)*DJACPRED(IWHICHJAC, 2,ILAY) ) +
+     $                   ( COFHDO(3,ILAY,IHDO)*DJACPRED(IWHICHJAC, 3,ILAY) ) +
+     $                   ( COFHDO(4,ILAY,IHDO)*DJACPRED(IWHICHJAC, 4,ILAY) ) +
+     $                   ( COFHDO(5,ILAY,IHDO)*DJACPRED(IWHICHJAC, 5,ILAY) ) +
+     $                   ( COFHDO(6,ILAY,IHDO)*DJACPRED(IWHICHJAC, 6,ILAY) ) +
+     $                   ( COFHDO(7,ILAY,IHDO)*DJACPRED(IWHICHJAC, 7,ILAY) ) +
+     $                   ( COFHDO(8,ILAY,IHDO)*DJACPRED(IWHICHJAC, 8,ILAY) )
+C         $               ( COFHDO(9,ILAY,IHDO)*DJACPRED(IWHICHJAC, 9,ILAY) ) +
+C         $               ( COFHDO(10,ILAY,IHDO)*DJACPRED(IWHICHJAC,10,ILAY) ) +
+C         $               ( COFHDO(11,ILAY,IHDO)*DJACPRED(IWHICHJAC,11,ILAY) )
+C         
+C                      IF (KHDO .LT. 0.0E+0) KHDO=0.0E+0
+                      KHDO = KHDO*HDOMLT(ILAY)
+                   ELSE
+                      KHDO=0.0
+                   ENDIF
+C         
+C                  --------------------------
+C                  Compute the ozone abs coef
+C                  --------------------------
+                   KOZO=( COEF1(27,ILAY,I)*OJACPRED1(IWHICHJAC,1,ILAY) ) +
+     $                ( COEF1(28,ILAY,I)*OJACPRED1(IWHICHJAC,2,ILAY) ) +
+     $                ( COEF1(29,ILAY,I)*OJACPRED1(IWHICHJAC,3,ILAY) ) +
+     $                ( COEF1(30,ILAY,I)*OJACPRED1(IWHICHJAC,4,ILAY) ) +
+     $                ( COEF1(31,ILAY,I)*OJACPRED1(IWHICHJAC,5,ILAY) )
+C         
+C                   IF (KOZO .LT. 0.0E+0) THEN
+C                      KOZO=0.0E+0
+C                   ELSEIF (KOZO .GT. 0.1E+0 .AND. ILAY .EQ. 1) THEN
+c  %%%    %%                KOZO=1.0E+1
+C                      KOZO=1.0E-10
+C                   ENDIF
+C         
+C                  Update KZFW
+                   KZFW=KZFW + KFIX + KW(ILAY)
+C         
+C                  ----------------------------------
+C                  Calc the total layer transmittance
+C                  ----------------------------------
+          
+C                  ----------------------------
+C                  Calc change in total optical
+C                  depth due to variable CO2
+C                  ----------------------------
+                   IF (LCO2 .AND. CO2MLT(ILAY) .NE. 0) THEN
+                      DKCO2=( COFCO2(1,ILAY,ICO2)*TRCJACPRD(IWHICHJAC,1,ILAY) ) +
+     $                    ( COFCO2(2,ILAY,ICO2)*TRCJACPRD(IWHICHJAC,2,ILAY) ) +
+     $                    ( COFCO2(3,ILAY,ICO2)*TRCJACPRD(IWHICHJAC,3,ILAY) ) +
+     $                    ( COFCO2(4,ILAY,ICO2)*TRCJACPRD(IWHICHJAC,4,ILAY) ) +
+     $                    ( COFCO2(5,ILAY,ICO2)*TRCJACPRD(IWHICHJAC,5,ILAY) )
+                      DKCO2=DKCO2*CO2MLT(ILAY)
+                   ELSE
+                      DKCO2=0.0
+                   ENDIF
+C         
+          
+C                  ----------------------------
+C                  Calc change in total optical
+C                  depth due to variable SO2
+C                  ----------------------------
+                   IF (LSO2 .AND. SO2MLT(ILAY) .NE. 0) THEN
+                      DKSO2=( COFSO2(1,ILAY,ISO2)*TRCJACPRD(IWHICHJAC,1,ILAY) ) +
+     $                    ( COFSO2(2,ILAY,ISO2)*TRCJACPRD(IWHICHJAC,2,ILAY) ) +
+     $                    ( COFSO2(3,ILAY,ISO2)*TRCJACPRD(IWHICHJAC,3,ILAY) ) +
+     $                    ( COFSO2(4,ILAY,ISO2)*TRCJACPRD(IWHICHJAC,4,ILAY) )
+                      DKSO2=DKSO2*SO2MLT(ILAY)
+                   ELSE
+                      DKSO2=0.0
+                   ENDIF
+C         
+          
+C                  ----------------------------
+C                  Calc change in total optical
+C                  depth due to variable HNO3
+C                  ----------------------------
+                   IF (LHNO3 .AND. HNOMLT(ILAY) .NE. 0) THEN
+                      DKHNO3=( COFHNO(1,ILAY,IHNO3)*TRCJACPRD(IWHICHJAC,1,ILAY) ) +
+     $                     ( COFHNO(2,ILAY,IHNO3)*TRCJACPRD(IWHICHJAC,2,ILAY) ) +
+     $                     ( COFHNO(3,ILAY,IHNO3)*TRCJACPRD(IWHICHJAC,3,ILAY) ) +
+     $                     ( COFHNO(4,ILAY,IHNO3)*TRCJACPRD(IWHICHJAC,4,ILAY) )
+                      DKHNO3=DKHNO3*HNOMLT(ILAY)
+                   ELSE
+                      DKHNO3=0.0
+                   ENDIF
+C         
+          
+C                  ----------------------------
+C                  Calc change in total optical
+C                  depth due to variable N2O
+C                  ----------------------------
+                   IF (LN2O .AND. N2OMLT(ILAY) .NE. 0) THEN
+                      DKN2O=( COFN2O(1,ILAY,IN2O)*TRCJACPRD(IWHICHJAC,1,ILAY) ) +
+     $                    ( COFN2O(2,ILAY,IN2O)*TRCJACPRD(IWHICHJAC,2,ILAY) ) +
+     $                    ( COFN2O(3,ILAY,IN2O)*TRCJACPRD(IWHICHJAC,3,ILAY) ) +
+     $                    ( COFN2O(4,ILAY,IN2O)*TRCJACPRD(IWHICHJAC,4,ILAY) ) +
+     $                    ( COFN2O(5,ILAY,IN2O)*TRCJACPRD(IWHICHJAC,5,ILAY) ) +
+     $                    ( COFN2O(6,ILAY,IN2O)*TRCJACPRD(IWHICHJAC,6,ILAY) ) +
+     $                    ( COFN2O(7,ILAY,IN2O)*TRCJACPRD(IWHICHJAC,7,ILAY) )
+                      DKN2O=DKN2O*N2OMLT(ILAY)
+                   ELSE
+                      DKN2O=0.0
+                   ENDIF
+C         
+C                  ----------------------------
+C                  Calc change in total optical
+C                  depth due to variable NH3
+C                  ----------------------------
+                   IF (LNH3 .AND. NH3MLT(ILAY) .NE. 0) THEN
+                      DKNH3=( COFNH3(1,ILAY,INH3)*TRCJACPRD(IWHICHJAC,1,ILAY) ) +
+     $                    ( COFNH3(2,ILAY,INH3)*TRCJACPRD(IWHICHJAC,2,ILAY) ) +
+     $                    ( COFNH3(3,ILAY,INH3)*TRCJACPRD(IWHICHJAC,3,ILAY) ) +
+     $                    ( COFNH3(4,ILAY,INH3)*TRCJACPRD(IWHICHJAC,4,ILAY) )
+                      DKNH3=DKNH3*NH3MLT(ILAY)
+                   ELSE
+                      DKNH3=0.0
+                   ENDIF
+C         
+C                  ------------------------------------------
+C                  Calc total optical depth and transmittance
+C                  ------------------------------------------
+C                  Calc total layer optical depth
+c  cc     
+c   th    is block for testing
+c            DKHNO3=0.0
+c            DKSO2=0.0
+c            DKCO2=0.0
+c            DKN2O=0.0
+C            DKNH3=0.0
+C            DKHDO=0.0
+            KHDO=0.0
+c  cc     
+C                  Limit -DK so it can never totally totally cancel KFIX
+                   DK = DKCO2 + DKSO2 + DKHNO3 + DKN2O + DKNH3
+          
+                   
+C                  Calc effective layer optical
+C                   write(*,'(A,3(I5),5(F12.4))') 'ycalt1_od',I,J,ILAY,KCON,KFIX,KW(ILAY),KOZO,DK
+                   KLAYER = KCON + KFIX + KW(ILAY) + KOZO + DK
+                   IF (IWHICHJAC .EQ. 1) THEN 
+                     DTAU_DTZ(ILAY,J)=KLAYER
+                   ELSEIF (IWHICHJAC .EQ. 2) THEN 
+                     DTAU_DG1(ILAY,J)=KLAYER
+                   ELSEIF (IWHICHJAC .EQ. 3) THEN 
+                     DTAU_DG3(ILAY,J)=KLAYER
+                   END IF
+C         
+C                  Calc layer-to-space optical depth
+C                   KZ=KZ + KLAYER
+C                   TAUZ(ILAY,J)=KZ
+C         
+                ENDDO
+C               End loop on levels
+C            ENDDO       !!! DO I = IY,IY
+C            End loops on channel number (frequency)
+          END IF   !!!! IF (INTERSECT(ITRYJAC,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) : is this a jac to work on?????
+        END DO     !!! DO IWHICHJAC = 1,3
+      END IF  !! DOJAC
+
+c************************************************************************
 
        RETURN
        END

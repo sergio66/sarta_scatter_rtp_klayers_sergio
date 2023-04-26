@@ -10,15 +10,20 @@ C          -----
 C          Fixed (for FWO, FOW, FMW, & FCOW)
 C          -----
  
-c          TJUNKS=TR*TR
-c          FIXMUL(L)=A_F
+          TJUNKS_T = 2*TR*TR_T
+          TJUNKS_1 = 2*TR*TR_1
+          TJUNKS_3 = 2*TR*TR_3
+
+          FIXMUL_T(L)=A_F_T
+          FIXMUL_1(L)=A_F_1
+          FIXMUL_3(L)=A_F_3
  
-           FJACPRED1(1,1,L)=SECANG(L)
-           FJACPRED1(1,2,L)=SECANG(L)*SECANG(L)
-           FJACPRED1(1,3,L)=SECANG(L)*TR
-           FJACPRED1(1,4,L)=SECANG(L)*TJUNKS
-           FJACPRED1(1,5,L)=TR
-           FJACPRED1(1,6,L)=TJUNKS
+           FJACPRED1(1,1,L)=0
+           FJACPRED1(1,2,L)=0
+           FJACPRED1(1,3,L)=SECANG(L)*TR_T
+           FJACPRED1(1,4,L)=SECANG(L)*TJUNKS_T
+           FJACPRED1(1,5,L)=TR_T
+           FJACPRED1(1,6,L)=TJUNKS_T
            FJACPRED1(1,7,L)=SECANG(L)*TRZ
            FJACPRED1(1,8,L)=SECANG(L)*TRZ/TR
  

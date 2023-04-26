@@ -30,6 +30,11 @@ C  $     FPRED1,FPRED2,FPRED3,FPRED4,FPRED5,FPRED6,FPRED7,
 C  $     WPRED1,WPRED2,WPRED3,WPRED4,WPRED5,WPRED6,WPRED7,
 C  $     OPRED1,OPRED2,       OPRED4,OPRED5,OPRED6,OPRED7,
 C  $     MPRED3,CPRED4,TRCPRD,
+C  $    DOJAC,CONJACPRD,DJACPRED, 
+C  $    FJACPRED1,FJACPRED2,FJACPRED3,FJACPRED4,FJACPRED5,FJACPRED6,FJACPRED7,
+C  $    WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
+C  $    OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,
+C  $    MJACPRED3,CJACPRED4,TRCJACPRD,
 C  $     CO2MLT,SO2MLT,HNOMLT,N2OMLT,NH3MLT,HDOMLT )
 
 
@@ -355,7 +360,7 @@ C  1 Feb 2019 C Hepplewhite  Add HDO
 !END====================================================================
 
 C      =================================================================
-       SUBROUTINE CALPAR ( LBOT,
+       SUBROUTINE YCALPAR_JAC ( LBOT,
      $    RTEMP,RFAMNT,RWAMNT,ROAMNT,RCAMNT,RMAMNT,RSAMNT,RHAMNT,RNAMNT,
      $    RAAMNT,PTEMP,PFAMNT,PWAMNT,POAMNT,PCAMNT,PMAMNT,PSAMNT,PHAMNT,
      $    PNAMNT,PAAMNT,PRES,SECANG,  ALAT,    FX, DZREF,
@@ -434,7 +439,7 @@ C      Input
 C
 C      Output
        REAL CO2TOP
-       REAL FIXMUL(MAXLAY)
+       REAL FIXMUL(MAXLAY), FIXMUL_T(MAXLAY), FIXMUL_1(MAXLAY), FIXMUL_3(MAXLAY)
 
        REAL CONPRD( N1CON,MAXLAY)
        REAL FPRED1( N1FIX,MAXLAY)
@@ -464,31 +469,31 @@ C      Output
 
        LOGICAL DOJAC
        !!! first index is the d/dT   second deriv is the d/dQ
-       REAL CONJACPRD(2, N1CON,MAXLAY)
-       REAL FJACPRED1(2, N1FIX,MAXLAY)
-       REAL FJACPRED2(2, N2FIX,MAXLAY)
-       REAL FJACPRED3(2, N3FIX,MAXLAY)
-       REAL FJACPRED4(2, N4FIX,MAXLAY)
-       REAL FJACPRED5(2, N5FIX,MAXLAY)
-       REAL FJACPRED6(2, N6FIX,MAXLAY)
-       REAL FJACPRED7(2, N7FIX,MAXLAY)
-       REAL WJACPRED1(2, N1H2O,MAXLAY)
-       REAL WJACPRED2(2, N2H2O,MAXLAY)
-       REAL WJACPRED3(2, N3H2O,MAXLAY)
-       REAL WJACPRED4(2, N4H2O,MAXLAY)
-       REAL WJACPRED5(2, N5H2O,MAXLAY)
-       REAL WJACPRED6(2, N6H2O,MAXLAY)
-       REAL WJACPRED7(2, N7H2O,MAXLAY)
-       REAL OJACPRED1(2,  N1O3,MAXLAY)
-       REAL OJACPRED2(2,  N2O3,MAXLAY)
-       REAL OJACPRED4(2,  N4O3,MAXLAY)
-       REAL OJACPRED5(2,  N5O3,MAXLAY)
-       REAL OJACPRED6(2,  N6O3,MAXLAY)
-       REAL OJACPRED7(2,  N7O3,MAXLAY)
-       REAL  DJACPRED(2,  NHDO,MAXLAY)
-       REAL MJACPRED3(2, N3CH4,MAXLAY)
-       REAL CJACPRED4(2,  N4CO,MAXLAY)
-       REAL TRCJACPRD(2,NTRACE,MAXLAY)
+       REAL CONJACPRD(3, N1CON,MAXLAY)
+       REAL FJACPRED1(3, N1FIX,MAXLAY)
+       REAL FJACPRED2(3, N2FIX,MAXLAY)
+       REAL FJACPRED3(3, N3FIX,MAXLAY)
+       REAL FJACPRED4(3, N4FIX,MAXLAY)
+       REAL FJACPRED5(3, N5FIX,MAXLAY)
+       REAL FJACPRED6(3, N6FIX,MAXLAY)
+       REAL FJACPRED7(3, N7FIX,MAXLAY)
+       REAL WJACPRED1(3, N1H2O,MAXLAY)
+       REAL WJACPRED2(3, N2H2O,MAXLAY)
+       REAL WJACPRED3(3, N3H2O,MAXLAY)
+       REAL WJACPRED4(3, N4H2O,MAXLAY)
+       REAL WJACPRED5(3, N5H2O,MAXLAY)
+       REAL WJACPRED6(3, N6H2O,MAXLAY)
+       REAL WJACPRED7(3, N7H2O,MAXLAY)
+       REAL OJACPRED1(3,  N1O3,MAXLAY)
+       REAL OJACPRED2(3,  N2O3,MAXLAY)
+       REAL OJACPRED4(3,  N4O3,MAXLAY)
+       REAL OJACPRED5(3,  N5O3,MAXLAY)
+       REAL OJACPRED6(3,  N6O3,MAXLAY)
+       REAL OJACPRED7(3,  N7O3,MAXLAY)
+       REAL  DJACPRED(3,  NHDO,MAXLAY)
+       REAL MJACPRED3(3, N3CH4,MAXLAY)
+       REAL CJACPRED4(3,  N4CO,MAXLAY)
+       REAL TRCJACPRD(3,NTRACE,MAXLAY)
 
        REAL CO2MLT(MAXLAY)
        REAL SO2MLT(MAXLAY)
@@ -503,22 +508,22 @@ C-----------------------------------------------------------------------
        INTEGER      L
        REAL    PDP
        REAL  PNORM
-       REAL     DT
-       REAL     TR
+       REAL     DT, DT_T, DT_1, DT_3
+       REAL     TR, TR_T, TR_1, TR_3
        REAL     TZ
        REAL    TRZ
-       REAL    A_F
-       REAL    A_W
+       REAL    A_F, A_F_T, A_F_1, A_F_3
+       REAL    A_W, A_W_T, A_W_1, A_W_3
        REAL  WZREF
        REAL     WZ
-       REAL   AZ_W
-       REAL    A_O
+       REAL   AZ_W, AZ_W_T, AZ_W_1, AZ_W_3
+       REAL    A_O, A_O_T, A_O_1, A_O_3
        REAL  XZREF
-       REAL     XZ
-       REAL   XZ_O
+       REAL     XZ, XZ_T, XZ_1, XZ_3
+       REAL   XZ_O, XZ_O_T, XZ_O_1, XZ_O_3
        REAL  OZREF
        REAL     OZ
-       REAL   AZ_O
+       REAL   AZ_O, AZ_O_T, AZ_O_1, AZ_O_3
        REAL    TOZ
        REAL  TAZ_O
        REAL    A_C
@@ -531,7 +536,7 @@ C-----------------------------------------------------------------------
        REAL   AZ_M
        REAL    TMZ
        REAL  TAZ_M
-       REAL TJUNKS
+       REAL TJUNKS, TJUNKS_T, TJUNKS_1, TJUNKS_3
        REAL WJUNKA
        REAL WJUNKR
        REAL WJUNKS
@@ -555,7 +560,7 @@ C-----------------------------------------------------------------------
        REAL MJUNKZ
 
 C      Variables for fixed gases adjustment
-       REAL PWATER
+       REAL PWATER, PWATER_T, PWATER_1, PWATER_3
        REAl  GSCAL
 C      variables with DATA assignments
        REAL  PMULT
@@ -609,11 +614,13 @@ C      --------------------
           include "ycalpar_INIT.f"
           include "ycalpar_predsINC.f"
           include "ycalpar_SWITCHES.f"
+
           IF (DOJAC) THEN
             include "ycalpar_jacINIT.f"
             include "ycalpar_TjacpredsINC.f"
             include "ycalpar_QjacpredsINC.f"
           END IF
+
        ENDDO
 C      End loop over layers
 C
