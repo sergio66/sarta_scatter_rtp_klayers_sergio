@@ -21,7 +21,7 @@ C    Calculate the OPTRAN water (H2O) predictors for a profile.
 
 !CALL PROTOCOL:
 C    CALOWP ( LBOT, WAMNT, P, T, SECANG, WAZOP, WAVGOP,
-C       WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP, DOJAC, H2OJACPRD )
+C       WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP, DOJAC, H2OJACPRD, DAOPJAC )
 
 
 !INPUT PARAMETERS:
@@ -47,6 +47,7 @@ C    REAL arr  H2OPRD  OPTRAN predictors           various
 C    INTEGER   LOPLOW  low bracketing OPTRAN lev   none
 C    REAL arr  DAOP    OPTRAN-to-AIRS interp frac  none
 C    REAL arr  H2OJACPRD  OPTRAN jac predictors           various
+C    REAL arr  DAOPJAC    OPTRAN-to-AIRS interp frac  none
 
 
 !INPUT/OUTPUT PARAMETERS:
@@ -100,7 +101,8 @@ C                                 of MAXLAY
 
 C      =================================================================
        SUBROUTINE YCALOWP ( LBOT, WAMNT, P, T, SECANG, WAZOP, WAVGOP,
-     $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP, DOJAC, H2OJACPRD )
+     $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP, 
+     $    DOJAC, H2OJACPRD, DAOPJAC )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -142,6 +144,7 @@ C      Output
        LOGICAL LOPUSE(MXOWLY)
        INTEGER LOPLOW(MAXLAY)
        REAL  DAOP(MAXLAY)
+       REAL  DAOPJAC(2, MAXLAY)
        REAL H2OJACPRD(2, NH2O,MXOWLY)
 
 
@@ -380,6 +383,12 @@ C         Assign the lower OPTRAN level
           LOPLOW(L)=LOPL
 C         Assign the interpolation fraction
           DAOP(L)=(WAZ(L) - WAZOP(LOPL))/(WAZOP(LOPU) - WAZOP(LOPL))
+
+          IF (DOJAC) THEN
+            DAOPJAC(1,L) = WAZ_T(L)/(WAZOP(LOPU) - WAZOP(LOPL))
+            DAOPJAC(2,L) = WAZ_1(L)/(WAZOP(LOPU) - WAZOP(LOPL))
+          END IF
+
        ENDDO
 C
        RETURN

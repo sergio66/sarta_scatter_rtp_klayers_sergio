@@ -505,7 +505,7 @@ C      Output
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
-       INTEGER      L
+       INTEGER      L, IWHICHJAC
        REAL    PDP
        REAL  PNORM
        REAL     DT, DT_T, DT_1, DT_3
@@ -618,7 +618,7 @@ C      --------------------
           IF (DOJAC) THEN
             include "ycalpar_jacINIT.f"
             include "ycalpar_TjacpredsINC.f"
-            include "ycalpar_QjacpredsINC.f"
+            include "ycalpar_WVjacpredsINC.f"
           END IF
 
        ENDDO

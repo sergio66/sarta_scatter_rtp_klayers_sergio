@@ -114,7 +114,7 @@ C                                 of MAXLAY
 C      =================================================================
        SUBROUTINE YCALOKW ( LBOT, ICHAN, LOPMIN, LOPMAX, LOPLOW, LOPUSE,
      $    H2OPRD, COFH2O, WAOP, DAOP, WAANG, KW, 
-     $    DOJAC, SECANG, H2OJACPRD, KW_T, KW_1 )
+     $    DOJAC, SECANG, H2OJACPRD, DAOPJAC, KW_T, KW_1 )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -152,7 +152,8 @@ C      Input
        REAL  H2OPRD(  NH2O,MXOWLY)
        REAL  COFH2O(  NH2O,MXOWLY,MXCHNW)
        LOGICAL DOJAC
-       REAL   H2OJACPRD(2,NH2O,MXOWLY)
+       REAL   H2OJACPRD(2,NH2O,MXOWLY)    !! OPTRAN, used by ycalt1_od, ycalt3_od
+       REAL  DAOPJAC(2, MAXLAY)           !! OPTRAN, used by ycalt1_od, ycalt3_od
 
 C      Output
        REAL  KW(MAXLAY)
@@ -297,7 +298,13 @@ c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L)
             KW_1(L)=( DAOP(L)*( KWOP_1(LOPLOW(L) + 1) -
      $       KWOP_1(LOPLOW(L)) ) + KWOP_1(LOPLOW(L)) )*WAANG(L)
 
-c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L) so d/dQWAANG(L) = SECANG(L)
+c    ycalowp.f shows DAOP depends on T and WV
+c            KW_T(L)=KW_T(L) + ( DAOPJAC(1,L)*( KWOP(LOPLOW(L) + 1) -
+c     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*SECANG(L)
+c            KW_1(L)=KW_1(L) + ( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
+c     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*SECANG(L)
+
+c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L) so d WAANG(L)/dQ = SECANG(L)
             KW_1(L)=KW_1(L) + ( DAOP(L)*( KWOP(LOPLOW(L) + 1) -
      $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*SECANG(L)
 

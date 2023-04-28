@@ -631,6 +631,7 @@ C      for function intersect
        INTEGER intersect
 
 C      for jacobians
+       REAL  DAOPJAC(2, MAXLAY)         !!!! OPTRAN
        REAL   H2OJACPRD(2,NH2O,MXOWLY)  !!!! OPTRAN
        REAL JAC_ST_C(MXCHAN),         JAC_ST_1(MXCHAN),         JAC_ST_2(MXCHAN),         JAC_ST_12(MXCHAN)
        REAL JAC_TZ_C(MAXLAY,MXCHAN),  JAC_TZ_1(MAXLAY,MXCHAN),  JAC_TZ_2(MAXLAY,MXCHAN),  JAC_TZ_12(MAXLAY,MXCHAN)
@@ -998,7 +999,8 @@ C      -----------------------------------
 C      Calculate the OPTRAN H2O predictors
 C      -----------------------------------
        CALL YCALOWP ( LBOT, WAMNT, RPRES, TEMP, SECANG, WAZOP, WAVGOP,
-     $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP, DOJAC, H2OJACPRD )
+     $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP, 
+     $    DOJAC, H2OJACPRD, DAOPJAC )
 
 c************************************************************************
 
@@ -1068,7 +1070,7 @@ C        compute OD : indirectly uses T(z),WV(z),O3(z) through the PREDS, to get
      $     FPRED1, FPRED2, FPRED3, FPRED4, FPRED5, FPRED6, FPRED7, 
      $                         SUNFPRED4, SUNFPRED5, SUNFPRED6, SUNFPRED7, 
      $     MPRED3, CPRED4, SUNCPRED4, SECANG, SECSUN, SUNFDG, SUNCOS,
-     $       DOJAC,LISTJ,NWANTJ, CONJACPRD, DJACPRED, H2OJACPRD,
+     $       DOJAC,LISTJ,NWANTJ, CONJACPRD, DJACPRED, H2OJACPRD, DAOPJAC, 
      $       FJACPRED1,FJACPRED2,FJACPRED3,FJACPRED4,FJACPRED5,FJACPRED6,FJACPRED7,
      $       WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
      $       OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,
