@@ -20,7 +20,11 @@ C    Program to quickly compute simulated AIRS radiances.
 C
 C    This variant of the code allows for the modelling of a
 C    up to two scatter clouds using the PCLSAM method.
-
+C
+c************************************************************************
+C SSM : XJACPRD sometimes size(2,MXLAY,MXCHAN) where the 3 derivatives are T,G1
+C SSM : XJACPRD typically size(3,MXLAY,MXCHAN) where the 3 derivatives are T,G1,G3
+c************************************************************************
 
 !CALL PROTOCOL
 C    none (main program)
@@ -627,6 +631,7 @@ C      for function intersect
        INTEGER intersect
 
 C      for jacobians
+       REAL   H2OJACPRD(2,NH2O,MXOWLY)  !!!! OPTRAN
        REAL JAC_ST_C(MXCHAN),         JAC_ST_1(MXCHAN),         JAC_ST_2(MXCHAN),         JAC_ST_12(MXCHAN)
        REAL JAC_TZ_C(MAXLAY,MXCHAN),  JAC_TZ_1(MAXLAY,MXCHAN),  JAC_TZ_2(MAXLAY,MXCHAN),  JAC_TZ_12(MAXLAY,MXCHAN)
        REAL JAC_G1_C(MAXLAY,MXCHAN),  JAC_G1_1(MAXLAY,MXCHAN),  JAC_G1_2(MAXLAY,MXCHAN),  JAC_G1_12(MAXLAY,MXCHAN)
@@ -806,6 +811,32 @@ C      --------------------------------------------------------------
      $ QUICKCLIST1, QUICKCLIST2, QUICKCLIST3, QUICKCLIST4, QUICKCLIST5, 
      $ QUICKCLIST6, QUICKCLIST7,
      $ NWANTC, LISTC, LSTCHN, RINDCHN)
+       IF (NCHAN .EQ. 2645) THEN
+         write(*,'(A)') 'SET(X) NCNHN(X)  IMIN(X) IMAX(X)  FMIN(X)  FMAX(X)'
+         write(*,'(A)') '--------------------------------------------------'
+         write(*,'(4(I8),2(F8.2))') 1,NCHN1,CLIST1(1),CLIST1(NCHN1),
+     $                                      MINVAL(FREQ(INDCHN(CLIST1(1:NCHN1)))),MAXVAL(FREQ(INDCHN(CLIST1(1:NCHN1))))
+         write(*,'(4(I8),2(F8.2))') 2,NCHN2,CLIST2(1),CLIST2(NCHN2),
+     $                                      MINVAL(FREQ(INDCHN(CLIST2(1:NCHN2)))),MAXVAL(FREQ(INDCHN(CLIST2(1:NCHN2))))
+         write(*,'(4(I8),2(F8.2))') 3,NCHN3,CLIST3(1),CLIST3(NCHN3),
+     $                                      MINVAL(FREQ(INDCHN(CLIST3(1:NCHN3)))),MAXVAL(FREQ(INDCHN(CLIST3(1:NCHN3))))
+         write(*,'(4(I8),2(F8.2))') 4,NCHN4,CLIST4(1),CLIST4(NCHN4),
+     $                                      MINVAL(FREQ(INDCHN(CLIST4(1:NCHN4)))),MAXVAL(FREQ(INDCHN(CLIST4(1:NCHN4))))
+         write(*,'(4(I8),2(F8.2))') 5,NCHN5,CLIST5(1),CLIST5(NCHN5),
+     $                                      MINVAL(FREQ(INDCHN(CLIST5(1:NCHN5)))),MAXVAL(FREQ(INDCHN(CLIST5(1:NCHN5))))
+         write(*,'(4(I8),2(F8.2))') 6,NCHN6,CLIST6(1),CLIST6(NCHN6),
+     $                                      MINVAL(FREQ(INDCHN(CLIST6(1:NCHN6)))),MAXVAL(FREQ(INDCHN(CLIST6(1:NCHN6))))
+         write(*,'(4(I8),2(F8.2))') 7,NCHN7,CLIST7(1),CLIST7(NCHN7),
+     $                                      MINVAL(FREQ(INDCHN(CLIST7(1:NCHN7)))),MAXVAL(FREQ(INDCHN(CLIST7(1:NCHN7))))
+
+cc       write(*,'(4(I8),2(F8.2))') 1,NCHN1,CLIST1(1),CLIST1(NCHN1),FREQ(INDCHN(CLIST1(1))),FREQ(INDCHN(CLIST1(NCHN1)))
+cc       write(*,'(4(I8),2(F8.2))') 2,NCHN2,CLIST2(1),CLIST2(NCHN2),FREQ(INDCHN(CLIST2(1))),FREQ(INDCHN(CLIST2(NCHN2)))
+cc       write(*,'(4(I8),2(F8.2))') 3,NCHN3,CLIST3(1),CLIST3(NCHN3),FREQ(INDCHN(CLIST3(1))),FREQ(INDCHN(CLIST3(NCHN3)))
+cc       write(*,'(4(I8),2(F8.2))') 4,NCHN4,CLIST4(1),CLIST4(NCHN4),FREQ(INDCHN(CLIST4(1))),FREQ(INDCHN(CLIST4(NCHN4)))
+cc       write(*,'(4(I8),2(F8.2))') 5,NCHN5,CLIST5(1),CLIST5(NCHN5),FREQ(INDCHN(CLIST5(1))),FREQ(INDCHN(CLIST5(NCHN5)))
+cc       write(*,'(4(I8),2(F8.2))') 6,NCHN6,CLIST6(1),CLIST6(NCHN6),FREQ(INDCHN(CLIST6(1))),FREQ(INDCHN(CLIST6(NCHN6)))
+cc       write(*,'(4(I8),2(F8.2))') 7,NCHN7,CLIST7(1),CLIST7(NCHN7),FREQ(INDCHN(CLIST7(1))),FREQ(INDCHN(CLIST7(NCHN7)))
+       END IF
 
 C      Calc OPTRAN absorption coefficient scaling factor WAOP
        WAOP(1)=WAZOP(1)
@@ -920,7 +951,7 @@ C      which directly use T(z),WV(z),O3(z)
 C      ---------------------------------------------------------
 C      ---------------------------------------------------------
 C
-       IF (DOJAC .EQ. .FALSE.) THEN
+       IF (DOJAC .EQV. .FALSE.) THEN
          CALL CALPAR (LBOT,
      $      RTEMP,RFAMNT,RWAMNT,ROAMNT,RCAMNT,RMAMNT,RSAMNT,RHAMNT,RNAMNT,
      $      RAAMNT, TEMP, FAMNT, WAMNT, OAMNT, CAMNT, MAMNT, SAMNT, HAMNT, 
@@ -966,8 +997,8 @@ C
 C      -----------------------------------
 C      Calculate the OPTRAN H2O predictors
 C      -----------------------------------
-       CALL CALOWP ( LBOT, WAMNT, RPRES, TEMP, SECANG, WAZOP, WAVGOP,
-     $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP )
+       CALL YCALOWP ( LBOT, WAMNT, RPRES, TEMP, SECANG, WAZOP, WAVGOP,
+     $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP, DOJAC, H2OJACPRD )
 
 c************************************************************************
 
@@ -1037,7 +1068,7 @@ C        compute OD : indirectly uses T(z),WV(z),O3(z) through the PREDS, to get
      $     FPRED1, FPRED2, FPRED3, FPRED4, FPRED5, FPRED6, FPRED7, 
      $                         SUNFPRED4, SUNFPRED5, SUNFPRED6, SUNFPRED7, 
      $     MPRED3, CPRED4, SUNCPRED4, SECANG, SECSUN, SUNFDG, SUNCOS,
-     $       DOJAC,LISTJ,NWANTJ, CONJACPRD,DJACPRED, 
+     $       DOJAC,LISTJ,NWANTJ, CONJACPRD, DJACPRED, H2OJACPRD,
      $       FJACPRED1,FJACPRED2,FJACPRED3,FJACPRED4,FJACPRED5,FJACPRED6,FJACPRED7,
      $       WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
      $       OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,

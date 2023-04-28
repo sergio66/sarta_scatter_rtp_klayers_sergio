@@ -189,7 +189,7 @@ C      =================================================================
      $    INDNH3, COFNH3, NH3MLT, INDHDO, COFHDO, HDOMLT,
      $    INDH2O, H2OPRD, COFH2O, LOPMIN, LOPMAX, LOPLOW, LOPUSE,
      $      WAOP,   DAOP,  WAANG,    TAU,   TAUZ, IY, 
-     $    DOJAC,LISTJ,NWANTJ,CONJACPRD,DJACPRED, 
+     $    DOJAC,LISTJ,NWANTJ,SECANG,CONJACPRD,DJACPRED,H2OJACPRD,
      $    FJACPRED1,FJACPRED2,FJACPRED3,FJACPRED4,FJACPRED5,FJACPRED6,FJACPRED7,
      $    WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
      $    OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,
@@ -223,6 +223,7 @@ C      Input
        INTEGER   NLAY
        INTEGER  NCHN1
        INTEGER CLIST1(MXCHN1)
+       REAL SECANG(MAXLAY)
        REAL  COEF1(N1COEF,MAXLAY,MXCHN1)
        REAL FIXMUL(MAXLAY)
        REAL CONPRD1( N1CON,MAXLAY)
@@ -263,7 +264,8 @@ C
 C      Output
        REAL    TAU(MAXLAY,MXCHAN)
        REAL   TAUZ(MAXLAY,MXCHAN)
-       REAL DTAU_DTZ(MAXLAY,MXCHAN),DTAU_DG1(MAXLAY,MXCHAN),DTAU_DG3(MAXLAY,MXCHAN)
+       REAL DTAU_DTZ(MAXLAY,MXCHAN),DTAU_DG1(MAXLAY,MXCHAN)
+       REAL DTAU_DG3(MAXLAY,MXCHAN)
 
 c input
        LOGICAL DOJAC
@@ -295,11 +297,15 @@ c input
        REAL MJACPRED3(3, N3CH4,MAXLAY)
        REAL CJACPRED4(3,  N4CO,MAXLAY)
        REAL TRCJACPRD(3,NTRACE,MAXLAY)
+c optran
+       REAL   H2OJACPRD(2,NH2O,MXOWLY)
+       REAL  KW_T(MAXLAY)
+       REAL  KW_1(MAXLAY)
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
-       INTEGER      IWHICHJAC,ITRYJAC
+       INTEGER      IWHICHJAC,ITRYJAC,INTERSECT
        INTEGER      I
        INTEGER   ICO2
        INTEGER  IHNO3
@@ -330,7 +336,6 @@ C-----------------------------------------------------------------------
        LOGICAL   LNH3
        LOGICAL   LHDO
        LOGICAL   LSO2
-       INTEGER INTERSECT
 C
 C      for CALOKW
        INTEGER   IH2O
@@ -425,8 +430,9 @@ C         -------------------------
              LH2O=.FALSE.
 C            Calc OPTRAN water
 C
-             CALL CALOKW( NLAY, IH2O, LOPMIN, LOPMAX, LOPLOW, LOPUSE,
-     $          H2OPRD, COFH2O, WAOP, DAOP, WAANG, KW )
+             CALL YCALOKW( NLAY, IH2O, LOPMIN, LOPMAX, LOPLOW, LOPUSE,
+     $          H2OPRD, COFH2O, WAOP, DAOP, WAANG, KW, 
+     $          DOJAC, SECANG, H2OJACPRD, KW_T, KW_1 )
 C
           ELSE
              LH2O=.TRUE.
@@ -685,7 +691,6 @@ C
 
 c************************************************************************
 
-          
           IF (DOJAC) THEN
             DO IWHICHJAC = 1,3
               IF (IWHICHJAC .EQ. 1) THEN 
@@ -696,6 +701,7 @@ c************************************************************************
                 ITRYJAC = 3    !! GID 3
               END IF
               IF (INTERSECT(ITRYJAC,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+cbaba
 C               Initialize the layer-to-space optical depth
                 KZ=0.0E+0
                 KZFW=0.0E+0
@@ -724,12 +730,12 @@ C                  ---------------------------
                       END IF
                     END IF
           
-                   IF (KCON .LT. 0.0E+0) THEN
-                      KCON=0.0E+0
-                   ELSEIF (KCON .GT. 0.1E+0 .AND. ILAY .EQ. 1) THEN
-c  %%%    %%%%%                KCON=1.0E+1
-                     KCON=1.0E-10
-                   ENDIF
+c                   IF (KCON .LT. 0.0E+0) THEN
+c                      KCON=0.0E+0
+c                   ELSEIF (KCON .GT. 0.1E+0 .AND. ILAY .EQ. 1) THEN
+cc  %%%    %%%%%                KCON=1.0E+1
+c                     KCON=1.0E-10
+c                   ENDIF
 C         
           
 C                  -----------------------------
@@ -747,12 +753,12 @@ C                  -----------------------------
 C         
                    KFIX=KFIX*FIXMUL(ILAY)
 C         
-                   IF (KFIX .LT. 0.0E+0) THEN
-                      KFIX=0.0E+0
-                   ELSEIF (KFIX .GT. 0.1E+0 .AND. ILAY .EQ. 1) THEN
-c  %%%    %                KFIX=1.0E+1
-                      KFIX=1.0E-10
-                   ENDIF
+c                   IF (KFIX .LT. 0.0E+0) THEN
+c                      KFIX=0.0E+0
+c                   ELSEIF (KFIX .GT. 0.1E+0 .AND. ILAY .EQ. 1) THEN
+cc  %%%    %                KFIX=1.0E+1
+c                      KFIX=1.0E-10
+c                   ENDIF
 C         
           
 C                  --------------------------
@@ -913,11 +919,18 @@ C            DKHDO=0.0
             KHDO=0.0
 c  cc     
 C                  Limit -DK so it can never totally totally cancel KFIX
-                   DK = DKCO2 + DKSO2 + DKHNO3 + DKN2O + DKNH3
-          
+c                   DK = DKCO2 + DKSO2 + DKHNO3 + DKN2O + DKNH3
+             DK = 0          
                    
 C                  Calc effective layer optical
 C                   write(*,'(A,3(I5),5(F12.4))') 'ycalt1_od',I,J,ILAY,KCON,KFIX,KW(ILAY),KOZO,DK
+                   IF (IWHICHJAC .EQ. 1) THEN 
+                     KW(ILAY) = KW_T(ILAY)
+                   ELSEIF (IWHICHJAC .EQ. 2) THEN 
+                     KW(ILAY) = KW_1(ILAY)
+                   ELSEIF (IWHICHJAC .EQ. 3) THEN 
+                     KW(ILAY) = 0.0
+                   END IF
                    KLAYER = KCON + KFIX + KW(ILAY) + KOZO + DK
                    IF (IWHICHJAC .EQ. 1) THEN 
                      DTAU_DTZ(ILAY,J)=KLAYER
@@ -933,11 +946,12 @@ C                   TAUZ(ILAY,J)=KZ
 C         
                 ENDDO
 C               End loop on levels
-C            ENDDO       !!! DO I = IY,IY
-C            End loops on channel number (frequency)
-          END IF   !!!! IF (INTERSECT(ITRYJAC,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) : is this a jac to work on?????
-        END DO     !!! DO IWHICHJAC = 1,3
-      END IF  !! DOJAC
+C              ENDDO       !!! DO I = IY,IY
+C              End loops on channel number (frequency)
+cbaba
+              END IF   !!!! IF (INTERSECT(ITRYJAC,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) : is this a jac to work on?????
+            END DO     !!! DO IWHICHJAC = 1,3
+          END IF  !! DOJAC
 
 c************************************************************************
 

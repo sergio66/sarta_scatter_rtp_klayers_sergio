@@ -7,6 +7,9 @@ CjacXC
 CjacX      IF (L .EQ. 1) THEN
 CjacX         PDP = PRES(1)*( PRES(2) - PRES(1))
 CjacX         TRZ = 0.0E+0
+              TRZ_T = 0
+              TRZ_1 = 0
+              TRZ_3 = 0
 CjacX         TAZ_O = 0.0E+0
 CjacX         TAZ_M = 0.0E+0
 CjacX      ELSE
@@ -15,10 +18,23 @@ CjacX         PNORM = PNORM + PDP
 CjacXC
 CjacXC        Note: TRZ, TOZ, and TMZ use layer-above terms
 CjacX         TZ = TZ + PDP*TR
+              TZ_T = PDP/RTEMP(L)
+              TZ_1 = 0.0
+              TZ_3 = 0.0
 CjacX         TRZ = TZ/PNORM
+              TRZ_T = TZ_T/PNORM
+              TRZ_1 = 0
+              TRZ_3 = 0
 CjacXC
 CjacX         TOZ = TOZ + PDP*DT*A_O
+              TOZ_T = PDP*(DT_T*A_O + DT*A_O_T)
+              TOZ_1 = PDP*(DT_1*A_O + DT*A_O_1)
+              TOZ_3 = PDP*(DT_3*A_O + DT*A_O_3)
+
 CjacX         TAZ_O = TOZ/PNORM
+              TAZ_O_T = TOZ_T/PNORM
+              TAZ_O_1 = TOZ_1/PNORM
+              TAZ_O_3 = TOZ_3/PNORM
 CjacXC
 CjacX         TMZ = TMZ + PDP*TR*A_M
 CjacX         TAZ_M = TMZ/PNORM

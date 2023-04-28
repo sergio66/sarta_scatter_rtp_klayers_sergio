@@ -205,7 +205,7 @@ C    Calculate bottom cloud2 radiance
          IF (LBLAC2) THEN
             CALL CALRAD0( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
      $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC2, DOJAC, RADLAY )
+     $          RHOTHR, LABOVE, COEFF, RADC2, DOJAC, CLDTAU, RADLAY )
          ELSE
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
@@ -226,7 +226,7 @@ C      Calculate combined cloud1+cloud2 radiance
             CALL CALRAD1( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12, DOJAC, CLDTAU )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12, DOJAC, CLDTAU, RADLAY )
          ELSE
             CALL CALRAD2( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
@@ -268,7 +268,7 @@ C     Calculate top cloud1 radiance
          IF (LBLAC1) THEN
             CALL CALRAD0( DOSUN, I, LCTOP1, RPLNCK, RSURFC, SECANG,
      $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC1 )
+     $          RHOTHR, LABOVE, COEFF, RADC1, DOJAC, CLDTAU, RADLAY )
          ELSE
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,

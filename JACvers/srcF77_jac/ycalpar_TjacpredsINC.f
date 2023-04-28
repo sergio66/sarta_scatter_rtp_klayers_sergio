@@ -8,6 +8,7 @@ C         ----------------------
 C
 C          -----
 C          Fixed (for FWO, FOW, FMW, & FCOW)
+C          recall d(u/v) = (v du - u dv)/v^2
 C          -----
  
           TJUNKS_T = 2*TR*TR_T
@@ -24,8 +25,8 @@ C          -----
            FJACPRED1(1,4,L)=SECANG(L)*TJUNKS_T
            FJACPRED1(1,5,L)=TR_T
            FJACPRED1(1,6,L)=TJUNKS_T
-           FJACPRED1(1,7,L)=SECANG(L)*TRZ
-           FJACPRED1(1,8,L)=SECANG(L)*TRZ/TR
+           FJACPRED1(1,7,L)=SECANG(L)*TRZ_T
+           FJACPRED1(1,8,L)=SECANG(L)*(TR*TRZ_T - TRZ*TR_T)/TR/TR
  
            FJACPRED2(1,1,L)=FJACPRED1(1,1,L)
            FJACPRED2(1,2,L)=FJACPRED1(1,2,L)
@@ -45,97 +46,100 @@ C          -----
            FJACPRED3(1,7,L)=FJACPRED1(1,7,L)
            FJACPRED3(1,8,L)=FJACPRED1(1,8,L)
  
-           FJACPRED4(1,1,L)=SECANG(L)
-           FJACPRED4(1,2,L)=SECANG(L)*SECANG(L)
-           FJACPRED4(1,3,L)=SECANG(L)*TR
-           FJACPRED4(1,4,L)=SECANG(L)*TJUNKS
-           FJACPRED4(1,5,L)=TR
-           FJACPRED4(1,6,L)=TJUNKS
-           FJACPRED4(1,7,L)=SECANG(L)*TRZ
-           FJACPRED4(1,8,L)=SECANG(L)*SECANG(L)*TRZ
-           FJACPRED4(1,9,L)=SECANG(L)*SECANG(L)*TR
-           FJACPRED4(1,10,L)=SECANG(L)*SECANG(L)*SECANG(L)
-           FJACPRED4(1,11,L)=SQRT(SECANG(L))
+           FJACPRED4(1,1,L)=0.0
+           FJACPRED4(1,2,L)=0.0
+           FJACPRED4(1,3,L)=SECANG(L)*TR_T
+           FJACPRED4(1,4,L)=SECANG(L)*TJUNKS_T
+           FJACPRED4(1,5,L)=TR_T
+           FJACPRED4(1,6,L)=TJUNKS_T
+           FJACPRED4(1,7,L)=SECANG(L)*TRZ_T
+           FJACPRED4(1,8,L)=SECANG(L)*SECANG(L)*TRZ_T
+           FJACPRED4(1,9,L)=SECANG(L)*SECANG(L)*TR_T
+           FJACPRED4(1,10,L)=0
+           FJACPRED4(1,11,L)=0
  
 C          Fixed predictors for FWO sun bfsw = set5
-           FJACPRED5(1,1,L)=SECANG(L)
-           FJACPRED5(1,2,L)=SECANG(L)*SECANG(L)
-           FJACPRED5(1,3,L)=SECANG(L)*TR
-           FJACPRED5(1,4,L)=SECANG(L)*TJUNKS
-           FJACPRED5(1,5,L)=TR
-           FJACPRED5(1,6,L)=TJUNKS
-           FJACPRED5(1,7,L)=SECANG(L)*TRZ
-           FJACPRED5(1,8,L)=SECANG(L)*TRZ/TR
-           FJACPRED5(1,9,L)=SECANG(L)*SECANG(L)*TR
-           FJACPRED5(1,10,L)=SQRT(SECANG(L))
-           FJACPRED5(1,11,L)=TRZ
+           FJACPRED5(1,1,L)=0.0
+           FJACPRED5(1,2,L)=0.0
+           FJACPRED5(1,3,L)=SECANG(L)*TR_T
+           FJACPRED5(1,4,L)=SECANG(L)*TJUNKS_T
+           FJACPRED5(1,5,L)=TR_T
+           FJACPRED5(1,6,L)=TJUNKS_T
+           FJACPRED5(1,7,L)=SECANG(L)*TRZ_T
+           FJACPRED5(1,8,L)=SECANG(L)*(TR*TRZ_T - TRZ*TR_T)/TR/TR
+           FJACPRED5(1,9,L)=SECANG(L)*SECANG(L)*TR_T
+           FJACPRED5(1,10,L)=0.0
+           FJACPRED5(1,11,L)=TRZ_T
  
 c          Fixed predictors for FWO sun mfmw = set6
-           FJACPRED6(1,1,L)=SECANG(L)
-           FJACPRED6(1,2,L)=SECANG(L)*SECANG(L)
-           FJACPRED6(1,3,L)=SECANG(L)*TR
-           FJACPRED6(1,4,L)=SECANG(L)*TJUNKS
-           FJACPRED6(1,5,L)=TR
-           FJACPRED6(1,6,L)=TJUNKS
-           FJACPRED6(1,7,L)=SECANG(L)*TRZ
-           FJACPRED6(1,8,L)=SQRT(SECANG(L))
+           FJACPRED6(1,1,L)=0
+           FJACPRED6(1,2,L)=0
+           FJACPRED6(1,3,L)=SECANG(L)*TR_T
+           FJACPRED6(1,4,L)=SECANG(L)*TJUNKS_T
+           FJACPRED6(1,5,L)=TR_T
+           FJACPRED6(1,6,L)=TJUNKS_T
+           FJACPRED6(1,7,L)=SECANG(L)*TRZ_T
+           FJACPRED6(1,8,L)=0.0
  
 C          Fixed predictors for FWO sun mfbw = set7
-           FJACPRED7(1,1,L)=SECANG(L)
-           FJACPRED7(1,2,L)=SECANG(L)*SECANG(L)
-           FJACPRED7(1,3,L)=SECANG(L)*TR
-           FJACPRED7(1,4,L)=SECANG(L)*TJUNKS
-           FJACPRED7(1,5,L)=TR
-           FJACPRED7(1,6,L)=TJUNKS
-           FJACPRED7(1,7,L)=SECANG(L)*TRZ
-           FJACPRED7(1,8,L)=SQRT(SECANG(L))
- 
+           FJACPRED7(1,1,L)=0
+           FJACPRED7(1,2,L)=0
+           FJACPRED7(1,3,L)=SECANG(L)*TR_T
+           FJACPRED7(1,4,L)=SECANG(L)*TJUNKS_T
+           FJACPRED7(1,5,L)=TR_T
+           FJACPRED7(1,6,L)=TJUNKS_T
+           FJACPRED7(1,7,L)=SECANG(L)*TRZ_T
+           FJACPRED7(1,8,L)=0
  
 c          -----
 C          Ozone
 C          -----
-           OJUNKA=SECANG(L)*A_O
-           OJUNKR=SQRT( OJUNKA )
-           OJUNKZ=OJUNKA/XZ_O
-           OJUNKX=SECANG(L)*XZ_O
+           OJUNKA_T=SECANG(L)*A_O_T                     !!! A_O_T = 0!!!
+           OJUNKR_T=SQRT(SECANG(L))*0.5/SQRT(A_O)*A_O_T !!! A_O_T = 0!!!
+           OJUNKZ_T=(XZ_O*OJUNKA_T - OJUNKA*XZ_O_T)/XZ_O/XZ_O
+           OJUNKZ_T=(XZ_O*OJUNKA_T - OJUNKA*XZ_O_T)/XZ_O/XZ_O
+           OJUNKX_T=SECANG(L)*XZ_O_T
 
 C          Ozone predictors for FWO = set1
-           OJACPRED1(1,1,L)=OJUNKA
-           OJACPRED1(1,2,L)=OJUNKR
-           OJACPRED1(1,3,L)=OJUNKA*DT
-           OJACPRED1(1,4,L)=OJUNKA*OJUNKA
-           OJACPRED1(1,5,L)=OJUNKR*DT
+           OJACPRED1(1,1,L)=OJUNKA_T
+           OJACPRED1(1,2,L)=OJUNKR_T
+           OJACPRED1(1,3,L)=OJUNKA_T*DT + OJUNKA*DT_T
+           OJACPRED1(1,4,L)=2*OJUNKA*OJUNKA_T
+           OJACPRED1(1,5,L)=OJUNKR_T*DT + OJUNKR*DT_T
 
 C          ozone predictors for FOW = set2
-           OJACPRED2(1, 1,L)=OJUNKA
-           OJACPRED2(1, 2,L)=OJUNKR
-           OJACPRED2(1, 3,L)=OJUNKA*DT
-           OJACPRED2(1, 4,L)=OJUNKA*OJUNKA
-           OJACPRED2(1, 5,L)=OJUNKR*DT
-           OJACPRED2(1, 6,L)=OJUNKZ*A_O
-           OJACPRED2(1, 7,L)=OJUNKR*A_O/XZ_O
-           OJACPRED2(1, 8,L)=OJUNKZ*AZ_O
-           OJACPRED2(1, 9,L)=OJUNKA*SQRT( OJUNKX )
-           OJACPRED2(1,10,L)=OJUNKA*TAZ_O*SECANG(L)
-C
+           OJACPRED2(1, 1,L)=OJUNKA_T
+           OJACPRED2(1, 2,L)=OJUNKR_T
+           OJACPRED2(1, 3,L)=OJUNKA_T*DT + OJUNKA*DT_T
+           OJACPRED2(1, 4,L)=2*OJUNKA*OJUNKA_T
+           OJACPRED2(1, 5,L)=OJUNKR*DT_T + OJUNKR_T*DT
+           OJACPRED2(1, 6,L)=OJUNKZ*A_O_T + OJUNKZ_T*A_O
+           OJACPRED2(1, 7,L)=OJUNKR_T*A_O/XZ_O + OJUNKR*(XZ_O*A_O_T - A_O*XZ_O_T)/XZ_O/XZ_O 
+           OJACPRED2(1, 8,L)=(OJUNKZ*AZ_O_T + OJUNKZ_T*AZ_O)
+           OJACPRED2(1, 9,L)=(OJUNKA*0.5/SQRT( OJUNKX )*OJUNKX_T + OJUNKA_T*SQRT(OJUNKX))
+           OJACPRED2(1,10,L)=(OJUNKA*TAZ_O_T + OJUNKA_T*TAZ_O)*SECANG(L)
+
 C          There are no ozone predictors for set3 = FMW (the ozone
 C          absorption in the region covered by FMW is negligible).
  
 C          ozone predictors for FCOW = set4
-           OJACPRED4(1,1,L)=OJUNKA
-           OJACPRED4(1,2,L)=OJUNKR
-           OJACPRED4(1,3,L)=OJUNKA*DT
+           OJACPRED4(1,1,L)=OJUNKA_T
+           OJACPRED4(1,2,L)=OJUNKR_T
+           OJACPRED4(1,3,L)=OJUNKA_T*DT + OJUNKA*DT_T
 C
 C          ozone predictors for FWO sun bfsw = set5
-           OJACPRED5(1,1,L)=OJUNKA
+           OJACPRED5(1,1,L)=OJUNKA_T
 C
 C          ozone predictors for FWO sun mfmw = set6
-           OJACPRED6(1,1,L)=OJUNKA
+           OJACPRED6(1,1,L)=OJUNKA_T
 C
 C          ozone predictors for FWO sun mfbw = set7
-           OJACPRED7(1,1,L)=OJUNKA
+           OJACPRED7(1,1,L)=OJUNKA_T
 C
 C
+c STOPPED HERE STOPPED HERE STOPPED HERE 
+c STOPPED HERE STOPPED HERE STOPPED HERE 
+c STOPPED HERE STOPPED HERE STOPPED HERE 
 C          -------
 C          Methane for FMW = set3
 C          -------
@@ -151,56 +155,61 @@ C          -------
            MJACPRED3(1,7,L)=A_M*DT
            MJACPRED3(1,8,L)=TAZ_M*SECANG(L)
            MJACPRED3(1,9,L)=SQRT( MJUNKZ )
+c STOPPED HERE STOPPED HERE STOPPED HERE 
+c STOPPED HERE STOPPED HERE STOPPED HERE 
+c STOPPED HERE STOPPED HERE STOPPED HERE 
+
 C
 C
 C          -----
 C          Water
 C          -----
-           WJUNKA=SECANG(L)*A_W
-           WJUNKR=SQRT( WJUNKA )
-           WJUNKS=WJUNKA*WJUNKA
-           WJUNKZ=WJUNKA*A_W/AZ_W
-           WJUNK4=SQRT( WJUNKR )
+           WJUNKA_T=SECANG(L)*A_W_T
+           WJUNKR_T=SQRT(SECANG(L))*0.5/SQRT(A_W)*A_W_T
+           WJUNKS_T=2*WJUNKA*WJUNKA_T
+           WJUNKZ_T=WJUNKA_T*A_W/AZ_W + WJUNKA*(AZ_W*A_W_T - A_W*AZ_W_T)/AZ_W/AZ_W
+           WJUNK4_T=(SECANG(L)**0.25)*0.25/(A_W**(0.75))*A_W_T
 
 C          Water predictors for FWO = set1
-           WJACPRED1(1, 1,L)=WJUNKA
-           WJACPRED1(1, 2,L)=WJUNKR
-           WJACPRED1(1, 3,L)=WJUNKZ
-           WJACPRED1(1, 4,L)=WJUNKA*DT
-           WJACPRED1(1, 5,L)=WJUNKS
-           WJACPRED1(1, 6,L)=WJUNKR*DT
-           WJACPRED1(1, 7,L)=WJUNK4
-           WJACPRED1(1, 8,L)=WJUNKZ/WJUNKR
-           WJACPRED1(1, 9,L)=WJUNKS*WJUNKA
-           WJACPRED1(1,10,L)=A_W
-           WJACPRED1(1,11,L)=WJUNKA*DT*ABS( DT )
+           WJACPRED1(1, 1,L)=WJUNKA_T
+           WJACPRED1(1, 2,L)=WJUNKR_T
+           WJACPRED1(1, 3,L)=WJUNKZ_T
+           WJACPRED1(1, 4,L)=WJUNKA_T*DT + WJUNKA*DT_T
+           WJACPRED1(1, 5,L)=WJUNKS_T
+           WJACPRED1(1, 6,L)=WJUNKR_T*DT + WJUNKR*DT_T
+           WJACPRED1(1, 7,L)=WJUNK4_T
+           WJACPRED1(1, 8,L)=(WJUNKR*WJUNKZ_T - WJUNKZ*WJUNKR_T)/WJUNKR/WJUNKR
+           WJACPRED1(1, 9,L)=WJUNKS*WJUNKA_T + WJUNKS_T*WJUNKA 
+           WJACPRED1(1,10,L)=A_W_T
+           WJACPRED1(1,11,L)=WJUNKA*2*DT*DT_T + WJUNKA_T*(DT**2)
 
 C          water predictors for FOW = set2
-           WJACPRED2(1, 1,L)=WJUNKA
-           WJACPRED2(1, 2,L)=WJUNKR
-           WJACPRED2(1, 3,L)=WJUNKA*DT
-           WJACPRED2(1, 4,L)=WJUNKA*OJUNKX
-           WJACPRED2(1, 5,L)=WJUNKS
-           WJACPRED2(1, 6,L)=WJUNK4
-           WJACPRED2(1, 7,L)=WJUNKR*DT
-           WJACPRED2(1, 8,L)=WJUNKZ
-           WJACPRED2(1, 9,L)=WJUNKA*WJUNKS
-           WJACPRED2(1,10,L)=WJUNKA*OJUNKX*OJUNKX
-           WJACPRED2(1,11,L)=WJUNKZ/WJUNKR
+           WJACPRED2(1, 1,L)=WJUNKA_T
+           WJACPRED2(1, 2,L)=WJUNKR_T
+           WJACPRED2(1, 3,L)=WJUNKA_T*DT + WJUNKA*DT_T
+           WJACPRED2(1, 4,L)=WJUNKA_T*OJUNKX + WJUNKA*OJUNKX_T
+           WJACPRED2(1, 5,L)=WJUNKS_T
+           WJACPRED2(1, 6,L)=WJUNK4_T
+           WJACPRED2(1, 7,L)=WJUNKR_T*DT + WJUNKR*DT_T
+           WJACPRED2(1, 8,L)=WJUNKZ_T
+           WJACPRED2(1, 9,L)=WJUNKA_T*WJUNKS + WJUNKA*WJUNKS_T
+           WJACPRED2(1,10,L)=WJUNKA_T*OJUNKX*OJUNKX + WJUNKA*OJUNKX_T*OJUNKX + WJUNKA*OJUNKX*OJUNKX_T
+           WJACPRED2(1,11,L)=(WJUNKR*WJUNKZ_T - WJUNKZ*WJUNKR_T)/ WJUNKR/WJUNKR
 
 C          water predictors for FMW = set3
-           WJACPRED3(1, 1,L)=WJUNKA
-           WJACPRED3(1, 2,L)=WJUNKR
-           WJACPRED3(1, 3,L)=WJUNKZ
-           WJACPRED3(1, 4,L)=WJUNKA*DT
-           WJACPRED3(1, 5,L)=WJUNKS
-           WJACPRED3(1, 6,L)=WJUNKR*DT
-           WJACPRED3(1, 7,L)=WJUNK4
-           WJACPRED3(1, 8,L)=WJUNKS*WJUNKA
-           WJACPRED3(1, 9,L)=A_W
-           WJACPRED3(1,10,L)=WJUNKZ/WJUNKR
-           WJACPRED3(1,11,L)=WJUNKR*MJUNKZ
+           WJACPRED3(1, 1,L)=WJUNKA_T
+           WJACPRED3(1, 2,L)=WJUNKR_T
+           WJACPRED3(1, 3,L)=WJUNKZ_T
+           WJACPRED3(1, 4,L)=WJUNKA_T*DT + WJUNKA*DT_T
+           WJACPRED3(1, 5,L)=WJUNKS_T
+           WJACPRED3(1, 6,L)=WJUNKR_T*DT + WJUNKR*DT_T
+           WJACPRED3(1, 7,L)=WJUNK4_T
+           WJACPRED3(1, 8,L)=WJUNKS_T*WJUNKA + WJUNKS*WJUNKA_T
+           WJACPRED3(1, 9,L)=A_W_T
+           WJACPRED3(1,10,L)=(WJUNKR*WJUNKZ_T - WJUNKZ*WJUNKR_T)/WJUNKR/WJUNKR
+           WJACPRED3(1,11,L)=WJUNKR_T*MJUNKZ + WJUNKR*MJUNKZ_T
 
+c STOPPPED HERE STOPPED HERE XXXXXXX
 C          water predictors for FCOW = set4
            WJACPRED4(1, 1,L)=WJUNKA
            WJACPRED4(1, 2,L)=A_W
@@ -244,17 +253,18 @@ C          Water predictors for FWO sun mfbw = set7
            WJACPRED7(1,11,L)=WJUNKA*WJUNKZ
            WJACPRED7(1,12,L)=WJUNKA*A_W
            WJACPRED7(1,13,L)=WJUNKS/WJUNK4
+c STOPPPED HERE STOPPED HERE XXXXXXX
 
 C          ---------------
 C          Water continuum (for FWO, FOW, FMW, FCOW)
 C          ---------------
-           CONJACPRD(1,1,L)=WJUNKA/TJUNKS
-           CONJACPRD(1,2,L)=CONJACPRD(1,1,L)*A_W/TJUNKS
-           CONJACPRD(1,3,L)=WJUNKA/TR
-           CONJACPRD(1,4,L)=CONJACPRD(1,3,L)*A_W
-           CONJACPRD(1,5,L)=CONJACPRD(1,1,L)*A_W
-           CONJACPRD(1,6,L)=CONJACPRD(1,1,L)/TJUNKS
-           CONJACPRD(1,7,L)=WJUNKA
+           CONJACPRD(1,1,L)=(TJUNKS*WJUNKA_T - WJUNKA*TJUNKS_T)/TJUNKS/TJUNKS
+           CONJACPRD(1,2,L)=CONJACPRD(1,1,L)*A_W/TJUNKS + CONPRD(1,L)*(TJUNKS*A_W_T - A_W*TJUNKS_T)/TJUNKS/TJUNKS
+           CONJACPRD(1,3,L)=(TR*WJUNKA_T - WJUNKA*TR_T)/TR/TR
+           CONJACPRD(1,4,L)=CONJACPRD(1,3,L)*A_W + CONPRD(3,L)*A_W_T
+           CONJACPRD(1,5,L)=CONJACPRD(1,1,L)*A_W + CONPRD(1,L)*A_W_T
+           CONJACPRD(1,6,L)=(TJUNKS*CONJACPRD(1,1,L) - CONPRD(1,L)*TJUNKS_T)/TJUNKS/TJUNKS
+           CONJACPRD(1,7,L)=WJUNKA_T
 C         print *,'CALPAR CONJACPRD(1,1,L) = ',L,WJUNKA,TJUNKS,CONJACPRD(1,1,L)
 
 C          ---------------

@@ -510,8 +510,8 @@ C-----------------------------------------------------------------------
        REAL  PNORM
        REAL     DT, DT_T, DT_1, DT_3
        REAL     TR, TR_T, TR_1, TR_3
-       REAL     TZ
-       REAL    TRZ
+       REAL     TZ, TZ_T, TZ_1, TZ_3
+       REAL    TRZ, TRZ_T, TRZ_1, TRZ_3
        REAL    A_F, A_F_T, A_F_1, A_F_3
        REAL    A_W, A_W_T, A_W_1, A_W_3
        REAL  WZREF
@@ -524,8 +524,8 @@ C-----------------------------------------------------------------------
        REAL  OZREF
        REAL     OZ
        REAL   AZ_O, AZ_O_T, AZ_O_1, AZ_O_3
-       REAL    TOZ
-       REAL  TAZ_O
+       REAL    TOZ, TOZ_T, TOZ_1, TOZ_3
+       REAL  TAZ_O, TAZ_O_T, TAZ_O_1, TAZ_O_3
        REAL    A_C
        REAL     CZ
        REAL  CZREF
@@ -537,27 +537,27 @@ C-----------------------------------------------------------------------
        REAL    TMZ
        REAL  TAZ_M
        REAL TJUNKS, TJUNKS_T, TJUNKS_1, TJUNKS_3
-       REAL WJUNKA
-       REAL WJUNKR
-       REAL WJUNKS
-       REAL WJUNKZ
-       REAL WJUNK4
+       REAL WJUNKA, WJUNKA_T, WJUNKA_1, WJUNKA_3
+       REAL WJUNKR, WJUNKR_T, WJUNKR_1, WJUNKR_3
+       REAL WJUNKS, WJUNKS_T, WJUNKS_1, WJUNKS_3
+       REAL WJUNKZ, WJUNKZ_T, WJUNKZ_1, WJUNKZ_3
+       REAL WJUNK4, WJUNK4_T, WJUNK4_1, WJUNK4_3
        REAL DJUNKA
        REAL DJUNKR
        REAL DJUNKS
        REAL DJUNKZ
        REAL DJUNK4
-       REAL OJUNKA
-       REAL OJUNKR
-       REAL OJUNKZ
-       REAL OJUNKX
+       REAL OJUNKA, OJUNKA_T, OJUNKA_1, OJUNKA_3
+       REAL OJUNKR, OJUNKR_T, OJUNKR_1, OJUNKR_3
+       REAL OJUNKZ, OJUNKZ_T, OJUNKZ_1, OJUNKZ_3
+       REAL OJUNKX, OJUNKX_T, OJUNKX_1, OJUNKX_3
        REAL CJUNKA
        REAL CJUNKR
        REAL CJUNKS
        REAL CJUNKZ
-       REAL MJUNKA
-       REAL MJUNKR
-       REAL MJUNKZ
+       REAL MJUNKA, MJUNKA_T, MJUNKA_1, MJUNKA_3
+       REAL MJUNKR, MJUNKR_T, MJUNKR_1, MJUNKR_3
+       REAL MJUNKZ, MJUNKZ_T, MJUNKZ_1, MJUNKZ_3
 
 C      Variables for fixed gases adjustment
        REAL PWATER, PWATER_T, PWATER_1, PWATER_3
