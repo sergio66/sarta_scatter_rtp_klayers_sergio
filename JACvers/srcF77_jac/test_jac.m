@@ -15,15 +15,24 @@ eval(sartaer);
 
 figure(1); clf; plot(h.vchan,rad2bt(h.vchan,porig.rcalc)-rad2bt(h.vchan,pnew.rcalc)); xlim([640 1640]); title('BT DIFF orig-new')
 
-[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_WGTFCN',200);  dd = squeeze(d(1,:,:)); whos dd d
+[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_WGTFCN',200);  dd = squeeze(d(1,:,:)); % whos dd d
 figure(2); clf; pcolor(h.vchan,1:97,dd(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('WGT ANALYTIC'); colormap jet; caxis([0 1]/10); xlim([640 1640])
 
-[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacTZ',100);  dd = squeeze(d(1,:,:)); whos dd d
+[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacTZ',100);  dd = squeeze(d(1,:,:)); % whos dd d
 figure(1); clf; plot(h.vchan,rad2bt(h.vchan,porig.rcalc)-rad2bt(h.vchan,pnew.rcalc),'kx-',h.vchan,jacx.jac(:,7),'b',h.vchan,dd(:,98),'r'); xlim([640 1640]); 
   hl = legend('BT DIFF orig-new','finite diff','analytic','location','best','fontsize',10);
 figure(3); clf; pcolor(h.vchan,1:97,jacx.tjac(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('TZ FINITE DIFF'); colormap jet; caxis([0 1]/10); xlim([640 1640])
 figure(4); clf; pcolor(h.vchan,1:97,dd(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('TZ ANALYTIC'); colormap jet; caxis([0 1]/10); xlim([640 1640])
+figure(7); clf; 
+  figure(7); hold on; plot(h.vchan,10*sum(jacx.tjac(:,1:97)'),'r.-',h.vchan,10*nansum(dd(:,1:97)'),'m'); hold on
 
-[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacG1',1);  dd = squeeze(d(1,:,:)); whos dd d
+[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacG1',1);  dd = squeeze(d(1,:,:)); % whos dd d
 figure(5); clf; pcolor(h.vchan,1:97,jacx.wvjac(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('G1 FINITE DIFF'); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
 figure(6); clf; pcolor(h.vchan,1:97,dd(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('G1 ANALYTIC'); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
+  figure(7); hold on; plot(h.vchan,sum(jacx.wvjac(:,1:97)'),'b.-',h.vchan,sum(dd(:,1:97)'),'c'); hold off; axis([640 1640 -10 +10])
+  hl = legend('10*sum(TZjac),finite diff','10*sum(TZjac),analytic','sum(WVjac),finite diff','sum(WVjac),analytic','location','best','fontsize',10);
+
+
+%{
+  figure(7); clf; plot(h.vchan,sum(jacx.wvjac(:,1:97)')./sum(dd(:,1:97)'),'b'); hold off; axis([640 1640 0 +2]); title('WVjac FINITE/ANALYTIC')
+%}

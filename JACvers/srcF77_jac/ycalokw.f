@@ -259,6 +259,11 @@ C         Interpolate abs coef and convert to optical depth
 c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L)
             KW_T(L)=( DAOP(L)*( KWOP_T(LOPLOW(L) + 1) -
      $       KWOP_T(LOPLOW(L)) ) + KWOP_T(LOPLOW(L)) )*WAANG(L)
+
+c    ycalowp.f shows DAOP depends on T and WV
+            KW_T(L)=KW_T(L) + ( DAOPJAC(1,L)*( KWOP(LOPLOW(L) + 1) -
+     $       KWOP(LOPLOW(L)) ))*WAANG(L)
+
 c            IF (KW_T(L) .LT. 0.0E+0) KW(L)=0.0E+0
 C
          ENDIF
@@ -299,10 +304,8 @@ c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L)
      $       KWOP_1(LOPLOW(L)) ) + KWOP_1(LOPLOW(L)) )*WAANG(L)
 
 c    ycalowp.f shows DAOP depends on T and WV
-c            KW_T(L)=KW_T(L) + ( DAOPJAC(1,L)*( KWOP(LOPLOW(L) + 1) -
-c     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*SECANG(L)
-c            KW_1(L)=KW_1(L) + ( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
-c     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*SECANG(L)
+            KW_1(L)=KW_1(L) + ( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
+     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*WAANG(L)
 
 c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L) so d WAANG(L)/dQ = SECANG(L)
             KW_1(L)=KW_1(L) + ( DAOP(L)*( KWOP(LOPLOW(L) + 1) -

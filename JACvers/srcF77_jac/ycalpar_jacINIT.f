@@ -38,6 +38,10 @@ CjacX         TAZ_O = TOZ/PNORM
 CjacXC
 CjacX         TMZ = TMZ + PDP*TR*A_M
 CjacX         TAZ_M = TMZ/PNORM
+              TAZ_M_T = 1/PNORM*PDP*(TR_T*A_M + TR*A_M_T)
+              TAZ_M_1 = 1/PNORM*PDP*(TR_1*A_M + TR*A_M_1)
+              TAZ_M_3 = 1/PNORM*PDP*(TR_3*A_M + TR*A_M_3)
+              TAZ_M_6 = 1/PNORM*PDP*(TR_6*A_M + TR*A_M_6)
 CjacX      ENDIF
 CjacXC
 CjacXC     Temperature terms
@@ -49,6 +53,9 @@ CjacXC     water terms
 CjacXC     ozone terms
       DT_3 = 0.0
       TR_3 = 0.0
+CjacXC     ch4 terms
+      DT_6 = 0.0
+      TR_6 = 0.0
 CjacXC
 CjacXC     Calc the fixed gases correction term for this layer
       PWATER = KMOLE*PWAMNT(L)*PTEMP(L)/(STDDEN*STDTMP*100*DZREF(L))
@@ -104,7 +111,19 @@ CjacX      CZ = CZ + PDP*PCAMNT(L)
 CjacXC
 CjacXC     Methane terms
       A_M = PMAMNT(L)/RMAMNT(L)
+      A_M_T = 0
+      A_M_1 = 0
+      A_M_3 = 0
+      A_M_6 = 1/RMAMNT(L)
 CjacX      MZREF = MZREF + PDP*RMAMNT(L)
 CjacX      MZ = MZ + PDP*PMAMNT(L)
+      MZ_T   = 0
+      MZ_1   = 0
+      MZ_3   = 0
+      MZ_6   = PDP
       AZ_M = MZ/MZREF
+      AZ_M_T = MZ_T/MZREF
+      AZ_M_1 = MZ_1/MZREF
+      AZ_M_3 = MZ_3/MZREF
+      AZ_M_6 = MZ_6/MZREF
 

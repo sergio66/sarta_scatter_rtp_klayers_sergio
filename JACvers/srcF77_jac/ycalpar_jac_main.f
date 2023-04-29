@@ -508,8 +508,8 @@ C-----------------------------------------------------------------------
        INTEGER      L, IWHICHJAC
        REAL    PDP
        REAL  PNORM
-       REAL     DT, DT_T, DT_1, DT_3
-       REAL     TR, TR_T, TR_1, TR_3
+       REAL     DT, DT_T, DT_1, DT_3, DT_6
+       REAL     TR, TR_T, TR_1, TR_3, TR_6
        REAL     TZ, TZ_T, TZ_1, TZ_3
        REAL    TRZ, TRZ_T, TRZ_1, TRZ_3
        REAL    A_F, A_F_T, A_F_1, A_F_3
@@ -530,12 +530,12 @@ C-----------------------------------------------------------------------
        REAL     CZ
        REAL  CZREF
        REAL   AZ_C
-       REAL    A_M
+       REAL    A_M, A_M_T, A_M_1, A_M_3, A_M_6
        REAL  MZREF
-       REAL     MZ
-       REAL   AZ_M
+       REAL     MZ, MZ_T, MZ_1, MZ_3, MZ_6
+       REAL   AZ_M, AZ_M_T, AZ_M_1, AZ_M_3, AZ_M_6
        REAL    TMZ
-       REAL  TAZ_M
+       REAL  TAZ_M, TAZ_M_T, TAZ_M_1, TAZ_M_3, TAZ_M_6
        REAL TJUNKS, TJUNKS_T, TJUNKS_1, TJUNKS_3
        REAL WJUNKA, WJUNKA_T, WJUNKA_1, WJUNKA_3
        REAL WJUNKR, WJUNKR_T, WJUNKR_1, WJUNKR_3
@@ -555,9 +555,9 @@ C-----------------------------------------------------------------------
        REAL CJUNKR
        REAL CJUNKS
        REAL CJUNKZ
-       REAL MJUNKA, MJUNKA_T, MJUNKA_1, MJUNKA_3
-       REAL MJUNKR, MJUNKR_T, MJUNKR_1, MJUNKR_3
-       REAL MJUNKZ, MJUNKZ_T, MJUNKZ_1, MJUNKZ_3
+       REAL MJUNKA, MJUNKA_T, MJUNKA_1, MJUNKA_3, MJUNKA_6
+       REAL MJUNKR, MJUNKR_T, MJUNKR_1, MJUNKR_3, MJUNKR_6
+       REAL MJUNKZ, MJUNKZ_T, MJUNKZ_1, MJUNKZ_3, MJUNKZ_6
 
 C      Variables for fixed gases adjustment
        REAL PWATER, PWATER_T, PWATER_1, PWATER_3
