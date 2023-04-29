@@ -176,7 +176,8 @@ C     Calculate clear radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(1,:,I) = TAU(:,I)   !!! CLDTAU is a dummy
-        RAD4(1,:,I) = -RADLAY + RPLNCK
+        ! RAD4(1,:,I) = (-RADLAY + RPLNCK)
+        RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
 
 C     Store original values
@@ -217,7 +218,8 @@ C    Calculate bottom cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(3,:,I) = CLDTAU
-        RAD4(3,:,I) = -RADLAY + RPLNCK
+        ! RAD4(3,:,I) = (-RADLAY + RPLNCK)
+        RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
 
 C      Calculate combined cloud1+cloud2 radiance
@@ -239,7 +241,8 @@ C      Calculate combined cloud1+cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(4,:,I) = CLDTAU
-        RAD4(4,:,I) = -RADLAY + RPLNCK
+        ! RAD4(4,:,I) = (-RADLAY + RPLNCK)
+        RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
 
 C     Restore original values
@@ -280,7 +283,8 @@ C     Calculate top cloud1 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(2,:,I) = CLDTAU
-        RAD4(2,:,I) = -RADLAY + RPLNCK
+        ! RAD4(2,:,I) = (-RADLAY + RPLNCK)
+        RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
 
 c      Total the clear & various cloudy radiances

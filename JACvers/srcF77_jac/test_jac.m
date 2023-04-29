@@ -1,8 +1,9 @@
-addpath /home/sergio/MATLABCODE/COLORMAP
+addpath /home/sergio/MATLABCODE_Git
+addpath /home/sergio/MATLABCODE_Git/COLORMAP
 
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp';
-iProf = 1;  %% satzen = -50 deg
 iProf = 45; %% satzen =  0  deg
+iProf = 1;  %% satzen = -50 deg
 
 if ~exist('porig')
   sartaer = ['!date; time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
@@ -13,6 +14,9 @@ if ~exist('porig')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% time with and without jacs
+sartaer = ['!ls -lt ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug; date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
+eval(sartaer);
 sartaer = ['!ls -lt ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug; date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)  ' listj=-1'];
 eval(sartaer);
 [h,ha,pnew,pa] = rtpread('newdayx.rtp');
