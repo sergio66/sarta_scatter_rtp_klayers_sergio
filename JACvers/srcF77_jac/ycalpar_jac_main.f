@@ -526,10 +526,10 @@ C-----------------------------------------------------------------------
        REAL   AZ_O, AZ_O_T, AZ_O_1, AZ_O_3
        REAL    TOZ, TOZ_T, TOZ_1, TOZ_3
        REAL  TAZ_O, TAZ_O_T, TAZ_O_1, TAZ_O_3
-       REAL    A_C
+       REAL    A_C, A_C_T, A_C_1, A_C_3, A_C_5
        REAL     CZ
        REAL  CZREF
-       REAL   AZ_C
+       REAL   AZ_C, AZ_C_T, AZ_C_1, AZ_C_3
        REAL    A_M, A_M_T, A_M_1, A_M_3, A_M_6
        REAL  MZREF
        REAL     MZ, MZ_T, MZ_1, MZ_3, MZ_6
@@ -551,10 +551,10 @@ C-----------------------------------------------------------------------
        REAL OJUNKR, OJUNKR_T, OJUNKR_1, OJUNKR_3
        REAL OJUNKZ, OJUNKZ_T, OJUNKZ_1, OJUNKZ_3
        REAL OJUNKX, OJUNKX_T, OJUNKX_1, OJUNKX_3
-       REAL CJUNKA
-       REAL CJUNKR
-       REAL CJUNKS
-       REAL CJUNKZ
+       REAL CJUNKA, CJUNKA_T, CJUNKA_1, CJUNKA_3, CJUNKA_5
+       REAL CJUNKR, CJUNKR_T, CJUNKR_1, CJUNKR_3, CJUNKR_5
+       REAL CJUNKS, CJUNKS_T, CJUNKS_1, CJUNKS_3, CJUNKS_5
+       REAL CJUNKZ, CJUNKZ_T, CJUNKZ_1, CJUNKZ_3, CJUNKZ_5
        REAL MJUNKA, MJUNKA_T, MJUNKA_1, MJUNKA_3, MJUNKA_6
        REAL MJUNKR, MJUNKR_T, MJUNKR_1, MJUNKR_3, MJUNKR_6
        REAL MJUNKZ, MJUNKZ_T, MJUNKZ_1, MJUNKZ_3, MJUNKZ_6
@@ -619,6 +619,7 @@ C      --------------------
             include "ycalpar_jacINIT.f"
             include "ycalpar_TjacpredsINC.f"
             include "ycalpar_WVjacpredsINC.f"
+            include "ycalpar_OZjacpredsINC.f"
           END IF
 
        ENDDO

@@ -283,8 +283,8 @@ cbaba QJAC
      $          COFH2O(7,LOP,ICHAN)*H2OJACPRD(2,7,LOP) +
      $          COFH2O(8,LOP,ICHAN)*H2OJACPRD(2,8,LOP) +
      $          COFH2O(9,LOP,ICHAN)*H2OJACPRD(2,9,LOP)
-C            Remove WAOP scaling factor
-             KWOP_1(LOP)=KWOP_1(LOP)/WAOP(LOP)
+C            Remove WAOP scaling factor, which depends on wazop (sarta_pclsam.f) which is read in by rdcoef.f
+             KWOP_1(LOP) = KWOP_1(LOP)/WAOP(LOP)
 C            Check for negative value
 c             IF (KWOP_1(LOP) .LT. 0.0E+0) KWOP_1(LOP)=0.0E+0
           ENDIF

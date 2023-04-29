@@ -228,10 +228,10 @@ c          write(6,'(A,I3,X,E11.4,X,E11.4)') 'calowp:WAZ(L),WAZSUM : ',L,WAZ(L),
              WPZSUM_1   = SECANG(L)*P(L)
              WTZSUM_T   = WAANG(L)
              WTZSUM_1   = SECANG(L)*T(L)
-             PZ_T       = (WAZSUM*WPZSUM_T -  WPZSUM*WAZSUM_T)/WAZSUM/WAZSUM
-             PZ_1       = (WAZSUM*WPZSUM_1 -  WPZSUM*WAZSUM_1)/WAZSUM/WAZSUM
-             TZ_T       = (WAZSUM*WTZSUM_T -  WTZSUM*WAZSUM_T)/WAZSUM/WAZSUM
-             TZ_1       = (WAZSUM*WTZSUM_1 -  WTZSUM*WAZSUM_1)/WAZSUM/WAZSUM
+             PZ_T(L)    = (WAZSUM*WPZSUM_T -  WPZSUM*WAZSUM_T)/WAZSUM/WAZSUM
+             PZ_1(L)    = (WAZSUM*WPZSUM_1 -  WPZSUM*WAZSUM_1)/WAZSUM/WAZSUM
+             TZ_T(L)    = (WAZSUM*WTZSUM_T -  WTZSUM*WAZSUM_T)/WAZSUM/WAZSUM
+             TZ_1(L)    = (WAZSUM*WTZSUM_1 -  WTZSUM*WAZSUM_1)/WAZSUM/WAZSUM
            END IF
        ENDDO
 C
@@ -245,6 +245,9 @@ C      --------------------------------------------------
           LOPMIN=LOPMIN + 1
           GOTO 30
        ENDIF
+
+c************************************************************************
+
 C
 C      Initialize the upper and lower (pressure) layer index
        LL=1
@@ -271,7 +274,7 @@ C         --------------------------------------------------------
              ENDIF
           ENDIF
 C
-C         Compute the interpolation fractor
+C         Compute the interpolation fractor, for OPTRAN LAYER LOP
           DA=(WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))
 C
 C         Do the interpolation
@@ -292,27 +295,38 @@ C         Assign the predictors
           H2OPRD(8,LOP)=PZOP
           H2OPRD(9,LOP)=TZOP
 
+c rdcoef.f reads in the fixed values of wazop from a data file, so they are FIXED 
+c   which means da_T and da_1 are both zero
+          WAZOP_T = 0
+          WAZOP_1 = 0
+c rdcoef.f reads in the fixed values of wavgop from a data file, so they are FIXED 
+          WAVGOP_T = 0
+          WAVGOP_1 = 0
+
           IF (DOJAC) THEN
-            DA_T = 1/(WAZ(LU) - WAZ(LL)) * WAZ_T(LL)
-            DA_1 = 1/(WAZ(LU) - WAZ(LL)) * WAZ_1(LL)
+            DA_T = 1/(WAZ(LU) - WAZ(LL)) * WAZOP_T(LOP)
+            DA_1 = 1/(WAZ(LU) - WAZ(LL)) * WAZOP_1(LOP)
 
-            JUNK = P(LU) -  P(LL)
-            POP_T = DA_T*junk/WAVGOP(1,LOP) - (DA*junk + P(LL))/WAVGOP(1,LOP)/WAVGOP(1,LOP)*WAVGOP_T(1,LOP)
-            POP_1 = DA_1*junk/WAVGOP(1,LOP) - (DA*junk + P(LL))/WAVGOP(1,LOP)/WAVGOP(1,LOP)*WAVGOP_1(1,LOP)
+            JUNK = ( DA*(  P(LU) -  P(LL) ) +  P(LL) )
+            POP_T = -JUNK/WAVGOP(1,LOP)/WAVGOP(1,LOP)*WAVGOP_T(1,LOP)
+            POP_1 = -JUNK/WAVGOP(1,LOP)/WAVGOP(1,LOP)*WAVGOP_1(1,LOP)
 
-            JUNK = T(LU) -  T(LL)
-            TOP_T = DA_T*junk/WAVGOP(2,LOP) - (DA*junk + T(LL))/WAVGOP(2,LOP)/WAVGOP(2,LOP)*WAVGOP_T(2,LOP)
-            TOP_1 = DA_1*junk/WAVGOP(2,LOP) - (DA*junk + T(LL))/WAVGOP(2,LOP)/WAVGOP(2,LOP)*WAVGOP_1(2,LOP)
+            JUNK = ( DA*(  T(LU) -  T(LL) ) +  T(LL) )
+            TOP_T = -JUNK/WAVGOP(2,LOP)/WAVGOP(2,LOP)*WAVGOP_T(2,LOP) + 
+     $               1/WAVGOP(2,LOP)*(DA*(1 - 1) + 1)
+            TOP_1 = -JUNK/WAVGOP(2,LOP)/WAVGOP(2,LOP)*WAVGOP_1(2,LOP)
 
-            !!! assume dPZ/dT = dPZ/dQ = 0
-            JUNK = PZ(LU) -  PZ(LL)
-            PZOP_T = DA_T*junk/WAVGOP(3,LOP) - (DA*junk + PZ(LL))/WAVGOP(3,LOP)/WAVGOP(3,LOP)*WAVGOP_T(3,LOP)
-            PZOP_1 = DA_1*junk/WAVGOP(3,LOP) - (DA*junk + PZ(LL))/WAVGOP(3,LOP)/WAVGOP(3,LOP)*WAVGOP_1(3,LOP)
+            JUNK = ( DA*(  PZ(LU) -  PZ(LL) ) +  PZ(LL) )
+            PZOP_T = -JUNK/WAVGOP(3,LOP)/WAVGOP(3,LOP)*WAVGOP_T(3,LOP) + 
+     $               1/WAVGOP(3,LOP)*(DA*(PZ_T(LU) - PZ_T(LL)) + PZ_T(LL))
+            PZOP_1 = -JUNK/WAVGOP(3,LOP)/WAVGOP(3,LOP)*WAVGOP_1(3,LOP) + 
+     $               1/WAVGOP(3,LOP)*(DA*(PZ_1(LU) - PZ_1(LL)) + PZ_1(LL))
 
-            !!! assume dTZ/dT = dTZ/dQ = 0
-            JUNK = TZ(LU) -  TZ(LL)
-            TZOP_T = DA_T*junk/WAVGOP(4,LOP) - (DA*junk + TZ(LL))/WAVGOP(4,LOP)/WAVGOP(4,LOP)*WAVGOP_T(4,LOP)
-            TZOP_1 = DA_1*junk/WAVGOP(4,LOP) - (DA*junk + TZ(LL))/WAVGOP(4,LOP)/WAVGOP(4,LOP)*WAVGOP_1(4,LOP)
+            JUNK = ( DA*(  T(LU) -  T(LL) ) +  T(LL) )
+            TZOP_T = -JUNK/WAVGOP(4,LOP)/WAVGOP(4,LOP)*WAVGOP_T(4,LOP) + 
+     $               1/WAVGOP(4,LOP)*(DA*(TZ_T(LU) - TZ_T(LL)) + TZ_T(LL))
+            TZOP_1 = -JUNK/WAVGOP(4,LOP)/WAVGOP(4,LOP)*WAVGOP_1(4,LOP) + 
+     $               1/WAVGOP(4,LOP)*(DA*(TZ_1(LU) - TZ_1(LL)) + TZ_1(LL))
 
             ANGOP_T = DA_T*( SECANG(LU) - SECANG(LL) )
             ANGOP_1 = DA_1*( SECANG(LU) - SECANG(LL) )
@@ -338,6 +352,8 @@ C         Assign the predictors
             H2OJACPRD(2,7,LOP)=ANGOP_1
             H2OJACPRD(2,8,LOP)=PZOP_1
             H2OJACPRD(2,9,LOP)=TZOP_1
+
+c            H2OJACPRD(2,1:9,LOP)=H2OJACPRD(2,1:9,LOP)*(-100)
           END IF
 
 C

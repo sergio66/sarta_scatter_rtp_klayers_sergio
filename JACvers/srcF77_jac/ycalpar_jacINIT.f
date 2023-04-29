@@ -12,6 +12,8 @@ CjacX         TRZ = 0.0E+0
               TRZ_3 = 0
 CjacX         TAZ_O = 0.0E+0
 CjacX         TAZ_M = 0.0E+0
+
+              AZ_W_1 = 0
 CjacX      ELSE
 CjacX         PDP = PRES(L)*( PRES(L) - PRES(L-1) )
 CjacX         PNORM = PNORM + PDP
@@ -80,8 +82,7 @@ CjacX      WZREF = WZREF + PDP*RWAMNT(L)
 CjacX      WZ = WZ + PDP*PWAMNT(L)
       AZ_W = WZ/WZREF
       AZ_W_T = 0.0
-      AZ_W_1 = 0.0
-      AZ_W_1 = AZ_W_1 + PDP
+      AZ_W_1 = AZ_W_1 + PDP/WZREF
       AZ_W_3 = 0.0
 CjacXC
 CjacXC     Ozone terms
@@ -100,14 +101,21 @@ CjacX      OZ = OZ + PDP*POAMNT(L)
       AZ_O = OZ/OZREF
       AZ_O_T = 0.0
       AZ_O_1 = 0.0
-      AZ_O_3 = 1/OZREF
+      AZ_O_3 = PDP/OZREF
 
 CjacXC
 CjacXC     Carbon monoxide terms
       A_C = PCAMNT(L)/RCAMNT(L)
+      A_C_T = 0
+      A_C_1 = 0
+      A_C_3 = 0
+      A_C_5 = 1/RCAMNT(L)
 CjacX      CZREF = CZREF + PDP*RCAMNT(L)
 CjacX      CZ = CZ + PDP*PCAMNT(L)
       AZ_C = CZ/CZREF
+      AZ_C_T = 0.0
+      AZ_C_1 = 0.0
+      AZ_C_3 = 0.0
 CjacXC
 CjacXC     Methane terms
       A_M = PMAMNT(L)/RMAMNT(L)
