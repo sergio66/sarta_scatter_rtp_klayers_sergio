@@ -98,7 +98,6 @@ C          -----
            OJUNKA_1=SECANG(L)*A_O_1                     !!! A_O_1 = 0!!!
            OJUNKR_1=SQRT(SECANG(L))*0.5/SQRT(A_O)*A_O_1 !!! A_O_1 = 0!!!
            OJUNKZ_1=(XZ_O*OJUNKA_1 - OJUNKA*XZ_O_1)/XZ_O/XZ_O
-           OJUNKZ_1=(XZ_O*OJUNKA_1 - OJUNKA*XZ_O_1)/XZ_O/XZ_O
            OJUNKX_1=SECANG(L)*XZ_O_1
 
 C          Ozone predictors for FWO = set1
@@ -261,32 +260,32 @@ C          ---------------
            CONJACPRD(IWHICHJAC,7,L)=WJUNKA_1
 C         print *,'CALPAR CONJACPRD(IWHICHJAC,1,L) = ',L,WJUNKA,TJUNKS,CONJACPRD(IWHICHJAC,1,L)
 
-c STOPPPED HERE STOPPED HERE XXXXXXX
 C          ---------------
 C          HDO
 C          ---------------
            if (DEBUG) then
              IF(L .EQ. 96) write(6,'(A,X,I4,X,F6.2)') 'calpar: L,HDOFCT ',L,HDOFCT
            endif
-           DJUNKA=SECANG(L)*A_W*(1 - HDOFCT)      ! *(1 - HDOFCT)
-           DJUNKR=SQRT( DJUNKA )
-           DJUNKS=DJUNKA*DJUNKA
-           DJUNKZ=DJUNKA*A_W/AZ_W                 ! *(1 - HDOFCT)
-           DJUNK4=SQRT( DJUNKR )
+           DJUNKA_1=SECANG(L)*(A_W_1*(1 - HDOFCT) + A_W*(-1))      ! *(1 - HDOFCT)
+           DJUNKR_1=0.5/SQRT( DJUNKA ) * DJUNKA_1
+           DJUNKS_1=2*DJUNKA*DJUNKA_1
+           DJUNKZ_1=DJUNKA_1*A_W/AZ_W + DJUNKA*(AZ_W*A_W_1 - A_W*AZ_W_1)/AZ_W/AZ_W                 ! *(1 - HDOFCT)
+           DJUNK4_1=0.5/SQRT( DJUNKR )*DJUNKR_1
 
-           DJACPRED(IWHICHJAC, 1,L)=DJUNKA
-           DJACPRED(IWHICHJAC, 2,L)=DJUNKR
-           DJACPRED(IWHICHJAC, 3,L)=DJUNKZ
-           DJACPRED(IWHICHJAC, 4,L)=DJUNKA*DT
-           DJACPRED(IWHICHJAC, 5,L)=DJUNKS
-           DJACPRED(IWHICHJAC, 6,L)=DJUNKR*DT
-           DJACPRED(IWHICHJAC, 7,L)=DJUNK4
-           DJACPRED(IWHICHJAC, 8,L)=DJUNKZ/DJUNKR
-           DJACPRED(IWHICHJAC, 9,L)=DJUNKS*DJUNKA
-           DJACPRED(IWHICHJAC,10,L)=A_W
-           DJACPRED(IWHICHJAC,11,L)=DJUNKA*DT*ABS( DT )
-
-c STOPPPED HERE STOPPED HERE XXXXXXX
+           DJACPRED(IWHICHJAC, 1,L)=DJUNKA_1
+           DJACPRED(IWHICHJAC, 2,L)=DJUNKR_1
+           DJACPRED(IWHICHJAC, 3,L)=DJUNKZ_1
+           DJACPRED(IWHICHJAC, 4,L)=DJUNKA_1*DT + DJUNKA*DT_1
+           DJACPRED(IWHICHJAC, 5,L)=DJUNKS_1
+           DJACPRED(IWHICHJAC, 6,L)=DJUNKR_1*DT + DJUNKR*DT_1
+           DJACPRED(IWHICHJAC, 7,L)=DJUNK4_1
+           DJACPRED(IWHICHJAC, 8,L)=(DJUNKR*DJUNKZ_1 - DJUNKZ*DJUNKR_1)/DJUNKR/DJUNKR
+           DJACPRED(IWHICHJAC, 9,L)=DJUNKS_1*DJUNKA + DJUNKS*DJUNKA_1
+           DJACPRED(IWHICHJAC,10,L)=A_W_1
+           DJACPRED(IWHICHJAC,11,L)=DJUNKA_1*DT + DJUNKA*DT_1
+           IF (DT .LT. 0) THEN
+             DJACPRED(IWHICHJAC,11,L) = -DJACPRED(IWHICHJAC,11,L)
+           END IF
 
 C          ---------------
 C          Carbon monoxide for FCOW = set4

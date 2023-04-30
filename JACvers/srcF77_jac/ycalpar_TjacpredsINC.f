@@ -28,7 +28,7 @@ C          -----
            FJACPRED1(IWHICHJAC,6,L)=TJUNKS_T
            FJACPRED1(IWHICHJAC,7,L)=SECANG(L)*TRZ_T
            FJACPRED1(IWHICHJAC,8,L)=SECANG(L)*(TR*TRZ_T - TRZ*TR_T)/TR/TR
- 
+
            FJACPRED2(IWHICHJAC,1,L)=FJACPRED1(IWHICHJAC,1,L)
            FJACPRED2(IWHICHJAC,2,L)=FJACPRED1(IWHICHJAC,2,L)
            FJACPRED2(IWHICHJAC,3,L)=FJACPRED1(IWHICHJAC,3,L)
@@ -97,7 +97,6 @@ C          Ozone
 C          -----
            OJUNKA_T=SECANG(L)*A_O_T                     !!! A_O_T = 0!!!
            OJUNKR_T=SQRT(SECANG(L))*0.5/SQRT(A_O)*A_O_T !!! A_O_T = 0!!!
-           OJUNKZ_T=(XZ_O*OJUNKA_T - OJUNKA*XZ_O_T)/XZ_O/XZ_O
            OJUNKZ_T=(XZ_O*OJUNKA_T - OJUNKA*XZ_O_T)/XZ_O/XZ_O
            OJUNKX_T=SECANG(L)*XZ_O_T
 
@@ -262,31 +261,32 @@ C          ---------------
            CONJACPRD(IWHICHJAC,7,L)=WJUNKA_T
 C         print *,'CALPAR CONJACPRD(IWHICHJAC,1,L) = ',L,WJUNKA,TJUNKS,CONJACPRD(IWHICHJAC,1,L)
 
-c STOPPPED HERE STOPPED HERE XXXXXXX
 C          ---------------
 C          HDO
 C          ---------------
            if (DEBUG) then
              IF(L .EQ. 96) write(6,'(A,X,I4,X,F6.2)') 'calpar: L,HDOFCT ',L,HDOFCT
            endif
-           DJUNKA=SECANG(L)*A_W*(1 - HDOFCT)      ! *(1 - HDOFCT)
-           DJUNKR=SQRT( DJUNKA )
-           DJUNKS=DJUNKA*DJUNKA
-           DJUNKZ=DJUNKA*A_W/AZ_W                 ! *(1 - HDOFCT)
-           DJUNK4=SQRT( DJUNKR )
+           DJUNKA_T=SECANG(L)*A_W_T*(1 - HDOFCT)      ! *(1 - HDOFCT)
+           DJUNKR_T=0.5/SQRT( DJUNKA ) * DJUNKA_T
+           DJUNKS_T=2*DJUNKA*DJUNKA_T
+           DJUNKZ_T=DJUNKA_T*A_W/AZ_W + DJUNKA*(AZ_W*A_W_T - A_W*AZ_W_T)/AZ_W/AZ_W                 ! *(1 - HDOFCT)
+           DJUNK4_T=0.5/SQRT( DJUNKR )*DJUNKR_T
 
-           DJACPRED(IWHICHJAC, 1,L)=DJUNKA
-           DJACPRED(IWHICHJAC, 2,L)=DJUNKR
-           DJACPRED(IWHICHJAC, 3,L)=DJUNKZ
-           DJACPRED(IWHICHJAC, 4,L)=DJUNKA*DT
-           DJACPRED(IWHICHJAC, 5,L)=DJUNKS
-           DJACPRED(IWHICHJAC, 6,L)=DJUNKR*DT
-           DJACPRED(IWHICHJAC, 7,L)=DJUNK4
-           DJACPRED(IWHICHJAC, 8,L)=DJUNKZ/DJUNKR
-           DJACPRED(IWHICHJAC, 9,L)=DJUNKS*DJUNKA
-           DJACPRED(IWHICHJAC,10,L)=A_W
-           DJACPRED(IWHICHJAC,11,L)=DJUNKA*DT*ABS( DT )
-c STOPPPED HERE STOPPED HERE XXXXXXX
+           DJACPRED(IWHICHJAC, 1,L)=DJUNKA_T
+           DJACPRED(IWHICHJAC, 2,L)=DJUNKR_T
+           DJACPRED(IWHICHJAC, 3,L)=DJUNKZ_T
+           DJACPRED(IWHICHJAC, 4,L)=DJUNKA_T*DT + DJUNKA*DT_T
+           DJACPRED(IWHICHJAC, 5,L)=DJUNKS_T
+           DJACPRED(IWHICHJAC, 6,L)=DJUNKR_T*DT + DJUNKR*DT_T
+           DJACPRED(IWHICHJAC, 7,L)=DJUNK4_T
+           DJACPRED(IWHICHJAC, 8,L)=(DJUNKR*DJUNKZ_T - DJUNKZ*DJUNKR_T)/DJUNKR/DJUNKR
+           DJACPRED(IWHICHJAC, 9,L)=DJUNKS_T*DJUNKA + DJUNKS*DJUNKA_T
+           DJACPRED(IWHICHJAC,10,L)=A_W_T
+           DJACPRED(IWHICHJAC,11,L)=DJUNKA_T*DT + DJUNKA*DT_T
+           IF (DT .LT. 0) THEN
+             DJACPRED(IWHICHJAC,11,L) = -DJACPRED(IWHICHJAC,11,L)
+           END IF
 
 C          ---------------
 C          Carbon monoxide for FCOW = set4

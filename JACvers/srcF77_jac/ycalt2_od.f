@@ -664,6 +664,7 @@ C            --------------------------
      $            ( COEF2(23,ILAY,I)*OJACPRED2(IWHICHJAC, 8,ILAY) ) +
      $            ( COEF2(24,ILAY,I)*OJACPRED2(IWHICHJAC, 9,ILAY) ) +
      $            ( COEF2(25,ILAY,I)*OJACPRED2(IWHICHJAC,10,ILAY) )
+C              IF ((ILAY .EQ. 1) .AND. (IWHICHJAC .EQ. 1)) write(*,'(A,10(ES12.5))') 'OJACPRED2',OJACPRED2(IWHICHJAC,1:10,ILAY)
 C
 c             IF (KOZO .LT. 0.0E+0) THEN
 c                KOZO=0.0E+0
@@ -809,8 +810,12 @@ c             ENDIF
 
 C            Calc effective layer optical depth
              KLAYER = KCON + KFIX + KOZO + KWAT + DK
+
                    IF (IWHICHJAC .EQ. 1) THEN 
                      DTAU_DTZ(ILAY,J)=KLAYER
+C                     IF (IY .EQ. 18) THEN
+C                       write(*,'(A,2(I4),7(ES12.5))') 'moo',ILAY,IY,FIXMUL(ILAY),KCON,KFIX,KOZO,KWAT,DK,KLAYER
+C                     END IF
                    ELSEIF (IWHICHJAC .EQ. 2) THEN 
                      DTAU_DG1(ILAY,J)=KLAYER
                    ELSEIF (IWHICHJAC .EQ. 3) THEN 

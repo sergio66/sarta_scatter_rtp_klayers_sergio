@@ -29,9 +29,9 @@
       ELSEIF (JAC_OUTPUT_UNITS .EQ. 1) THEN
         !! JAC_OUTPUT_UNITS = 1  ==> output dBT/dT
         a = c1*c2*(FREQ(1:NCHAN)**4)
-        b = c1*FREQ(1:NCHAN)**3/RAD(1:NCHAN) + 1
+        b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
         c = (log(b))**2
-        d = RAD(1:NCHAN)**2
+        d = (RAD(1:NCHAN))**2
         raDeriv_Rad(1:NCHAN) = a/(b*c*d)
         DO iL = 1,NLAY
           WRITE(IOUNTZ) (raDeriv_rad(IC) * JAC_TZ_C(IL,iC),iC=1,NCHAN)
@@ -74,9 +74,9 @@ c************************************************************************
       ELSEIF ((IGASID .LE. 12) .AND. (JAC_OUTPUT_UNITS .EQ. 1)) THEN
         !! JAC_OUTPUT_UNITS = 1  ==> output q dBT/dq = dBT/dlog(q)) 
         a = c1*c2*(FREQ(1:NCHAN)**4)
-        b = c1*FREQ(1:NCHAN)**3/RAD(1:NCHAN) + 1
+        b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
         c = (log(b))**2
-        d = RAD(1:NCHAN)**2
+        d = (RAD(1:NCHAN))**2
         raDeriv_Rad(1:NCHAN) = a/(b*c*d)
         DO iL = 1,NLAY
           WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_G1_C(IL,iC) * GAMNT(IL),iC=1,NCHAN)

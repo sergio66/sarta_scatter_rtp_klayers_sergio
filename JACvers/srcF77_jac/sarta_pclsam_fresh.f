@@ -1,4 +1,4 @@
-c This version with rtp input profiles and command-line arguments
+c     This version with rtp input profiles and command-line arguments
 C=======================================================================
 C=======================================================================
 C
@@ -646,6 +646,7 @@ C      for jacobians
        INTEGER JAC_OUTPUT_UNITS           ! 0 for drad/dT and drad/dq, 1 for dBT/dT and dBT/d(log q) = q dBT/dq
        CHARACTER*180 caJacTZ,caJACG1,caJACG3,caJACWGT
 
+       INTEGER ijunk
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
 C-----------------------------------------------------------------------
@@ -1048,7 +1049,7 @@ C      ----------------------
        DO I=1,NCHAN
 
 C        compute OD : indirectly uses T(z),WV(z),O3(z) through the PREDS, to get TAU, TAUZ, TAUZSN
-         CALL CALC_LAYER_TRANS_CALTODX_1_7(
+         CALL CALC_LAYER_TRANS_YCALTODX_1_7(
      $     I,DOSUN, NCHAN, LSTCHN, FREQ, INDCHN, LBOT, 
      $     QUICKCLIST1, QUICKCLIST2, QUICKCLIST3, QUICKCLIST4, 
      $     QUICKCLIST5, QUICKCLIST6, QUICKCLIST7, 
@@ -1149,10 +1150,10 @@ c         FCLEAR = 1.0; CFRA1X = 0.0; CFRA2X = 0.0; CFRA12 = 0.0
      $                CFRA2X*JAC_ST_2(1:NCHAN)  * L2S4(3,NLAY,1:NCHAN) + 
      $                CFRA12*JAC_ST_12(1:NCHAN) * L2S4(4,NLAY,1:NCHAN)
 
-           JAC_TZ_C(1:NLAY,1:NCHAN)  = RAD4(1,1:NLAY,1:NCHAN) * dTAU_DTZ(1:NLAY,1:NCHAN)
-           JAC_TZ_1(1:NLAY,1:NCHAN)  = RAD4(2,1:NLAY,1:NCHAN) * dTAU_DTZ(1:NLAY,1:NCHAN)
-           JAC_TZ_2(1:NLAY,1:NCHAN)  = RAD4(3,1:NLAY,1:NCHAN) * dTAU_DTZ(1:NLAY,1:NCHAN)
-           JAC_TZ_12(1:NLAY,1:NCHAN) = RAD4(4,1:NLAY,1:NCHAN) * dTAU_DTZ(1:NLAY,1:NCHAN)
+           JAC_TZ_C(1:NLAY,1:NCHAN)  = RAD4(1,1:NLAY,1:NCHAN) * DTAU_DTZ(1:NLAY,1:NCHAN)
+           JAC_TZ_1(1:NLAY,1:NCHAN)  = RAD4(2,1:NLAY,1:NCHAN) * DTAU_DTZ(1:NLAY,1:NCHAN)
+           JAC_TZ_2(1:NLAY,1:NCHAN)  = RAD4(3,1:NLAY,1:NCHAN) * DTAU_DTZ(1:NLAY,1:NCHAN)
+           JAC_TZ_12(1:NLAY,1:NCHAN) = RAD4(4,1:NLAY,1:NCHAN) * DTAU_DTZ(1:NLAY,1:NCHAN)
 
            JAC_TZ_C(1:NLAY,1:NCHAN)  = JAC_TZ_C(1:NLAY,1:NCHAN)  + DBTDT(1:NLAY,1:NCHAN) * (1 - EXP(-TAU4(1,1:NLAY,1:NCHAN)))
            JAC_TZ_1(1:NLAY,1:NCHAN)  = JAC_TZ_1(1:NLAY,1:NCHAN)  + DBTDT(1:NLAY,1:NCHAN) * (1 - EXP(-TAU4(2,1:NLAY,1:NCHAN)))
@@ -1163,6 +1164,12 @@ c         FCLEAR = 1.0; CFRA1X = 0.0; CFRA2X = 0.0; CFRA12 = 0.0
      $                CFRA1X*JAC_TZ_1(1:NLAY,1:NCHAN)  * L2S4(2,1:NLAY,1:NCHAN) + 
      $                CFRA2X*JAC_TZ_2(1:NLAY,1:NCHAN)  * L2S4(3,1:NLAY,1:NCHAN) + 
      $                CFRA12*JAC_TZ_12(1:NLAY,1:NCHAN) * L2S4(4,1:NLAY,1:NCHAN)
+
+c           DO IJUNK = 1,100
+c             write(*,'(A,I5,6(ES15.6))') 'TADA ',IJUNK,RAD4(1,IJUNK,254),DTAU_DTZ(IJUNK,254),
+c     $                              DBTDT(IJUNK,254),TAU4(1,IJUNK,254),L2S4(1,IJUNK,254),JAC_TZ_C(IJUNK,254)
+c           END DO
+
            CALL WRTJAC_T(IOUNTZ,IPROF,NLAY,NCHAN,FREQ,RAD,JAC_OUTPUT_UNITS,JAC_ST_C,JAC_TZ_C)
          END IF   
 

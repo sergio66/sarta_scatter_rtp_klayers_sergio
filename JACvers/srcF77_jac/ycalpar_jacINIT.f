@@ -4,17 +4,61 @@ CjacXC     Calculate the basic profile
 CjacXC     dependent predictors DERIVATIVES
 CjacXC     ---------------------------
 CjacXC
-CjacX      IF (L .EQ. 1) THEN
+           IF (L .EQ. 1) THEN
 CjacX         PDP = PRES(1)*( PRES(2) - PRES(1))
 CjacX         TRZ = 0.0E+0
               TRZ_T = 0
               TRZ_1 = 0
               TRZ_3 = 0
 CjacX         TAZ_O = 0.0E+0
+              TAZ_O_T = 0
+              TAZ_O_1 = 0
+              TAZ_O_3 = 0
 CjacX         TAZ_M = 0.0E+0
+              TAZ_M_T = 0
+              TAZ_M_1 = 0
+              TAZ_M_3 = 0
 
               AZ_W_1 = 0
-CjacX      ELSE
+
+              DT_T = 1
+              DT_1 = 0
+              DT_3 = 0
+
+              TZ_T = PDP/RTEMP(L)
+              TZ_1 = 0.0
+              TZ_3 = 0.0
+
+              TRZ_T = 0.0
+              TRZ_1 = 0.0
+              TRZ_3 = 0.0
+
+              TOZ_T = PDP*(DT_T*A_O + DT*A_O_T)
+              TOZ_1 = PDP*(DT_1*A_O + DT*A_O_1)
+              TOZ_3 = PDP*(DT_3*A_O + DT*A_O_3)
+
+CjacX         TAZ_O = TOZ/PNORM
+!              TAZ_O_T = TOZ_T/PNORM
+!              TAZ_O_1 = TOZ_1/PNORM
+!              TAZ_O_3 = TOZ_3/PNORM
+              TAZ_O_T = 0
+              TAZ_O_1 = 0
+              TAZ_O_3 = 0
+CjacXC
+CjacX         TMZ = TMZ + PDP*TR*A_M
+CjacX         TAZ_M = TMZ/PNORM
+!              TAZ_M_T = 1/PNORM*PDP*(TR_T*A_M + TR*A_M_T)
+!              TAZ_M_1 = 1/PNORM*PDP*(TR_1*A_M + TR*A_M_1)
+!              TAZ_M_3 = 1/PNORM*PDP*(TR_3*A_M + TR*A_M_3)
+!              TAZ_M_6 = 1/PNORM*PDP*(TR_6*A_M + TR*A_M_6)
+              TAZ_M_T = 0
+              TAZ_M_1 = 0
+              TAZ_M_3 = 0
+              TAZ_M_6 = 0
+
+            ELSE
+              AZ_W_1 = 0
+
 CjacX         PDP = PRES(L)*( PRES(L) - PRES(L-1) )
 CjacX         PNORM = PNORM + PDP
 CjacXC
@@ -44,7 +88,7 @@ CjacX         TAZ_M = TMZ/PNORM
               TAZ_M_1 = 1/PNORM*PDP*(TR_1*A_M + TR*A_M_1)
               TAZ_M_3 = 1/PNORM*PDP*(TR_3*A_M + TR*A_M_3)
               TAZ_M_6 = 1/PNORM*PDP*(TR_6*A_M + TR*A_M_6)
-CjacX      ENDIF
+            ENDIF
 CjacXC
 CjacXC     Temperature terms
       DT_T = 1.0

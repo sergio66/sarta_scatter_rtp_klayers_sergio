@@ -14,11 +14,12 @@ c input
       REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12
 
 c output
-      REAL L2S4(4,MAXLAY,MXCHAN),WGT4(4,MAXLAY,MXCHAN)
+      REAL L2S4(4,MAXLAY,MXCHAN)  ! L2S tramnsmittance
+      REAL WGT4(4,MAXLAY,MXCHAN)  ! WGT functiom
 
 c local
       INTEGER iL
-      INTEGER I               ! which channel
+      INTEGER I         ! which channel
       
       L2S4 = 0          ! initialize
       WGT4 = 0          ! initialize

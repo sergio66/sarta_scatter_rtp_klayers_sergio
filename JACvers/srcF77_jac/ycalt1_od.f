@@ -751,7 +751,7 @@ C                  -----------------------------
      $                ( COEF1(13,ILAY,I)*FJACPRED1(IWHICHJAC,6,ILAY) ) +
      $                ( COEF1(14,ILAY,I)*FJACPRED1(IWHICHJAC,7,ILAY) ) +
      $                ( COEF1(15,ILAY,I)*FJACPRED1(IWHICHJAC,8,ILAY) )
-C         
+c                   IF ((ILAY .EQ. 1) .AND. (IY .EQ. 254)) print *,'fjacpred',FJACPRED1(IWHICHJAC,1:8,ILAY)
                    KFIX=KFIX*FIXMUL(ILAY)
 C         
 c                   IF (KFIX .LT. 0.0E+0) THEN
@@ -933,8 +933,12 @@ C                   write(*,'(A,3(I5),5(F12.4))') 'ycalt1_od',I,J,ILAY,KCON,KFIX
                      KW(ILAY) = 0.0
                    END IF
                    KLAYER = KCON + KFIX + KW(ILAY) + KOZO + DK
+
                    IF (IWHICHJAC .EQ. 1) THEN 
                      DTAU_DTZ(ILAY,J)=KLAYER
+C                     IF (IY .EQ. 18) THEN
+C                       write(*,'(A,2(I4),7(ES12.5))') 'moo',ILAY,IY,FIXMUL(ILAY),KCON,KFIX,KW(ILAY),KOZO,DK,KLAYER
+C                     END IF
                    ELSEIF (IWHICHJAC .EQ. 2) THEN 
                      DTAU_DG1(ILAY,J)=KLAYER
                    ELSEIF (IWHICHJAC .EQ. 3) THEN 
