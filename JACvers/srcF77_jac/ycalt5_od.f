@@ -155,6 +155,7 @@ C      =================================================================
      $    WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
      $    OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,
      $    MJACPRED3,CJACPRED4,TRCJACPRD,
+     $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
 C      =================================================================
 
@@ -210,6 +211,12 @@ c input
        LOGICAL DOJAC
        INTEGER NWANTJ          ! number of wanted jacs (default 0=none)
        INTEGER  LISTJ(MAXPRO)  ! list of wanted channels
+       REAL CO2JACMLT(MAXLAY)
+       REAL SO2JACMLT(MAXLAY)
+       REAL HNOJACMLT(MAXLAY)
+       REAL N2OJACMLT(MAXLAY)
+       REAL NH3JACMLT(MAXLAY)
+       REAL HDOJACMLT(MAXLAY)
        !!! first index is the d/dT   second deriv is the d/dQ
        REAL CONJACPRD(MAXJAC, N1CON,MAXLAY)
        REAL FJACPRED1(MAXJAC, N1FIX,MAXLAY)

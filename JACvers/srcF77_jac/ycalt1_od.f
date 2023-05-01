@@ -194,6 +194,7 @@ C      =================================================================
      $    WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
      $    OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,
      $    MJACPRED3,CJACPRED4,TRCJACPRD,
+     $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
 C      =================================================================
 
@@ -273,6 +274,12 @@ c input
        LOGICAL DOJAC
        INTEGER NWANTJ          ! number of wanted jacs (default 0=none)
        INTEGER  LISTJ(MAXPRO)  ! list of wanted channels
+       REAL CO2JACMLT(MAXLAY)
+       REAL SO2JACMLT(MAXLAY)
+       REAL HNOJACMLT(MAXLAY)
+       REAL N2OJACMLT(MAXLAY)
+       REAL NH3JACMLT(MAXLAY)
+       REAL HDOJACMLT(MAXLAY)
        !!! first index is the d/dT   second deriv is the d/dQ
        REAL CONJACPRD(MAXJAC, N1CON,MAXLAY)
        REAL FJACPRED1(MAXJAC, N1FIX,MAXLAY)
@@ -696,13 +703,25 @@ C
 c************************************************************************
 
           IF (DOJAC) THEN
-            DO IWHICHJAC = 1,3
+            DO IWHICHJAC = 1,9
               IF (IWHICHJAC .EQ. 1) THEN 
                 ITRYJAC = 100  !! TZ
               ELSEIF (IWHICHJAC .EQ. 2) THEN 
                 ITRYJAC = 1    !! GID 1
               ELSEIF (IWHICHJAC .EQ. 3) THEN 
                 ITRYJAC = 3    !! GID 3
+              ELSEIF (IWHICHJAC .EQ. 4) THEN 
+                ITRYJAC = 2    !! GID 2
+              ELSEIF (IWHICHJAC .EQ. 5) THEN 
+                ITRYJAC = 4    !! GID 4
+              ELSEIF (IWHICHJAC .EQ. 6) THEN 
+                ITRYJAC = 5    !! GID 5
+              ELSEIF (IWHICHJAC .EQ. 7) THEN 
+                ITRYJAC = 6    !! GID 6
+              ELSEIF (IWHICHJAC .EQ. 8) THEN 
+                ITRYJAC = 9    !! GID 9
+              ELSEIF (IWHICHJAC .EQ. 9) THEN 
+                ITRYJAC = 12   !! GID 12
               END IF
               IF (INTERSECT(ITRYJAC,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
 cbaba
@@ -932,7 +951,7 @@ C                   write(*,'(A,3(I5),5(F12.4))') 'ycalt1_od',I,J,ILAY,KCON,KFIX
                      KW(ILAY) = KW_T(ILAY)
                    ELSEIF (IWHICHJAC .EQ. 2) THEN 
                      KW(ILAY) = KW_1(ILAY)
-                   ELSEIF (IWHICHJAC .EQ. 3) THEN 
+                   ELSEIF (IWHICHJAC .GE. 3) THEN 
                      KW(ILAY) = 0.0
                    END IF
 
@@ -960,6 +979,18 @@ C                     END IF
                      DTAU_DG1(ILAY,J)=KLAYER
                    ELSEIF (IWHICHJAC .EQ. 3) THEN 
                      DTAU_DG3(ILAY,J)=KLAYER
+                   ELSEIF (IWHICHJAC .EQ. 4) THEN 
+                     DTAU_DG2(ILAY,J)=KLAYER
+                   ELSEIF (IWHICHJAC .EQ. 5) THEN 
+                     DTAU_DG4(ILAY,J)=KLAYER
+                   ELSEIF (IWHICHJAC .EQ. 6) THEN 
+                     DTAU_DG5(ILAY,J)=KLAYER
+                   ELSEIF (IWHICHJAC .EQ. 7) THEN 
+                     DTAU_DG6(ILAY,J)=KLAYER
+                   ELSEIF (IWHICHJAC .EQ. 8) THEN 
+                     DTAU_DG9(ILAY,J)=KLAYER
+                   ELSEIF (IWHICHJAC .EQ. 9) THEN 
+                     DTAU_DG12(ILAY,J)=KLAYER
                    END IF
 C         
 C                  Calc layer-to-space optical depth

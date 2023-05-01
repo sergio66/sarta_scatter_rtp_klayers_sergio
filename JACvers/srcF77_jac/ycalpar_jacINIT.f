@@ -26,6 +26,7 @@ CjacX         TAZ_M = 0.0E+0
               DT_T = 1
               DT_1 = 0
               DT_3 = 0
+              DT_5 = 0
 
               TZ_T = PDP/RTEMP(L)
               TZ_1 = 0.0
@@ -159,6 +160,7 @@ CjacX      CZ = CZ + PDP*PCAMNT(L)
       AZ_C_T = 0.0
       AZ_C_1 = 0.0
       AZ_C_3 = 0.0
+      AZ_C_5 = PDP
 CjacXC
 CjacXC     Methane terms
       A_M = PMAMNT(L)/RMAMNT(L)

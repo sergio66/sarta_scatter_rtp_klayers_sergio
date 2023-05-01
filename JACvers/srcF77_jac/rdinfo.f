@@ -485,6 +485,17 @@ C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 G2 G3 G4 G5 G6 
             LISTJ(2) = 3
             LISTJ(3) = 100
             LISTJ(4) = 200
+
+            LISTJ = 0
+            NWANTJ = 8
+            LISTJ(1) = 1
+            LISTJ(2) = 2
+            LISTJ(3) = 3
+            LISTJ(4) = 4
+            LISTJ(5) = 5
+            LISTJ(6) = 6
+            LISTJ(7) = 100
+            LISTJ(8) = 200
           END IF            
        ENDIF
 

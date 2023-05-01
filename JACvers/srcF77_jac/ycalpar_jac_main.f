@@ -30,12 +30,13 @@ C  $     FPRED1,FPRED2,FPRED3,FPRED4,FPRED5,FPRED6,FPRED7,
 C  $     WPRED1,WPRED2,WPRED3,WPRED4,WPRED5,WPRED6,WPRED7,
 C  $     OPRED1,OPRED2,       OPRED4,OPRED5,OPRED6,OPRED7,
 C  $     MPRED3,CPRED4,TRCPRD,
+C  $     CO2MLT,SO2MLT,HNOMLT,N2OMLT,NH3MLT,HDOMLT, 
 C  $    DOJAC,LISTJ,NWANTJ,CONJACPRD,DJACPRED, 
 C  $    FJACPRED1,FJACPRED2,FJACPRED3,FJACPRED4,FJACPRED5,FJACPRED6,FJACPRED7,
 C  $    WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
 C  $    OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,
 C  $    MJACPRED3,CJACPRED4,TRCJACPRD,
-C  $     CO2MLT,SO2MLT,HNOMLT,N2OMLT,NH3MLT,HDOMLT )
+C  $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT)
 
 
 !INPUT PARAMETERS:
@@ -371,12 +372,13 @@ C      =================================================================
      $    WPRED1,WPRED2,WPRED3,WPRED4,WPRED5,WPRED6,WPRED7,
      $    OPRED1,OPRED2,       OPRED4,OPRED5,OPRED6,OPRED7,
      $    MPRED3,CPRED4,TRCPRD,
+     $    CO2MLT,SO2MLT,HNOMLT,N2OMLT,NH3MLT,HDOMLT,
      $    DOJAC,LISTJ,NWANTJ,CONJACPRD,DJACPRED, 
      $    FJACPRED1,FJACPRED2,FJACPRED3,FJACPRED4,FJACPRED5,FJACPRED6,FJACPRED7,
      $    WJACPRED1,WJACPRED2,WJACPRED3,WJACPRED4,WJACPRED5,WJACPRED6,WJACPRED7,
      $    OJACPRED1,OJACPRED2,       OJACPRED4,OJACPRED5,OJACPRED6,OJACPRED7,
      $    MJACPRED3,CJACPRED4,TRCJACPRD,
-     $    CO2MLT,SO2MLT,HNOMLT,N2OMLT,NH3MLT,HDOMLT)
+     $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT)
 C      =================================================================
 
 
@@ -504,16 +506,23 @@ C      Output
        REAL NH3MLT(MAXLAY)
        REAL HDOMLT(MAXLAY)
 
+       REAL CO2JACMLT(MAXLAY)
+       REAL SO2JACMLT(MAXLAY)
+       REAL HNOJACMLT(MAXLAY)
+       REAL N2OJACMLT(MAXLAY)
+       REAL NH3JACMLT(MAXLAY)
+       REAL HDOJACMLT(MAXLAY)
+
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
        INTEGER      L, IWHICHJAC
        REAL    PDP
        REAL  PNORM
-       REAL     DT, DT_T, DT_1, DT_3, DT_6
-       REAL     TR, TR_T, TR_1, TR_3, TR_6
-       REAL     TZ, TZ_T, TZ_1, TZ_3
-       REAL    TRZ, TRZ_T, TRZ_1, TRZ_3
+       REAL     DT, DT_T, DT_1, DT_3, DT_5, DT_6
+       REAL     TR, TR_T, TR_1, TR_3,       TR_6
+       REAL     TZ, TZ_T, TZ_1, TZ_3, TZ_N
+       REAL    TRZ, TRZ_T, TRZ_1, TRZ_3, TRZ_N
        REAL    A_F, A_F_T, A_F_1, A_F_3
        REAL    A_W, A_W_T, A_W_1, A_W_3
        REAL  WZREF
@@ -531,14 +540,14 @@ C-----------------------------------------------------------------------
        REAL    A_C, A_C_T, A_C_1, A_C_3, A_C_5
        REAL     CZ
        REAL  CZREF
-       REAL   AZ_C, AZ_C_T, AZ_C_1, AZ_C_3
+       REAL   AZ_C, AZ_C_T, AZ_C_1, AZ_C_3, AZ_C_5
        REAL    A_M, A_M_T, A_M_1, A_M_3, A_M_6
        REAL  MZREF
        REAL     MZ, MZ_T, MZ_1, MZ_3, MZ_6
        REAL   AZ_M, AZ_M_T, AZ_M_1, AZ_M_3, AZ_M_6
        REAL    TMZ
        REAL  TAZ_M, TAZ_M_T, TAZ_M_1, TAZ_M_3, TAZ_M_6
-       REAL TJUNKS, TJUNKS_T, TJUNKS_1, TJUNKS_3
+       REAL TJUNKS, TJUNKS_T, TJUNKS_1, TJUNKS_3, TJUNKS_N
        REAL WJUNKA, WJUNKA_T, WJUNKA_1, WJUNKA_3
        REAL WJUNKR, WJUNKR_T, WJUNKR_1, WJUNKR_3
        REAL WJUNKS, WJUNKS_T, WJUNKS_1, WJUNKS_3
@@ -553,13 +562,13 @@ C-----------------------------------------------------------------------
        REAL OJUNKR, OJUNKR_T, OJUNKR_1, OJUNKR_3
        REAL OJUNKZ, OJUNKZ_T, OJUNKZ_1, OJUNKZ_3
        REAL OJUNKX, OJUNKX_T, OJUNKX_1, OJUNKX_3
-       REAL CJUNKA, CJUNKA_T, CJUNKA_1, CJUNKA_3, CJUNKA_5
-       REAL CJUNKR, CJUNKR_T, CJUNKR_1, CJUNKR_3, CJUNKR_5
-       REAL CJUNKS, CJUNKS_T, CJUNKS_1, CJUNKS_3, CJUNKS_5
-       REAL CJUNKZ, CJUNKZ_T, CJUNKZ_1, CJUNKZ_3, CJUNKZ_5
-       REAL MJUNKA, MJUNKA_T, MJUNKA_1, MJUNKA_3, MJUNKA_6
-       REAL MJUNKR, MJUNKR_T, MJUNKR_1, MJUNKR_3, MJUNKR_6
-       REAL MJUNKZ, MJUNKZ_T, MJUNKZ_1, MJUNKZ_3, MJUNKZ_6
+       REAL CJUNKA, CJUNKA_T, CJUNKA_1, CJUNKA_3, CJUNKA_5  !! CO
+       REAL CJUNKR, CJUNKR_T, CJUNKR_1, CJUNKR_3, CJUNKR_5  !! CO
+       REAL CJUNKS, CJUNKS_T, CJUNKS_1, CJUNKS_3, CJUNKS_5  !! CO
+       REAL CJUNKZ, CJUNKZ_T, CJUNKZ_1, CJUNKZ_3, CJUNKZ_5  !! CO
+       REAL MJUNKA, MJUNKA_T, MJUNKA_1, MJUNKA_3, MJUNKA_6  !! CH4
+       REAL MJUNKR, MJUNKR_T, MJUNKR_1, MJUNKR_3, MJUNKR_6  !! CH4
+       REAL MJUNKZ, MJUNKZ_T, MJUNKZ_1, MJUNKZ_3, MJUNKZ_6  !! CH4
        INTEGER INTERSECT
 
 C      Variables for fixed gases adjustment
@@ -616,19 +625,14 @@ C      --------------------
        DO L = 1,LBOT
           include "ycalpar_INIT.f"
           include "ycalpar_predsINC.f"
-          include "ycalpar_SWITCHES.f"
+          include "ycalpar_SWITCHES.f"    !!!! this does have a bit of DOJAC stuff
 
           IF (DOJAC) THEN
             include "ycalpar_jacINIT.f"
             include "ycalpar_TjacpredsINC.f"
             include "ycalpar_WVjacpredsINC.f"
-c            include "ycalpar_FjacpredsINC.f"
             include "ycalpar_OZjacpredsINC.f"
-c            include "ycalpar_N2OjacpredsINC.f"
-c           include "ycalpar_COjacpredsINC.f"
-c           include "ycalpar_CH4jacpredsINC.f"
-c           include "ycalpar_SO2jacpredsINC.f"
-c           include "ycalpar_HNO3jacpredsINC.f"
+            include "ycalpar_GXjacpredsINC.f"
           END IF
 
        ENDDO
