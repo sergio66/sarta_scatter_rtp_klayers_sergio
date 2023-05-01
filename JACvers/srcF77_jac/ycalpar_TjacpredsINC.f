@@ -10,6 +10,8 @@ C          -----
 C          Fixed (for FWO, FOW, FMW, & FCOW)
 C          recall d(u/v) = (v du - u dv)/v^2
 C          -----
+        IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+
           IWHICHJAC = 1
  
           TJUNKS_T = 2*TR*TR_T
@@ -319,3 +321,5 @@ C         The last 3 trace predictors are only used by N2O
           TRCJACPRD(IWHICHJAC,5,L)=0
           TRCJACPRD(IWHICHJAC,6,L)=0.0
           TRCJACPRD(IWHICHJAC,7,L)=0
+
+        END IF

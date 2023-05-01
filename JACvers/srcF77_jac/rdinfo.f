@@ -146,7 +146,8 @@ C 06 Feb 2004 Scott Hannon      Add LRHOT argument and associated code
 
 C      =================================================================
        SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
-     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3, caJacWgt)
+     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
+     $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,caJACG6,caJACG9,caJACG12)
 C      =================================================================
 
 C      use unix_library
@@ -186,7 +187,7 @@ C      Output:
        INTEGER  LISTC(MAXPRO)
        INTEGER NWANTJ,NUMPROF,NUMCHAN,XNUMPROF,XNUMCHAN
        INTEGER  LISTJ(MAXPRO)
-       CHARACTER*180 caJacTZ,caJACG1,caJACG3,CaJACWGT
+       CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,caJACG6,caJACG9,caJACG12
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -463,12 +464,18 @@ C         Check for repeats
             END IF
           ENDIF
 
-C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 or G3, 100 = only T+ST
+C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 G2 G3 G4 G5 G6 G9 G12, 100 = only T+ST, 200 = WGT
           NWANTJX  = NWANTJ
           LISTJX   = LISTJ
           caJacTZ  = trim(trim(FOUT) // '_jacTZ')
           caJACG1  = trim(trim(FOUT) // '_jacG1')
+          caJACG2  = trim(trim(FOUT) // '_jacG2')
           caJACG3  = trim(trim(FOUT) // '_jacG3')
+          caJACG4  = trim(trim(FOUT) // '_jacG4')
+          caJACG5  = trim(trim(FOUT) // '_jacG5')
+          caJACG6  = trim(trim(FOUT) // '_jacG6')
+          caJACG9  = trim(trim(FOUT) // '_jacG9')
+          caJACG12 = trim(trim(FOUT) // '_jacG12')
           caJACWGT = trim(trim(FOUT) // '_WGTFCN')
 
           IF ((NWANTJX .EQ. 1) .AND. (LISTJX(1) .EQ. -1)) THEN

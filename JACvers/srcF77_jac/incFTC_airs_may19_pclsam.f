@@ -238,6 +238,8 @@ C      -----------------------------------
        INTEGER MAXPRO ! max # of user specified profiles
        INTEGER  MXGAS ! max # of gases in user profile
        INTEGER MXMIEA ! max # of mie particle sizes (cloud code only)
+       INTEGER MAXJAC    ! max # of jacs = 7 (since we have WV, CO2, O3, N2O, CO, CH4, SO2, HNO3, Tz
+       INTEGER OPTRANJAC ! max # of jacs = 2 (since we have WV, Tz
        PARAMETER(MAXLAY = 100)
        PARAMETER(  NSET = 7)
        PARAMETER(MXCHAN = 2834)
@@ -246,6 +248,8 @@ C      -----------------------------------
        PARAMETER(MAXPRO = 25)
        PARAMETER( MXGAS = 44)
        PARAMETER(MXMIEA = 10)
+       PARAMETER(MAXJAC = 7)
+       PARAMETER(OPTRANJAC = 2)
 C
 C***********************************************************************
 C      Variables for the coefficient sets

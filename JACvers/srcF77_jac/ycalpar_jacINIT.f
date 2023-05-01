@@ -5,7 +5,7 @@ CjacXC     dependent predictors DERIVATIVES
 CjacXC     ---------------------------
 CjacXC
            IF (L .EQ. 1) THEN
-CjacX         PDP = PRES(1)*( PRES(2) - PRES(1))
+              PDP = PRES(1)*( PRES(2) - PRES(1))
 CjacX         TRZ = 0.0E+0
               TRZ_T = 0
               TRZ_1 = 0
@@ -19,7 +19,9 @@ CjacX         TAZ_M = 0.0E+0
               TAZ_M_1 = 0
               TAZ_M_3 = 0
 
+              AZ_W_T = 0
               AZ_W_1 = 0
+              AZ_W_3 = 0
 
               DT_T = 1
               DT_1 = 0
@@ -57,14 +59,13 @@ CjacX         TAZ_M = TMZ/PNORM
               TAZ_M_6 = 0
 
             ELSE
-              AZ_W_1 = 0
-
-CjacX         PDP = PRES(L)*( PRES(L) - PRES(L-1) )
+              PDP = PRES(L)*( PRES(L) - PRES(L-1) )
 CjacX         PNORM = PNORM + PDP
 CjacXC
 CjacXC        Note: TRZ, TOZ, and TMZ use layer-above terms
 CjacX         TZ = TZ + PDP*TR
               TZ_T = PDP/RTEMP(L)
+              !! TZ_T = PDP*PTEMP(L)/TZ  !! tobias wehr HIRS writeup
               TZ_1 = 0.0
               TZ_3 = 0.0
 CjacX         TRZ = TZ/PNORM
@@ -92,15 +93,13 @@ CjacX         TAZ_M = TMZ/PNORM
 CjacXC
 CjacXC     Temperature terms
       DT_T = 1.0
-      TR_T = 1/RTEMP(L)
-CjacXC     water terms
       DT_1 = 0.0
-      TR_1 = 0.0
-CjacXC     ozone terms
       DT_3 = 0.0
-      TR_3 = 0.0
-CjacXC     ch4 terms
       DT_6 = 0.0
+
+      TR_T = 1/RTEMP(L)
+      TR_1 = 0.0
+      TR_3 = 0.0
       TR_6 = 0.0
 CjacXC
 CjacXC     Calc the fixed gases correction term for this layer
@@ -114,7 +113,6 @@ CjacXC     Calc the fixed gases correction term for this layer
       A_F_3 = 0.0
 CCjacXccc
 CCjacXc for testing
-CCjacXc      A_F = 1.0
 CCjacXccc
 CjacXC
 CjacXC     Water terms
@@ -127,6 +125,7 @@ CjacX      WZ = WZ + PDP*PWAMNT(L)
       AZ_W = WZ/WZREF
       AZ_W_T = 0.0
       AZ_W_1 = AZ_W_1 + PDP/WZREF
+      AZ_W_1 = PDP/WZREF   !! tobias Wehr HIRS write up
       AZ_W_3 = 0.0
 CjacXC
 CjacXC     Ozone terms

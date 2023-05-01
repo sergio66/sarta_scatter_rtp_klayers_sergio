@@ -10,9 +10,9 @@ C          -----
 C          Fixed (for FWO, FOW, FMW, & FCOW)
 C          recall d(u/v) = (v du - u dv)/v^2
 C          -----
-        IF (INTERSECT(3,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+        IF (INTERSECT(6,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
 
-          IWHICHJAC = 3
+          IWHICHJAC = 6
  
           TJUNKS_T = 2*TR*TR_T
           TJUNKS_1 = 2*TR*TR_1

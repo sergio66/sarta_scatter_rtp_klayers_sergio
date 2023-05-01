@@ -152,8 +152,8 @@ C      Input
        REAL  H2OPRD(  NH2O,MXOWLY)
        REAL  COFH2O(  NH2O,MXOWLY,MXCHNW)
        LOGICAL DOJAC
-       REAL   H2OJACPRD(2,NH2O,MXOWLY)    !! OPTRAN, used by ycalt1_od, ycalt3_od
-       REAL  DAOPJAC(2, MAXLAY)           !! OPTRAN, used by ycalt1_od, ycalt3_od
+       REAL   H2OJACPRD(OPTRANJAC,NH2O,MXOWLY)    !! OPTRAN, used by ycalt1_od, ycalt3_od
+       REAL  DAOPJAC(OPTRANJAC, MAXLAY)           !! OPTRAN, used by ycalt1_od, ycalt3_od
 
 C      Output
        REAL  KW(MAXLAY)

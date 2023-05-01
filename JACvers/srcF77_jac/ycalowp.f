@@ -144,8 +144,8 @@ C      Output
        LOGICAL LOPUSE(MXOWLY)
        INTEGER LOPLOW(MAXLAY)
        REAL  DAOP(MAXLAY)
-       REAL  DAOPJAC(2, MAXLAY)
-       REAL H2OJACPRD(2, NH2O,MXOWLY)
+       REAL  DAOPJAC(OPTRANJAC, MAXLAY)
+       REAL H2OJACPRD(OPTRANJAC, NH2O,MXOWLY)
 
 
 C-----------------------------------------------------------------------
