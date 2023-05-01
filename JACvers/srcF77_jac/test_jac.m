@@ -12,9 +12,10 @@ iProf = 1;  %% satzen = -50 deg
 iExtraGas = [];
 iExtraGas = [2 4 5 6];
 iExtraGas = [6];
-iExtraGas = [4];
 iExtraGas = [2];
+iExtraGas = [4];
 iExtraGas = [6];
+iExtraGas = [5];
 if ~exist('porig')
   sartaer = ['!date; time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
   eval(sartaer);
@@ -98,8 +99,14 @@ if length(iExtraGas) == 1
   figure(14); clf; pcolor(h.vchan,1:nlays,gNjac(:,1:nlays)' ./ (eps + dd(:,1:nlays)')); colorbar; shading interp; set(gca,'ydir','reverse'); title(['G' num2str(iExtraGas) ' FINITE/ANALYTIC']); 
     colormap(usa2); caxis([-1 +1]*2); xlim([640 1640])
   ratio = gNjac(:,1:nlays)' ./ (eps + dd(:,1:nlays)'); bad = find(abs(gNjac(:,1:nlays)') < 1e-6); ratio(bad) = nan;
-  figure(11); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); 
+  figure(14); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); 
   title(['FINITE/ANALYTIC G' num2str(iExtraGas) '-1']); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
+
+  if iExtraGas == 5
+    figure(12); xlim([2000 2700])
+    figure(13); xlim([2000 2700])
+    figure(14); xlim([2000 2700])
+  end
   
   strG = ['G' num2str(iExtraGas)];
   figure(15); hold on; plot(h.vchan,sum(gNjac(:,1:nlays)'),'k.-',h.vchan,sum(dd(:,1:nlays)'),'g'); hold off; 

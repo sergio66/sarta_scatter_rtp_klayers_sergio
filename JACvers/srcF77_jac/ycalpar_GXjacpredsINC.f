@@ -11,6 +11,23 @@ C          Fixed (for FWO, FOW, FMW, & FCOW)
 C          recall d(u/v) = (v du - u dv)/v^2
 C          -----
 
+C --------------------------------------------
+C  IWHICHJAC  NAME           ID
+C --------------------------------------------
+C    1        T              100
+C    2        WV             1
+C    3        O3             3
+C    4        CO2            2
+C    5        N2O            4
+C    6        CO             5
+C    7        CH4            6
+C    8        SO2            9
+C    9        HNO3           12
+C    10       NH3            11   eventually
+C    11       HDO            103  eventually
+C --------------------------------------------
+
+C first set everything to zero
         IF (INTERSECT(2,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
           !!! CO2
           IWHICHJAC = 4 
@@ -89,6 +106,10 @@ C          -----
           DJACPRED(IWHICHJAC,1:11,L) = 0
           TRCJACPRD(IWHICHJAC,1:4,L) = 0
         END IF
+
+c------------------------------------------------------------------------
+c-------------------- NOW BE MORE CAREFUL -------------------------------
+c------------------------------------------------------------------------
 
         IF (INTERSECT(6,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
           !!! CH4

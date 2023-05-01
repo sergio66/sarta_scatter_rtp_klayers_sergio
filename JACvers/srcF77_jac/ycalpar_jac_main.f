@@ -625,7 +625,7 @@ C      --------------------
        DO L = 1,LBOT
           include "ycalpar_INIT.f"
           include "ycalpar_predsINC.f"
-          include "ycalpar_SWITCHES.f"    !!!! this does have a bit of DOJAC stuff
+          include "ycalpar_SWITCHES.f"    
 
           IF (DOJAC) THEN
             include "ycalpar_jacINIT.f"

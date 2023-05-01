@@ -314,11 +314,12 @@ C-----------------------------------------------------------------------
        INTEGER   IHDO
        INTEGER      J
        REAL     DK
-       REAL DKHNO3
-       REAL  DKN2O
-       REAL  DKSO2
-       REAL  DKNH3
-       REAL  DKHDO
+C       REAL  DKCO2, QDKCO2
+       REAL DKHNO3, QDKHNO3
+       REAL  DKN2O, QDKN2O
+       REAL  DKSO2, QDKSO2
+       REAL  DKNH3, QDKNH3
+       REAL  DKHDO, QDKHDO
        REAL   KHDO
        REAL   KCON
        REAL   KFIX
@@ -794,6 +795,15 @@ C            ----------------------------
              ELSE
                 DKSO2=0.0
              ENDIF
+
+             IF (LSO2) THEN
+                QDKSO2=( COFSO2(1,ILAY,ISO2)*TRCPRD(1,ILAY) ) +
+     $                ( COFSO2(2,ILAY,ISO2)*TRCPRD(2,ILAY) ) +
+     $                ( COFSO2(3,ILAY,ISO2)*TRCPRD(3,ILAY) ) +
+     $                ( COFSO2(4,ILAY,ISO2)*TRCPRD(4,ILAY) )
+                QDKSO2=QDKSO2*SO2JACMLT(ILAY)
+             ENDIF
+
 C
 C            ----------------------------
 C            Calc change in total optical
@@ -808,6 +818,15 @@ C            ----------------------------
              ELSE
                 DKHNO3=0.0
              ENDIF
+
+             IF (LHNO3) THEN
+                QDKHNO3=( COFHNO(1,ILAY,IHNO3)*TRCPRD(1,ILAY) ) +
+     $                 ( COFHNO(2,ILAY,IHNO3)*TRCPRD(2,ILAY) ) +
+     $                 ( COFHNO(3,ILAY,IHNO3)*TRCPRD(3,ILAY) ) +
+     $                 ( COFHNO(4,ILAY,IHNO3)*TRCPRD(4,ILAY) )
+                QDKHNO3=QDKHNO3*HNOJACMLT(ILAY)
+             ENDIF
+
 C
 C            ----------------------------
 C            Calc change in total optical
@@ -825,6 +844,18 @@ C            ----------------------------
              ELSE
                 DKN2O=0.0
              ENDIF
+
+             IF (LN2O) THEN
+                QDKN2O=( COFN2O(1,ILAY,IN2O)*TRCPRD(1,ILAY) ) +
+     $                ( COFN2O(2,ILAY,IN2O)*TRCPRD(2,ILAY) ) +
+     $                ( COFN2O(3,ILAY,IN2O)*TRCPRD(3,ILAY) ) +
+     $                ( COFN2O(4,ILAY,IN2O)*TRCPRD(4,ILAY) ) +
+     $                ( COFN2O(5,ILAY,IN2O)*TRCPRD(5,ILAY) ) +
+     $                ( COFN2O(6,ILAY,IN2O)*TRCPRD(6,ILAY) ) +
+     $                ( COFN2O(7,ILAY,IN2O)*TRCPRD(7,ILAY) )
+                QDKN2O=QDKN2O*N2OJACMLT(ILAY)
+             ENDIF
+
 C
 C            ----------------------------
 C            Calc change in total optical
@@ -839,6 +870,13 @@ C            ----------------------------
              ELSE
                 DKNH3=0.0
              ENDIF
+             IF (LNH3) THEN
+                QDKNH3=( COFNH3(1,ILAY,INH3)*TRCPRD(1,ILAY) ) +
+     $                ( COFNH3(2,ILAY,INH3)*TRCPRD(2,ILAY) ) +
+     $                ( COFNH3(3,ILAY,INH3)*TRCPRD(3,ILAY) ) +
+     $                ( COFNH3(4,ILAY,INH3)*TRCPRD(4,ILAY) )
+                QDKNH3=QDKNH3*NH3JACMLT(ILAY)
+             ENDIF
 C
 ccc
 c this block for testing
@@ -847,6 +885,7 @@ c      DKHNO3=0.0
 c      DKN2O=0.0
 C       DKNH3=0.0
 C       DKHDO=0.0
+
       KHDO=0.0
 ccc
 C            Limit -DK so it can never totally totally cancel KFIX
@@ -881,17 +920,17 @@ C            Calc total layer optical depth
                    ELSEIF (IWHICHJAC .EQ. 3) THEN 
                      DTAU_DG3(ILAY,J)=KLAYER
                    ELSEIF (IWHICHJAC .EQ. 4) THEN 
-                     DTAU_DG2(ILAY,J)=KLAYER
+                     DTAU_DG2(ILAY,J)=0
                    ELSEIF (IWHICHJAC .EQ. 5) THEN 
-                     DTAU_DG4(ILAY,J)=KLAYER
+                     DTAU_DG4(ILAY,J)=QDKN2O
                    ELSEIF (IWHICHJAC .EQ. 6) THEN 
-                     DTAU_DG5(ILAY,J)=KLAYER
+                     DTAU_DG5(ILAY,J)=0
                    ELSEIF (IWHICHJAC .EQ. 7) THEN 
-                     DTAU_DG6(ILAY,J)=KLAYER
+                     DTAU_DG6(ILAY,J)=KMET
                    ELSEIF (IWHICHJAC .EQ. 8) THEN 
-                     DTAU_DG9(ILAY,J)=KLAYER
+                     DTAU_DG9(ILAY,J)=QDKSO2
                    ELSEIF (IWHICHJAC .EQ. 9) THEN 
-                     DTAU_DG12(ILAY,J)=KLAYER
+                     DTAU_DG12(ILAY,J)=QDKHNO3
                    END IF
 
 c             TAU(ILAY,J)=KLAYER

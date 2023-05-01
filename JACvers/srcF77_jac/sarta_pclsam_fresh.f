@@ -24,6 +24,23 @@ C
 c*********************************************************************************************************************
 C SSM : H2OJACPRD,DAOPJAC typically size(OPTRANJAC,MXLAY,MXCHAN) where the 2 derivatives are T,G1 (OPTRAN)
 C SSM : XJACPRD           typically   size(MAXJAC, MXLAY,MXCHAN) where the   derivatives are T,G1,G2,G3,G4,G5,G6,G9,G12
+C
+C --------------------------------------------
+C  IWHICHJAC  NAME           ID
+C --------------------------------------------
+C    1        T              100
+C    2        WV             1
+C    3        O3             3
+C    4        CO2            2
+C    5        N2O            4
+C    6        CO             5
+C    7        CH4            6
+C    8        SO2            9
+C    9        HNO3           12
+C    10       NH3            11   eventually
+C    11       HDO            103  eventually
+C --------------------------------------------
+C
 c*********************************************************************************************************************
 
 !CALL PROTOCOL
