@@ -7,21 +7,16 @@ addpath /asl/matlib/h4tools
 
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45; %% satzen =  0  deg
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;  %% satzen = -50  deg
-frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 1;     %% same as profile 1 from cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp
-frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 59;    %% DCC
 frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 113;   %% almost clear
+frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 59;    %% DCC
+frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 1;     %% same as profile 1 from cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp
+frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 12150/2+45;  %% satzen = +50  deg
 
-iExtraGas = [];
-iExtraGas = [2 4 5 6];
-iExtraGas = [6];
-iExtraGas = [2];
-iExtraGas = [4];
-iExtraGas = [6];
-iExtraGas = [9];
-iExtraGas = [5];
-iExtraGas = [2];
 if ~exist('porig')
 
+  iExtraGas = [];
+  iExtraGas = [2 4 5 6 9 12];
+  iExtraGas = [9];
   iExtraGas = input('Enter which gas ID to check [2 4 5 6 9 12] : ');
   if length(iExtraGas) == 0
     iExtraGas = 2;
@@ -70,7 +65,7 @@ figure(5); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(g
 figure(15); clf; 
   figure(15); hold on; plot(h.vchan,10*sum(jacx.tjac(:,1:nlays)'),'r.-',h.vchan,10*sum(dd(:,1:nlays)'),'m'); hold on
 figure(16); clf; 
-  figure(16); hold on; plot(h.vchan,(eps+sum(jacx.tjac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'b'); hold on; axis([640 1640 0 +2]); 
+  figure(16); hold on; plot(h.vchan,(eps+sum(jacx.tjac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'r'); hold on; axis([640 1640 0 +2]); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -84,7 +79,7 @@ figure(8); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(g
 figure(15); hold on; plot(h.vchan,sum(jacx.wvjac(:,1:nlays)'),'b.-',h.vchan,sum(dd(:,1:nlays)'),'c'); hold on; 
   axis([640 1640 -10 +10])
   hl = legend('10*sum(TZjac),finite diff','10*sum(TZjac),analytic','sum(WVjac),finite diff','sum(WVjac),analytic','location','best','fontsize',10);
-figure(16); hold on; plot(h.vchan,(eps+sum(jacx.wvjac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'r'); hold on; axis([640 1640 0 +2]); 
+figure(16); hold on; plot(h.vchan,(eps+sum(jacx.wvjac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'b'); hold on; axis([640 1640 0 +2]); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 [w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacG3',3);  dd = squeeze(d(1,:,:)); % whos dd d

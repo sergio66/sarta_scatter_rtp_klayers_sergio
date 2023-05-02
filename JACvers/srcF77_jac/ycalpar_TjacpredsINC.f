@@ -266,9 +266,9 @@ C         print *,'CALPAR CONJACPRD(IWHICHJAC,1,L) = ',L,WJUNKA,TJUNKS,CONJACPRD
 C          ---------------
 C          HDO
 C          ---------------
-           if (DEBUG) then
-             IF(L .EQ. 96) write(6,'(A,X,I4,X,F6.2)') 'calpar: L,HDOFCT ',L,HDOFCT
-           endif
+c           if (DEBUG) then
+c             IF(L .EQ. 96) write(6,'(A,X,I4,X,F6.2)') 'calpar: L,HDOFCT ',L,HDOFCT
+c           endif
            DJUNKA_T=SECANG(L)*A_W_T*(1 - HDOFCT)      ! *(1 - HDOFCT)
            DJUNKR_T=0.5/SQRT( DJUNKA ) * DJUNKA_T
            DJUNKS_T=2*DJUNKA*DJUNKA_T

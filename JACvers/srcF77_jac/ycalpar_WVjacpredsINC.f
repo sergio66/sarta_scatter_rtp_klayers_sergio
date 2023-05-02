@@ -265,10 +265,11 @@ C         print *,'CALPAR CONJACPRD(IWHICHJAC,1,L) = ',L,WJUNKA,TJUNKS,CONJACPRD
 C          ---------------
 C          HDO
 C          ---------------
-           if (DEBUG) then
-             IF(L .EQ. 96) write(6,'(A,X,I4,X,F6.2)') 'calpar: L,HDOFCT ',L,HDOFCT
-           endif
+c           if (DEBUG) then
+c             IF(L .EQ. 96) write(6,'(A,X,I4,X,F6.2)') 'calpar: L,HDOFCT ',L,HDOFCT
+c           endif
            DJUNKA_1=SECANG(L)*(A_W_1*(1 - HDOFCT) + A_W*(-1))      ! *(1 - HDOFCT)
+           DJUNKA_1=SECANG(L)*(A_W_1*(1 - HDOFCT) + A_W*(0))       ! *(1 - HDOFCT = const)
            DJUNKR_1=0.5/SQRT( DJUNKA ) * DJUNKA_1
            DJUNKS_1=2*DJUNKA*DJUNKA_1
            DJUNKZ_1=DJUNKA_1*A_W/AZ_W + DJUNKA*(AZ_W*A_W_1 - A_W*AZ_W_1)/AZ_W/AZ_W                 ! *(1 - HDOFCT)
