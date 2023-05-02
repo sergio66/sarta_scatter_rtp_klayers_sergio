@@ -241,6 +241,7 @@ cbaba TJAC
      $          COFH2O(8,LOP,ICHAN)*H2OJACPRD(1,8,LOP) +
      $          COFH2O(9,LOP,ICHAN)*H2OJACPRD(1,9,LOP)
 C            Remove WAOP scaling factor
+C            WAOP depends on WAZOP(L)-WAZOP(L-1), and WAZOP are from a file so constant!
              KWOP_T(LOP)=KWOP_T(LOP)/WAOP(LOP)
 C            Check for negative value
 c             IF (KWOP_T(LOP) .LT. 0.0E+0) KWOP_T(LOP)=0.0E+0
@@ -264,7 +265,7 @@ c    ycalowp.f shows DAOP depends on T and WV
             KW_T(L)=KW_T(L) + ( DAOPJAC(1,L)*( KWOP(LOPLOW(L) + 1) -
      $       KWOP(LOPLOW(L)) ))*WAANG(L)
 
-c            IF (KW_T(L) .LT. 0.0E+0) KW(L)=0.0E+0
+c            IF (KW_T(L) .LT. 0.0E+0) KW_T(L)=0.0E+0
 C
          ENDIF
        ENDDO
@@ -284,6 +285,7 @@ cbaba QJAC
      $          COFH2O(8,LOP,ICHAN)*H2OJACPRD(2,8,LOP) +
      $          COFH2O(9,LOP,ICHAN)*H2OJACPRD(2,9,LOP)
 C            Remove WAOP scaling factor, which depends on wazop (sarta_pclsam.f) which is read in by rdcoef.f
+C            WAOP depends on WAZOP(L)-WAZOP(L-1), and WAZOP are from a file so constant!
              KWOP_1(LOP) = KWOP_1(LOP)/WAOP(LOP)
 C            Check for negative value
 c             IF (KWOP_1(LOP) .LT. 0.0E+0) KWOP_1(LOP)=0.0E+0

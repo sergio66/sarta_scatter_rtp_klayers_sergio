@@ -526,7 +526,7 @@ C-----------------------------------------------------------------------
        REAL    A_F, A_F_T, A_F_1, A_F_3
        REAL    A_W, A_W_T, A_W_1, A_W_3
        REAL  WZREF
-       REAL     WZ
+       REAL     WZ, WZ_T,   WZ_1,   WZ_3
        REAL   AZ_W, AZ_W_T, AZ_W_1, AZ_W_3
        REAL    A_O, A_O_T, A_O_1, A_O_3
        REAL  XZREF
@@ -545,7 +545,7 @@ C-----------------------------------------------------------------------
        REAL  MZREF
        REAL     MZ, MZ_T, MZ_1, MZ_3, MZ_6
        REAL   AZ_M, AZ_M_T, AZ_M_1, AZ_M_3, AZ_M_6
-       REAL    TMZ
+       REAL    TMZ, TMZ_T,   TMZ_1,   TMZ_3,   TMZ_6
        REAL  TAZ_M, TAZ_M_T, TAZ_M_1, TAZ_M_3, TAZ_M_6
        REAL TJUNKS, TJUNKS_T, TJUNKS_1, TJUNKS_3, TJUNKS_N
        REAL WJUNKA, WJUNKA_T, WJUNKA_1, WJUNKA_3

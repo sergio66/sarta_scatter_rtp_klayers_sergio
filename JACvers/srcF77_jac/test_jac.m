@@ -5,9 +5,11 @@ addpath /home/sergio/KCARTA/MATLAB
 addpath /asl/matlib/aslutil
 addpath /asl/matlib/h4tools
 
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp';
-iProf = 45; %% satzen =  0  deg
-iProf = 1;  %% satzen = -50 deg
+frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45; %% satzen =  0  deg
+frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;  %% satzen = -50  deg
+frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 1;     %% same as profile 1 from cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp
+frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 59;    %% DCC
+frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 113;   %% almost clear
 
 iExtraGas = [];
 iExtraGas = [2 4 5 6];
@@ -18,11 +20,13 @@ iExtraGas = [6];
 iExtraGas = [9];
 iExtraGas = [5];
 iExtraGas = [2];
-iExtraGas = input('Enter which gas ID to check [2 4 5 6 9 12] : ');
-if length(iExtraGas) == 0
-  iExtraGas = 2;
-end
 if ~exist('porig')
+
+  iExtraGas = input('Enter which gas ID to check [2 4 5 6 9 12] : ');
+  if length(iExtraGas) == 0
+    iExtraGas = 2;
+  end
+
   sartaer = ['!date; time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
   eval(sartaer);
   [h,ha,porig,pa] = rtpread('newdayx.rtp');

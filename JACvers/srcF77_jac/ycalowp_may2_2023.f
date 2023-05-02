@@ -275,8 +275,6 @@ C         --------------------------------------------------------
           ENDIF
 C
 C         Compute the interpolation fractor, for OPTRAN LAYER LOP
-c         RECALL FROM ABOVE       WAZ(L)=5.0E-1*WAANG(L) + WAZSUM
-C         REALLY HERE             LL = LL(LOP)
           DA=(WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))
 C
 C         Do the interpolation
@@ -298,6 +296,7 @@ C         Assign the predictors
           H2OPRD(9,LOP)=TZOP
 
 c rdcoef.f reads in the fixed values of wazop from a data file, so they are FIXED 
+c   which means da_T and da_1 are both zero
           WAZOP_T = 0
           WAZOP_1 = 0
 c rdcoef.f reads in the fixed values of wavgop from a data file, so they are FIXED 
@@ -305,24 +304,29 @@ c rdcoef.f reads in the fixed values of wavgop from a data file, so they are FIX
           WAVGOP_1 = 0
 
           IF (DOJAC) THEN
-            DA_T = -1/(WAZ(LU) - WAZ(LL)) * WAZ_T(LL)
-            DA_1 = -1/(WAZ(LU) - WAZ(LL)) * WAZ_1(LL)
+            DA_T = 1/(WAZ(LU) - WAZ(LL)) * WAZOP_T(LOP)
+            DA_1 = 1/(WAZ(LU) - WAZ(LL)) * WAZOP_1(LOP)
 
-            JUNK = P(LU) -  P(LL)
-            POP_T = 1/WAVGOP(1,LOP)*(DA_T * JUNK + DA*0 + 0) 
-            POP_1 = 1/WAVGOP(1,LOP)*(DA_1 * JUNK + DA*0 + 0) 
+            JUNK = ( DA*(  P(LU) -  P(LL) ) +  P(LL) )
+            POP_T = -JUNK/WAVGOP(1,LOP)/WAVGOP(1,LOP)*WAVGOP_T(1,LOP)
+            POP_1 = -JUNK/WAVGOP(1,LOP)/WAVGOP(1,LOP)*WAVGOP_1(1,LOP)
 
-            JUNK = T(LU) -  T(LL)
-            TOP_T = 1/WAVGOP(2,LOP)*(DA_T * JUNK + DA*(1-1) + 1)
-            TOP_1 = 1/WAVGOP(2,LOP)*(DA_1 * JUNK + DA*0     + 0)
+            JUNK = ( DA*(  T(LU) -  T(LL) ) +  T(LL) )
+            TOP_T = -JUNK/WAVGOP(2,LOP)/WAVGOP(2,LOP)*WAVGOP_T(2,LOP) + 
+     $               1/WAVGOP(2,LOP)*(DA*(1 - 1) + 1)
+            TOP_1 = -JUNK/WAVGOP(2,LOP)/WAVGOP(2,LOP)*WAVGOP_1(2,LOP)
 
-            JUNK = PZ(LU) -  PZ(LL)
-            PZOP_T = 1/WAVGOP(3,LOP)*(DA_T * JUNK + DA*(PZ_T(LU) - PZ_T(LL)) + PZ_T(LL))
-            PZOP_1 = 1/WAVGOP(3,LOP)*(DA_1 * JUNK + DA*(PZ_1(LU) - PZ_1(LL)) + PZ_1(LL))
+            JUNK = ( DA*(  PZ(LU) -  PZ(LL) ) +  PZ(LL) )
+            PZOP_T = -JUNK/WAVGOP(3,LOP)/WAVGOP(3,LOP)*WAVGOP_T(3,LOP) + 
+     $               1/WAVGOP(3,LOP)*(DA*(PZ_T(LU) - PZ_T(LL)) + PZ_T(LL))
+            PZOP_1 = -JUNK/WAVGOP(3,LOP)/WAVGOP(3,LOP)*WAVGOP_1(3,LOP) + 
+     $               1/WAVGOP(3,LOP)*(DA*(PZ_1(LU) - PZ_1(LL)) + PZ_1(LL))
 
-            JUNK = TZ(LU) -  TZ(LL)
-            TZOP_T = 1/WAVGOP(4,LOP)*(DA_T * JUNK + DA*(TZ_T(LU) - TZ_T(LL)) + TZ_T(LL))
-            TZOP_1 = 1/WAVGOP(4,LOP)*(DA_1 * JUNK + DA*(TZ_1(LU) - TZ_1(LL)) + TZ_1(LL))
+            JUNK = ( DA*(  T(LU) -  T(LL) ) +  T(LL) )
+            TZOP_T = -JUNK/WAVGOP(4,LOP)/WAVGOP(4,LOP)*WAVGOP_T(4,LOP) + 
+     $               1/WAVGOP(4,LOP)*(DA*(TZ_T(LU) - TZ_T(LL)) + TZ_T(LL))
+            TZOP_1 = -JUNK/WAVGOP(4,LOP)/WAVGOP(4,LOP)*WAVGOP_1(4,LOP) + 
+     $               1/WAVGOP(4,LOP)*(DA*(TZ_1(LU) - TZ_1(LL)) + TZ_1(LL))
 
             ANGOP_T = DA_T*( SECANG(LU) - SECANG(LL) )
             ANGOP_1 = DA_1*( SECANG(LU) - SECANG(LL) )
@@ -396,7 +400,6 @@ C         Assign the lower OPTRAN level
 C         Assign the interpolation fraction
           DAOP(L)=(WAZ(L) - WAZOP(LOPL))/(WAZOP(LOPU) - WAZOP(LOPL))
 
-c rdcoef.f reads in the fixed values of wazop from a data file, so they are FIXED 
           IF (DOJAC) THEN
             DAOPJAC(1,L) = WAZ_T(L)/(WAZOP(LOPU) - WAZOP(LOPL))
             DAOPJAC(2,L) = WAZ_1(L)/(WAZOP(LOPU) - WAZOP(LOPL))

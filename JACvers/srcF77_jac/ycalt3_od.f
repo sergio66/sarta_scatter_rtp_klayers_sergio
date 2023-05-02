@@ -896,6 +896,7 @@ C            Limit -DK so it can never totally totally cancel KFIX
              DK = 0
 
 C            Calc total layer optical depth
+                 IF (LH2O .EQ. .FALSE.) THEN
                    IF (IWHICHJAC .EQ. 1) THEN 
                      KW(ILAY) = KW_T(ILAY)
                    ELSEIF (IWHICHJAC .EQ. 2) THEN 
@@ -903,6 +904,7 @@ C            Calc total layer optical depth
                    ELSEIF (IWHICHJAC .GE. 3) THEN 
                      KW(ILAY) = 0.0
                    END IF
+                 END IF
 
              KLAYER = KCON + KFIX + KMET + KW(ILAY) + DK
 
