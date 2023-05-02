@@ -290,7 +290,7 @@ C     Calculate top cloud1 radiance
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12
 
-      IF (NWANTC .GT. 0) THEN
+      IF ((NWANTC .GT. 0) .AND. DEBUG) THEN
         write(*,'(A,I5,7(F12.4),6(ES12.4))') 'rads',I,FREQ(I),EMIS(I),TSURF,
      $           FCLEAR,CFRA1X,CFRA2X,CFRA12,
      $           RSURFE,RAD0,RADC1,RADC2,RADC12,RAD(I)

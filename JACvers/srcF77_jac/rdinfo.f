@@ -360,6 +360,8 @@ C      -----------------------------------------------------------------
 C      -------------------------------------
 C      Sort prof numbers & check for repeats
 C      -------------------------------------
+       IF ((NWANTP .EQ. 1) .AND. (LISTP(1) .EQ. -1)) NWANTP = -1
+
        IF (NWANTP .GT. 0) THEN
 C
 C         Sort in ascending order
@@ -393,6 +395,8 @@ C
 C      -------------------------------------
 C      Sort chan numbers & check for repeats
 C      -------------------------------------
+       IF ((NWANTC .EQ. 1) .AND. (LISTC(1) .EQ. -1)) NWANTC = -1
+
        IF (NWANTC .GT. 0) THEN
 C
 C         Sort in ascending order
@@ -425,6 +429,7 @@ C         Check for repeats
 C      -------------------------------------
 C      Sort jac numbers & check for repeats
 C      -------------------------------------
+       IF ((NWANTJ .EQ. 1) .AND. (LISTJ(1) .EQ. 0)) NWANTJ = 0
        IF (NWANTJ .GT. 0) THEN
 C
 C         Sort in ascending order
