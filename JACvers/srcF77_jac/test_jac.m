@@ -15,7 +15,13 @@ iExtraGas = [6];
 iExtraGas = [2];
 iExtraGas = [4];
 iExtraGas = [6];
+iExtraGas = [9];
 iExtraGas = [5];
+iExtraGas = [2];
+iExtraGas = input('Enter which gas ID to check [2 4 5 6 9 12] : ');
+if length(iExtraGas) == 0
+  iExtraGas = 2;
+end
 if ~exist('porig')
   sartaer = ['!date; time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
   eval(sartaer);
@@ -119,3 +125,18 @@ end
 
 figure(15); hold off
 figure(16); hold off
+
+iAX = input('Change x-axis to [640 2780] ? (-1 default /+1) : ');
+if length(iAX) == 0
+  iAX = -1;
+end
+if iAX > 0
+  for ii = 1 : 16
+    figure(ii); xlim([640 2800]);
+  end
+  figure(01); figure(02);             pause(1)
+  figure(03); figure(04); figure(05); pause(1)
+  figure(06); figure(07); figure(08); pause(1)
+  figure(09); figure(10); figure(11); pause(1)
+  figure(12); figure(13); figure(14); pause(1)
+end

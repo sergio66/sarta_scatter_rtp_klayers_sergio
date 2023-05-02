@@ -293,10 +293,10 @@ C          ---------------
 C          ---------------
 C          Carbon monoxide for FCOW = set4
 C          ---------------
-           CJUNKA=SECANG(L)*A_C_T
-           CJUNKR=0.5/SQRT( CJUNKA ) * CJUNKA_T
-           CJUNKS=2*CJUNKA*CJUNKA_T
-           CJUNKZ=CJUNKA_T*A_C/AZ_C + CJUNKA*(AZ_C*A_C_T + A_C*AZ_C_T)/AZ_C/AZ_C
+           CJUNKA_T=SECANG(L)*A_C_T
+           CJUNKR_T=0.5/SQRT( CJUNKA ) * CJUNKA_T
+           CJUNKS_T=2*CJUNKA*CJUNKA_T
+           CJUNKZ_T=CJUNKA_T*A_C/AZ_C + CJUNKA*(AZ_C*A_C_T + A_C*AZ_C_T)/AZ_C/AZ_C
            CJACPRED4(IWHICHJAC,1,L)=CJUNKA_T
            CJACPRED4(IWHICHJAC,2,L)=CJUNKR_T
            CJACPRED4(IWHICHJAC,3,L)=CJUNKA_T*DT + CJUNKA*DT_T

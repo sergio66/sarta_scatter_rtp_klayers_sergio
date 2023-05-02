@@ -673,9 +673,10 @@ C      for jacobians
        REAL RAD4(4,MAXLAY,MXCHAN) ! -chan radiance + planck(TL)         for CLR,CLD1,CLD2,CLD12
        REAL L2S4(4,MAXLAY,MXCHAN),WGT4(4,MAXLAY,MXCHAN)
        REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
-       INTEGER IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,IOUNG12,IOUNWGT,iFileErr
+       INTEGER IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,IOUNG11,IOUNG12,IOUNG103,IOUNWGT,iFileErr
        INTEGER JAC_OUTPUT_UNITS           ! 0 for drad/dT and drad/dq, 1 for dBT/dT and dBT/d(log q) = q dBT/dq
-       CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,caJACG6,caJACG9,caJACG12
+       CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
+     $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103
 
        INTEGER ijunk
 C-----------------------------------------------------------------------
@@ -717,7 +718,8 @@ C      Get command-line info
 C      ---------------------
        CALL RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC, 
      $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
-     $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,caJACG6,caJACG9,caJACG12)
+     $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
+     $     caJACG6,caJACG9,caJACG11,caJACG12,caJACG103)
 ccc
        if (DEBUG) then
          print *, 'nwantp=', NWANTP
@@ -755,7 +757,9 @@ ccc
          IOUNG5  = 25
          IOUNG6  = 26
          IOUNG9  = 29
+         IOUNG11 = 211
          IOUNG12 = 212
+         IOUNG103 = 2103
 
          IF (INTERSECT(1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
            write(*,'(A,A)') 'opening jac file caJacG1 = ',caJacG1
@@ -799,11 +803,23 @@ ccc
            WRITE(IOUNG9) NUMPROF
            WRITE(IOUNG9) NUMCHAN
          END IF
+         IF (INTERSECT(11,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           write(*,'(A,A)') 'opening jac file caJacG11 = ',caJacG11
+           OPEN(UNIT=IOUNG11,FILE=caJacG11,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
+           WRITE(IOUNG11) NUMPROF
+           WRITE(IOUNG11) NUMCHAN
+         END IF
          IF (INTERSECT(12,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
            write(*,'(A,A)') 'opening jac file caJacG12 = ',caJacG12
            OPEN(UNIT=IOUNG12,FILE=caJacG12,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
            WRITE(IOUNG12) NUMPROF
            WRITE(IOUNG12) NUMCHAN
+         END IF
+         IF (INTERSECT(103,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN
+           write(*,'(A,A)') 'opening jac file caJacG103 = ',caJacG103
+           OPEN(UNIT=IOUNG103,FILE=caJacG103,FORM='UNFORMATTED',STATUS='UNKNOWN',IOSTAT=iFileErr)
+           WRITE(IOUNG103) NUMPROF
+           WRITE(IOUNG103) NUMCHAN
          END IF
 
          IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) THEN

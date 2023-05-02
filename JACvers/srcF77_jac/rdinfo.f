@@ -147,7 +147,8 @@ C 06 Feb 2004 Scott Hannon      Add LRHOT argument and associated code
 C      =================================================================
        SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
      $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
-     $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,caJACG6,caJACG9,caJACG12)
+     $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
+     $     caJACG6,caJACG9,caJacG11,caJACG12,caJacG103)
 C      =================================================================
 
 C      use unix_library
@@ -187,7 +188,8 @@ C      Output:
        INTEGER  LISTC(MAXPRO)
        INTEGER NWANTJ,NUMPROF,NUMCHAN,XNUMPROF,XNUMCHAN
        INTEGER  LISTJ(MAXPRO)
-       CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,caJACG6,caJACG9,caJACG12
+       CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
+     $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -475,7 +477,9 @@ C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 G2 G3 G4 G5 G6 
           caJACG5  = trim(trim(FOUT) // '_jacG5')
           caJACG6  = trim(trim(FOUT) // '_jacG6')
           caJACG9  = trim(trim(FOUT) // '_jacG9')
+          caJACG11 = trim(trim(FOUT) // '_jacG11')
           caJACG12 = trim(trim(FOUT) // '_jacG12')
+          caJACG103= trim(trim(FOUT) // '_jacG103')
           caJACWGT = trim(trim(FOUT) // '_WGTFCN')
 
           IF ((NWANTJX .EQ. 1) .AND. (LISTJX(1) .EQ. -1)) THEN
@@ -496,6 +500,19 @@ C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 G2 G3 G4 G5 G6 
             LISTJ(6) = 6
             LISTJ(7) = 100
             LISTJ(8) = 200
+
+            LISTJ = 0
+            NWANTJ = 10
+            LISTJ(1) = 1
+            LISTJ(2) = 2
+            LISTJ(3) = 3
+            LISTJ(4) = 4
+            LISTJ(5) = 5
+            LISTJ(6) = 6
+            LISTJ(7) = 9
+            LISTJ(8) = 12
+            LISTJ(9)  = 100
+            LISTJ(10) = 200
           END IF            
        ENDIF
 

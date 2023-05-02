@@ -326,12 +326,12 @@ C-----------------------------------------------------------------------
        INTEGER   ISO2
        INTEGER      J
        REAL     DK
-       REAL  DKCO2, QDKCO2
-       REAL DKHNO3, QDKHNO3
-       REAL  DKN2O, QDKN2O
-       REAL  DKSO2, QDKSO2
-       REAL  DKNH3, QDKNH3
-       REAL  DKHDO, QDKHDO
+       REAL  DKCO2, QDKCO2, RAQDKCO2(MAXLAY)
+       REAL  DKN2O, QDKN2O, RAQDKN2O(MAXLAY)
+       REAL DKHNO3, QDKHNO3,RAQDKHNO3(MAXLAY)
+       REAL  DKSO2, QDKSO2, RAQDKSO2(MAXLAY)
+       REAL  DKNH3, QDKNH3, RAQDKNH3(MAXLAY)
+       REAL  DKHDO, QDKHDO, RAQDKHDO(MAXLAY)
        REAL   KHDO
        REAL   KCON
        REAL   KFIX
@@ -590,12 +590,12 @@ C            Calc change in total optical
 C            depth due to variable CO2
 C            ----------------------------
              IF (LCO2 .AND. CO2MLT(ILAY) .NE. 0) THEN
-                DKCO2=( COFCO2(1,ILAY,ICO2)*TRCPRD(1,ILAY) ) +
+                RAQDKCO2(ILAY)=( COFCO2(1,ILAY,ICO2)*TRCPRD(1,ILAY) ) +
      $                ( COFCO2(2,ILAY,ICO2)*TRCPRD(2,ILAY) ) +
      $                ( COFCO2(3,ILAY,ICO2)*TRCPRD(3,ILAY) ) +
      $                ( COFCO2(4,ILAY,ICO2)*TRCPRD(4,ILAY) ) +
      $                ( COFCO2(5,ILAY,ICO2)*TRCPRD(5,ILAY) )
-                DKCO2=DKCO2*CO2MLT(ILAY)
+                DKCO2=RAQDKCO2(ILAY)*CO2MLT(ILAY)
              ELSE
                 DKCO2=0.0
              ENDIF
@@ -606,11 +606,11 @@ C            Calc change in total optical
 C            depth due to variable SO2
 C            ----------------------------
              IF (LSO2 .AND. SO2MLT(ILAY) .NE. 0) THEN
-                DKSO2=( COFSO2(1,ILAY,ISO2)*TRCPRD(1,ILAY) ) +
+                RAQDKSO2(ILAY)=( COFSO2(1,ILAY,ISO2)*TRCPRD(1,ILAY) ) +
      $                ( COFSO2(2,ILAY,ISO2)*TRCPRD(2,ILAY) ) +
      $                ( COFSO2(3,ILAY,ISO2)*TRCPRD(3,ILAY) ) +
      $                ( COFSO2(4,ILAY,ISO2)*TRCPRD(4,ILAY) )
-                DKSO2=DKSO2*SO2MLT(ILAY)
+                DKSO2=RAQDKSO2(ILAY)*SO2MLT(ILAY)
              ELSE
                 DKSO2=0.0
              ENDIF
@@ -621,11 +621,11 @@ C            Calc change in total optical
 C            depth due to variable HNO3
 C            ----------------------------
              IF (LHNO3 .AND. HNOMLT(ILAY) .NE. 0) THEN
-                DKHNO3=( COFHNO(1,ILAY,IHNO3)*TRCPRD(1,ILAY) ) +
+                RAQDKHNO3(ILAY)=( COFHNO(1,ILAY,IHNO3)*TRCPRD(1,ILAY) ) +
      $                 ( COFHNO(2,ILAY,IHNO3)*TRCPRD(2,ILAY) ) +
      $                 ( COFHNO(3,ILAY,IHNO3)*TRCPRD(3,ILAY) ) +
      $                 ( COFHNO(4,ILAY,IHNO3)*TRCPRD(4,ILAY) )
-                DKHNO3=DKHNO3*HNOMLT(ILAY)
+                DKHNO3=RAQDKHNO3(ILAY)*HNOMLT(ILAY)
              ELSE
                 DKHNO3=0.0
              ENDIF
@@ -636,14 +636,14 @@ C            Calc change in total optical
 C            depth due to variable N2O
 C            ----------------------------
              IF (LN2O .AND. N2OMLT(ILAY) .NE. 0) THEN
-                DKN2O=( COFN2O(1,ILAY,IN2O)*TRCPRD(1,ILAY) ) +
+                RAQDKN2O(ILAY)=( COFN2O(1,ILAY,IN2O)*TRCPRD(1,ILAY) ) +
      $                ( COFN2O(2,ILAY,IN2O)*TRCPRD(2,ILAY) ) +
      $                ( COFN2O(3,ILAY,IN2O)*TRCPRD(3,ILAY) ) +
      $                ( COFN2O(4,ILAY,IN2O)*TRCPRD(4,ILAY) ) +
      $                ( COFN2O(5,ILAY,IN2O)*TRCPRD(5,ILAY) ) +
      $                ( COFN2O(6,ILAY,IN2O)*TRCPRD(6,ILAY) ) +
      $                ( COFN2O(7,ILAY,IN2O)*TRCPRD(7,ILAY) )
-                DKN2O=DKN2O*N2OMLT(ILAY)
+                DKN2O=RAQDKN2O(ILAY)*N2OMLT(ILAY)
              ELSE
                 DKN2O=0.0
              ENDIF
@@ -653,11 +653,11 @@ C            Calc change in total optical
 C            depth due to variable NH3
 C            ----------------------------
              IF (LNH3 .AND. NH3MLT(ILAY) .NE. 0) THEN
-                DKNH3=( COFNH3(1,ILAY,INH3)*TRCPRD(1,ILAY) ) +
+                RAQDKNH3(ILAY)=( COFNH3(1,ILAY,INH3)*TRCPRD(1,ILAY) ) +
      $                ( COFNH3(2,ILAY,INH3)*TRCPRD(2,ILAY) ) +
      $                ( COFNH3(3,ILAY,INH3)*TRCPRD(3,ILAY) ) +
      $                ( COFNH3(4,ILAY,INH3)*TRCPRD(4,ILAY) )
-                DKNH3=DKNH3*NH3MLT(ILAY)
+                DKNH3=RAQDKNH3(ILAY)*NH3MLT(ILAY)
              ELSE
                 DKNH3=0.0
              ENDIF
@@ -867,12 +867,13 @@ C                  ----------------------------
                    ENDIF
 
                    IF (LCO2) THEN
-                      QDKCO2=( COFCO2(1,ILAY,ICO2)*TRCPRD(1,ILAY) ) +
-     $                       ( COFCO2(2,ILAY,ICO2)*TRCPRD(2,ILAY) ) +
-     $                       ( COFCO2(3,ILAY,ICO2)*TRCPRD(3,ILAY) ) +
-     $                       ( COFCO2(4,ILAY,ICO2)*TRCPRD(4,ILAY) ) +
-     $                       ( COFCO2(5,ILAY,ICO2)*TRCPRD(5,ILAY) )
-                      QDKCO2 = QDKCO2*CO2JACMLT(ILAY)
+C                      QDKCO2=( COFCO2(1,ILAY,ICO2)*TRCPRD(1,ILAY) ) +
+C     $                       ( COFCO2(2,ILAY,ICO2)*TRCPRD(2,ILAY) ) +
+C     $                       ( COFCO2(3,ILAY,ICO2)*TRCPRD(3,ILAY) ) +
+C     $                       ( COFCO2(4,ILAY,ICO2)*TRCPRD(4,ILAY) ) +
+C     $                       ( COFCO2(5,ILAY,ICO2)*TRCPRD(5,ILAY) )
+C                      QDKCO2 = QDKCO2*CO2JACMLT(ILAY)
+                      QDKCO2 = RAQDKCO2(ILAY)*CO2JACMLT(ILAY)
                    END IF
 
 C                  ----------------------------
@@ -890,11 +891,12 @@ C                  ----------------------------
                    ENDIF
 
                    IF (LSO2) THEN
-                      QDKSO2=( COFSO2(1,ILAY,ISO2)*TRCPRD(1,ILAY) ) +
-     $                    ( COFSO2(2,ILAY,ISO2)*TRCPRD(2,ILAY) ) +
-     $                    ( COFSO2(3,ILAY,ISO2)*TRCPRD(3,ILAY) ) +
-     $                    ( COFSO2(4,ILAY,ISO2)*TRCPRD(4,ILAY) )
-                      QDKSO2 = QDKSO2*SO2JACMLT(ILAY)
+C                      QDKSO2=( COFSO2(1,ILAY,ISO2)*TRCPRD(1,ILAY) ) +
+C     $                    ( COFSO2(2,ILAY,ISO2)*TRCPRD(2,ILAY) ) +
+C     $                    ( COFSO2(3,ILAY,ISO2)*TRCPRD(3,ILAY) ) +
+C     $                    ( COFSO2(4,ILAY,ISO2)*TRCPRD(4,ILAY) )
+C                      QDKSO2 = QDKSO2*SO2JACMLT(ILAY)
+                      QDKSO2 = RAQDKSO2(ILAY)*SO2JACMLT(ILAY)
                    ENDIF
           
 C                  ----------------------------
@@ -912,11 +914,12 @@ C                  ----------------------------
                    ENDIF
 
                    IF (LHNO3) THEN
-                      QDKHNO3=( COFHNO(1,ILAY,IHNO3)*TRCPRD(1,ILAY) ) +
-     $                     ( COFHNO(2,ILAY,IHNO3)*TRCPRD(2,ILAY) ) +
-     $                     ( COFHNO(3,ILAY,IHNO3)*TRCPRD(3,ILAY) ) +
-     $                     ( COFHNO(4,ILAY,IHNO3)*TRCPRD(4,ILAY) )
-                      QDKHNO3 = QDKHNO3*HNOJACMLT(ILAY)
+C                      QDKHNO3=( COFHNO(1,ILAY,IHNO3)*TRCPRD(1,ILAY) ) +
+C     $                     ( COFHNO(2,ILAY,IHNO3)*TRCPRD(2,ILAY) ) +
+C     $                     ( COFHNO(3,ILAY,IHNO3)*TRCPRD(3,ILAY) ) +
+C     $                     ( COFHNO(4,ILAY,IHNO3)*TRCPRD(4,ILAY) )
+C                      QDKHNO3 = QDKHNO3*HNOJACMLT(ILAY)
+                      QDKHNO3 = RAQDKHNO3(ILAY)*HNOJACMLT(ILAY)
                    ENDIF
 C         
           
@@ -938,14 +941,15 @@ C                  ----------------------------
                    ENDIF
 
                    IF (LN2O) THEN
-                      QDKN2O=( COFN2O(1,ILAY,IN2O)*TRCPRD(1,ILAY) ) +
-     $                      ( COFN2O(2,ILAY,IN2O)*TRCPRD(2,ILAY) ) +
-     $                      ( COFN2O(3,ILAY,IN2O)*TRCPRD(3,ILAY) ) +
-     $                      ( COFN2O(4,ILAY,IN2O)*TRCPRD(4,ILAY) ) +
-     $                      ( COFN2O(5,ILAY,IN2O)*TRCPRD(5,ILAY) ) +
-     $                      ( COFN2O(6,ILAY,IN2O)*TRCPRD(6,ILAY) ) +
-     $                      ( COFN2O(7,ILAY,IN2O)*TRCPRD(7,ILAY) )
-                      QDKN2O=QDKN2O*N2OJACMLT(ILAY)
+c                      QDKN2O=( COFN2O(1,ILAY,IN2O)*TRCPRD(1,ILAY) ) +
+c     $                      ( COFN2O(2,ILAY,IN2O)*TRCPRD(2,ILAY) ) +
+c     $                      ( COFN2O(3,ILAY,IN2O)*TRCPRD(3,ILAY) ) +
+c     $                      ( COFN2O(4,ILAY,IN2O)*TRCPRD(4,ILAY) ) +
+c     $                      ( COFN2O(5,ILAY,IN2O)*TRCPRD(5,ILAY) ) +
+c     $                      ( COFN2O(6,ILAY,IN2O)*TRCPRD(6,ILAY) ) +
+c     $                      ( COFN2O(7,ILAY,IN2O)*TRCPRD(7,ILAY) )
+c                      QDKN2O=QDKN2O*N2OJACMLT(ILAY)
+                      QDKN2O=RAQDKN2O(ILAY)*N2OJACMLT(ILAY)
                    ENDIF
 C         
 C                  ----------------------------
@@ -963,11 +967,12 @@ C                  ----------------------------
                    ENDIF
 
                    IF (LNH3) THEN
-                      QDKNH3=( COFNH3(1,ILAY,INH3)*TRCPRD(1,ILAY) ) +
-     $                    ( COFNH3(2,ILAY,INH3)*TRCPRD(2,ILAY) ) +
-     $                    ( COFNH3(3,ILAY,INH3)*TRCPRD(3,ILAY) ) +
-     $                    ( COFNH3(4,ILAY,INH3)*TRCPRD(4,ILAY) )
-                      QDKNH3=QDKNH3*NH3JACMLT(ILAY)
+c                      QDKNH3=( COFNH3(1,ILAY,INH3)*TRCPRD(1,ILAY) ) +
+c     $                    ( COFNH3(2,ILAY,INH3)*TRCPRD(2,ILAY) ) +
+c     $                    ( COFNH3(3,ILAY,INH3)*TRCPRD(3,ILAY) ) +
+c     $                    ( COFNH3(4,ILAY,INH3)*TRCPRD(4,ILAY) )
+c                      QDKNH3=QDKNH3*NH3JACMLT(ILAY)
+                      QDKNH3=RAQDKNH3(ILAY)*NH3JACMLT(ILAY)
                    ENDIF
 C         
 C                  ------------------------------------------
