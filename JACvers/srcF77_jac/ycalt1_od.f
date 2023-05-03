@@ -1005,18 +1005,13 @@ C                   write(*,'(A,3(I5),5(F12.4))') 'ycalt1_od',I,J,ILAY,KCON,KFIX
                      END IF
                    END IF
 
-                   f1 = 1; f2 = 1; f3 = 1; f4 = 1; f5 = 1;
-                   KLAYER = KCON + KFIX + KW(ILAY) + KOZO + DK
+c                   f1 = 1; f2 = 1; f3 = 1; f4 = 1; f5 = 1;
+c                   KLAYER = KCON + KFIX + KW(ILAY) + KOZO + DK
 
-                   f1 = 1; f2 = 0; f3 = 0; f4 = 0; f5 = 0;
-                   f1 = 1; f2 = 0; f3 = 0; f4 = 0; f5 = 0; !! spiky up
-                   f1 = 0; f2 = 1; f3 = 0; f4 = 0; f5 = 0;
-                   f1 = 0; f2 = 0; f3 = 1; f4 = 0; f5 = 0; !! spiky down
-                   f1 = 0; f2 = 0; f3 = 0; f4 = 1; f5 = 0;
-                   f1 = 1; f2 = 0; f3 = 1; f4 = 0; f5 = 0; !! spiky down
-                   f1 = 1; f2 = 0; f3 = 0; f4 = 0; f5 = 0; !! spiky up
-                   f1 = 0; f2 = 0; f3 = 1; f4 = 0; f5 = 0; !! spiky down
-                   KLAYER = f1*KCON + f2*KFIX + f3*KW(ILAY) + f4*KOZO + f5*DK
+c                   f1 = 0; f2 = 1; f3 = 1; f4 = 1; f5 = 1; !! small change
+c                   f1 = 0; f2 = 1; f3 = 0; f4 = 1; f5 = 1; !! big change
+c                   f1 = 1; f2 = 1; f3 = 0; f4 = 1; f5 = 1; !! big change on 1400-1600 cm-1 lines, window region kinda ok
+c                   KLAYER = f1*KCON + f2*KFIX + f3*KW(ILAY) + f4*KOZO + f5*DK
 
                    KLAYER = KCON + KFIX + KW(ILAY) + KOZO + DK
 

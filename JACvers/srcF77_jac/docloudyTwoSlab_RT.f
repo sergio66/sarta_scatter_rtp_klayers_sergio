@@ -120,7 +120,7 @@ c local
        REAL RADLAY(MAXLAY)          ! chan layer radiance                for CLDONLY
        REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
        REAL VSTORE(6)      ! temporary storage for various variables
-       REAL QIKEXP, RJUNK1, RJUNK2
+       REAL QIKEXP, RJUNK1, RJUNK2, RAD2BT
 
 c************************************************************************
 
@@ -290,10 +290,13 @@ C     Calculate top cloud1 radiance
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12
 
-      IF ((NWANTC .GT. 0) .AND. DEBUG) THEN
-        write(*,'(A,I5,7(F12.4),6(ES12.4))') 'rads',I,FREQ(I),EMIS(I),TSURF,
-     $           FCLEAR,CFRA1X,CFRA2X,CFRA12,
-     $           RSURFE,RAD0,RADC1,RADC2,RADC12,RAD(I)
+      IF (  ((NWANTC .GT. 0) .AND. DEBUG) .OR. ((NWANTC .GT. 0) .AND. (NWANTC .LE. 5)) ) THEN
+c        write(*,'(A,I5,7(F12.4),6(ES12.4))') 'clr/cld Freq,Emis,Tsuf,4CldFrac,rads',I,FREQ(I),EMIS(I),TSURF,
+c     $           FCLEAR,CFRA1X,CFRA2X,CFRA12,
+c     $           RSURFE,RAD0,RADC1,RADC2,RADC12,RAD(I)
+        write(*,'(A,I5,3(F10.4),A,4(F10.4),A,4(ES10.3),A,ES10.3,F12.4)') ' [Index,Freq,Emis,Tsuf ]',I,FREQ(I),EMIS(I),TSURF,
+     $           ' [ Cldfrac fc,c1x,c2x,c12 ]',FCLEAR,CFRA1X,CFRA2X,CFRA12,
+     $           ' [ CldRad  rc,r1x,r2x,r12 ]',RAD0,RADC1,RADC2,RADC12,' [ final rad/BT ]',RAD(I),rad2bt(FREQ(I),RAD(I))
       END IF
 
 ccc this block for testing
@@ -333,3 +336,20 @@ CC FORGET THIS  III = INTERSECT(I,CLISTN(1:NCHNTE),NCHNTE)
 
       RETURN
       END
+
+c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      REAL FUNCTION rad2bt(f,r)
+
+      IMPLICIT NONE
+      include "incFTC.f"
+
+      REAL f,r
+
+      REAL x1,x2
+
+      x1 = c2*f
+      x2 = log(1 + c1*f**3/r)
+      rad2bt = x1/x2
+      RETURN
+      END
+c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

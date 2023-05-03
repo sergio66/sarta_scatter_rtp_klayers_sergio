@@ -110,7 +110,7 @@ C      Get and apply multipler tuning to coefficients {note: ignores HNO3}
 
        IF (NWANTC .GT. 0) THEN
          write(*,'(A)') '     ---------------------------------------------------------------------------------------------'
-         write(*,'(A,I5,A)') 'after opnrtp, NCHAN = ',NCHAN,' .... here are the channels after opnrtp .... '
+         write(*,'(A,I5,A)') 'NWANTC > 0 so NCHAN = ',NCHAN,' .... here are the channels after opnrtp .... '
          write(*,'(A)') '              I          LSTCHN(I)      RINDCHN(I)    INDCHN(LSTCHN(I))  BREAKOUT     FCHAN(I) '
          write(*,'(A)') '                                                                     SETCHN(LSTCHN(I))          '
          write(*,'(A)') '     ---------------------------------------------------------------------------------------------'

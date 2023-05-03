@@ -202,7 +202,7 @@ C         Layer amount*angle
           WAANG(L)=WAMNT(L)*SECANG(L)
 C
 C         Center-of-layer-to-space amount*angle
-C         Note: do this before updating AZSUM
+C         Note: do this before updating WAZSUM
           WAZ(L)=5.0E-1*WAANG(L) + WAZSUM
 C
 C         Bottom-of-layer-to-space amount sum
@@ -226,13 +226,33 @@ c          write(6,'(A,I3,X,E11.4,X,E11.4)') 'calowp:WAZ(L),WAZSUM : ',L,WAZ(L),
              WAZSUM_1   = SECANG(L)
              WPZSUM_T   = 0
              WPZSUM_1   = SECANG(L)*P(L)
-             WTZSUM_T   = WAANG(L)
+             WTZSUM_T   = SECANG(L)*WAMNT(L)
              WTZSUM_1   = SECANG(L)*T(L)
              PZ_T(L)    = (WAZSUM*WPZSUM_T -  WPZSUM*WAZSUM_T)/WAZSUM/WAZSUM
              PZ_1(L)    = (WAZSUM*WPZSUM_1 -  WPZSUM*WAZSUM_1)/WAZSUM/WAZSUM
              TZ_T(L)    = (WAZSUM*WTZSUM_T -  WTZSUM*WAZSUM_T)/WAZSUM/WAZSUM
              TZ_1(L)    = (WAZSUM*WTZSUM_1 -  WTZSUM*WAZSUM_1)/WAZSUM/WAZSUM
+! this is what the print statement results do suggest, if Q --> Q(1+x) !!!!!!!
+!             IF (L .EQ. 1) THEN
+!               WAZ_1(L)   = 0.5*SECANG(L)
+!             ELSEIF (L .LE. 10) THEN
+!               WAZ_1(L)   = 0.5*SUM(SECANG(1:L))
+!               WAZ_1(L)   = 0.5*(SECANG(L)+SECANG(L-1))
+!             ELSEIF (L .LE. 100) THEN
+!               WAZ_1(L)   = 0.5*SUM(SECANG(1:L))
+!               WAZ_1(L)   = 0.5*(SUM(SECANG(L-9:L)))
+!             END IF
+! this is what the print statement results do suggest, if Q --> Q(1+x) !!!!!!!
+!             PZ_T(L)    = 0
+!             PZ_1(L)    = 0
+!             TZ_T(L)    = 0
+!             TZ_1(L)    = 0
            END IF
+          !!! preferably do this for one channel only!!!! analyze this using test_optran_ycalowp_derivatives.m          
+          !!!                                1  2     3    4        5       6       7    8       [9]         10      11      12       13
+!          write(6,'(A,I3,X,12(E12.4))') 
+!     $           'Y1',L,P(L),T(L),WAMNT(L),WAANG(L),WAZ(L),PZ(L),TZ(L),WAZSUM,WAANG_1(L),WAZ_1(L),PZ_1(L),TZ_1(L)
+
        ENDDO
 C
        if (DEBUG) print*,'calowp: completed raw predictors'
@@ -276,7 +296,7 @@ C         --------------------------------------------------------
 C
 C         Compute the interpolation fractor, for OPTRAN LAYER LOP
 c         RECALL FROM ABOVE       WAZ(L)=5.0E-1*WAANG(L) + WAZSUM
-C         REALLY HERE             LL = LL(LOP)
+C         REALLY HERE             LL = LL(LOP) and LU = LU(LOP)
           DA=(WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))
 C
 C         Do the interpolation
@@ -304,25 +324,32 @@ c rdcoef.f reads in the fixed values of wavgop from a data file, so they are FIX
           WAVGOP_T = 0
           WAVGOP_1 = 0
 
+c LL = LL(LOP) and LU = LU(LOP) so have to do the LL and the LU derivatives
           IF (DOJAC) THEN
-            DA_T = -1/(WAZ(LU) - WAZ(LL)) * WAZ_T(LL)
-            DA_1 = -1/(WAZ(LU) - WAZ(LL)) * WAZ_1(LL)
+            DA_T = -1/(WAZ(LU) - WAZ(LL)) * WAZ_T(LL) - 
+     $             (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(-WAZ_T(LL))
+            DA_T = DA_T + 
+     $              (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(WAZ_T(LU))
+            DA_1 = -1/(WAZ(LU) - WAZ(LL)) * WAZ_1(LL) - 
+     $             (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(-WAZ_1(LL))
+            DA_1 = DA_1 + 
+     $             (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(WAZ_1(LU))
 
             JUNK = P(LU) -  P(LL)
-            POP_T = 1/WAVGOP(1,LOP)*(DA_T * JUNK + DA*0 + 0) 
-            POP_1 = 1/WAVGOP(1,LOP)*(DA_1 * JUNK + DA*0 + 0) 
+            POP_T = 1/WAVGOP(1,LOP)*(DA_T*JUNK + DA*0 + 0)
+            POP_1 = 1/WAVGOP(1,LOP)*(DA_1*JUNK + DA*0 + 0) 
 
             JUNK = T(LU) -  T(LL)
-            TOP_T = 1/WAVGOP(2,LOP)*(DA_T * JUNK + DA*(1-1) + 1)
-            TOP_1 = 1/WAVGOP(2,LOP)*(DA_1 * JUNK + DA*0     + 0)
+            TOP_T = 1/WAVGOP(2,LOP)*(DA_T*JUNK + DA*(1-1) + 1)
+            TOP_1 = 1/WAVGOP(2,LOP)*(DA_1*JUNK + DA*0     + 0)
 
             JUNK = PZ(LU) -  PZ(LL)
-            PZOP_T = 1/WAVGOP(3,LOP)*(DA_T * JUNK + DA*(PZ_T(LU) - PZ_T(LL)) + PZ_T(LL))
-            PZOP_1 = 1/WAVGOP(3,LOP)*(DA_1 * JUNK + DA*(PZ_1(LU) - PZ_1(LL)) + PZ_1(LL))
+            PZOP_T = 1/WAVGOP(3,LOP)*(DA_T*JUNK + DA*(PZ_T(LU) - PZ_T(LL)) + PZ_T(LL))
+            PZOP_1 = 1/WAVGOP(3,LOP)*(DA_1*JUNK + DA*(PZ_1(LU) - PZ_1(LL)) + PZ_1(LL))
 
             JUNK = TZ(LU) -  TZ(LL)
-            TZOP_T = 1/WAVGOP(4,LOP)*(DA_T * JUNK + DA*(TZ_T(LU) - TZ_T(LL)) + TZ_T(LL))
-            TZOP_1 = 1/WAVGOP(4,LOP)*(DA_1 * JUNK + DA*(TZ_1(LU) - TZ_1(LL)) + TZ_1(LL))
+            TZOP_T = 1/WAVGOP(4,LOP)*(DA_T*JUNK + DA*(TZ_T(LU) - TZ_T(LL)) + TZ_T(LL))
+            TZOP_1 = 1/WAVGOP(4,LOP)*(DA_1*JUNK + DA*(TZ_1(LU) - TZ_1(LL)) + TZ_1(LL))
 
             ANGOP_T = DA_T*( SECANG(LU) - SECANG(LL) )
             ANGOP_1 = DA_1*( SECANG(LU) - SECANG(LL) )

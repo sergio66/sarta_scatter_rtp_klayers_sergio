@@ -716,6 +716,8 @@ C            ----------------------------
      $            ( COEF3(22,ILAY,I)*MJACPRED3(IWHICHJAC,7,ILAY) ) +
      $            ( COEF3(23,ILAY,I)*MJACPRED3(IWHICHJAC,8,ILAY) ) +
      $            ( COEF3(24,ILAY,I)*MJACPRED3(IWHICHJAC,9,ILAY) )
+
+c              IF ((ILAY .EQ. 1) .AND. (IWHICHJAC .EQ. 7)) print *,MJACPRED3(IWHICHJAC,1:9,ILAY)
 C
 c             IF (KMET .LT. 0.0E+0) THEN
 c                KMET=0.0E+0
@@ -889,10 +891,10 @@ C       DKHDO=0.0
       KHDO=0.0
 ccc
 C            Limit -DK so it can never totally totally cancel KFIX
-             DK = DKSO2 + DKHNO3 + DKN2O + DKNH3
-             IF (-DK .GE. KFIX) THEN
-                DK = -0.999*KFIX
-             ENDIF
+c             DK = DKSO2 + DKHNO3 + DKN2O + DKNH3
+c             IF (-DK .GE. KFIX) THEN
+c                DK = -0.999*KFIX
+c             ENDIF
              DK = 0
 
 C            Calc total layer optical depth
@@ -906,14 +908,17 @@ C            Calc total layer optical depth
                    END IF
                  END IF
 
+c             f1 = 1; f2 = 1; f3 = 1; f4 = 1; f5 = 1;
+c             KLAYER = KCON + KFIX + KMET + KW(ILAY) + DK
+
+c             f1 = 1; f2 = 0; f3 = 0; f4 = 0; f5 = 0;
+c             f1 = 1; f2 = 1; f3 = 1; f4 = 1; f5 = 0;
+c             f1 = 0; f2 = 1; f3 = 1; f4 = 1; f5 = 0;  !!! hardly any change
+c             f1 = 0; f2 = 1; f3 = 1; f4 = 0; f5 = 0;  !!! big change
+c             KLAYER = f1*KCON + f2*KFIX + f3*KMET + f4*KW(ILAY) + f5*DK
+
              KLAYER = KCON + KFIX + KMET + KW(ILAY) + DK
 
-             f1 = 1; f2 = 1; f3 = 1; f4 = 1; f5 = 1;
-             KLAYER = KCON + KFIX + KMET + KW(ILAY) + DK
-
-             f1 = 1; f2 = 0; f3 = 0; f4 = 0; f5 = 0;
-             f1 = 1; f2 = 1; f3 = 1; f4 = 1; f5 = 0;
-             KLAYER = f1*KCON + f2*KFIX + f3*KMET + f4*KW(ILAY) + f5*DK
 
                    IF (IWHICHJAC .EQ. 1) THEN 
                      DTAU_DTZ(ILAY,J)=KLAYER

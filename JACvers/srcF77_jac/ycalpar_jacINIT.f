@@ -101,14 +101,19 @@ CjacX         TAZ_O = TOZ/PNORM
 CjacXC
 CjacX         TMZ = TMZ + PDP*TR*A_M
 CjacX         TAZ_M = TMZ/PNORM
-              TAZ_M_T = 1/PNORM*PDP*(TR_T*A_M + TR*A_M_T)
-              TAZ_M_1 = 1/PNORM*PDP*(TR_1*A_M + TR*A_M_1)
-              TAZ_M_3 = 1/PNORM*PDP*(TR_3*A_M + TR*A_M_3)
-              TAZ_M_6 = 1/PNORM*PDP*(TR_6*A_M + TR*A_M_6)
-!              TAZ_M_T = 0
-!              TAZ_M_1 = 0
-!              TAZ_M_3 = 0
-!              TAZ_M_6 = 0
+!! but PNORM == 0 at the beginning!!!!!
+c              TAZ_M_T = 1/PNORM*PDP*(TR_T*A_M + TR*A_M_T)
+c              TAZ_M_1 = 1/PNORM*PDP*(TR_1*A_M + TR*A_M_1)
+c              TAZ_M_3 = 1/PNORM*PDP*(TR_3*A_M + TR*A_M_3)
+c              TAZ_M_6 = 1/PNORM*PDP*(TR_6*A_M + TR*A_M_6)
+              TAZ_M_T = 0
+              TAZ_M_1 = 0
+              TAZ_M_3 = 0
+              TAZ_M_6 = 0
+              TAZ_M_T = (TR_T*A_M + TR*A_M_T)
+              TAZ_M_1 = (TR_1*A_M + TR*A_M_1)
+              TAZ_M_3 = (TR_3*A_M + TR*A_M_3)
+              TAZ_M_6 = (TR_6*A_M + TR*A_M_6)
 
             ELSE
               PDP = PRES(L)*( PRES(L) - PRES(L-1) )

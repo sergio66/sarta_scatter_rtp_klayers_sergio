@@ -882,14 +882,11 @@ C            Calc effective layer optical depth
              KLAYER = KCON + KFIX + KOZO + KWAT + DK
 
 c             f1 = 1; f2 = 0; f3 = 0; f4 = 0; f5 = 0;
-c             f1 = 1; f2 = 1; f3 = 1; f4 = 1; f5 = 0;
+c             f1 = 0; f2 = 1; f3 = 1; f4 = 0; f5 = 0;
 c             KLAYER = f1*KCON + f2*KFIX + f3*KOZO + f4*KWAT + f5*DK
 
                    IF (IWHICHJAC .EQ. 1) THEN 
                      DTAU_DTZ(ILAY,J)=KLAYER
-c                     IF (IY .EQ. 18) THEN
-c                       write(*,'(A,2(I4),7(ES12.5))') 'moo',ILAY,IY,FIXMUL(ILAY),KCON,KFIX,KOZO,KWAT,DK,KLAYER
-c                     END IF
                    ELSEIF (IWHICHJAC .EQ. 2) THEN 
                      DTAU_DG1(ILAY,J)=KLAYER
                    ELSEIF (IWHICHJAC .EQ. 3) THEN 

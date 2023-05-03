@@ -7,10 +7,10 @@ addpath /asl/matlib/h4tools
 
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45; %% satzen =  0  deg
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;  %% satzen = -50  deg
-frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 113;   %% almost clear
-frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 59;    %% DCC
-frtp = 'newdayx_1_100_12150.rad.rtp'; iProf = 1;     %% same as profile 1 from cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp
+frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 59;    %% DCC
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 12150/2+45;  %% satzen = +50  deg
+frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 113;   %% almost clear
+frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 1;     %% same as profile 1 from cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp
 
 if ~exist('porig')
 
@@ -118,11 +118,13 @@ if length(iExtraGas) == 1
     axis([640 1640 -20 +20])
     hl = legend('10*sum(TZjac),finite diff','10*sum(TZjac),analytic','sum(WVjac),finite diff','sum(WVjac),analytic','sum(O3jac),finite diff','sum(O3jac),analytic',...
                 ['sum(G' num2str(iExtraGas) 'jac),finitediff'],['sum(G' num2str(iExtraGas) 'jac),analytic'],'location','best','fontsize',8);  
-  figure(16); hold on; plot(h.vchan,(eps+sum(gNjac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'g'); hold on; axis([640 1640 0 +3]); title('ratio FINITE/ANALYTIC'); hl = legend('TZ','WV','O3',strG,'location','best','fontsize',10);
+  figure(16); hold on; plot(h.vchan,(eps+sum(gNjac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'g'); hold on; axis([640 1640 0 +3]); title('ratio FINITE/ANALYTIC \newline fg(cyan=column/sum(lay) WV)'); 
+     hl = legend('TZ','WV','O3',strG,'location','best','fontsize',10);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(15); hold off
+figure(16); hold on; plot(h.vchan,jacx.jac(:,1)'./nansum(jacx.wvjac(:,1:nlays)'),'c'); 
 figure(16); hold off
 
 iAX = input('Change x-axis to [640 2780] ? (-1 default /+1) : ');

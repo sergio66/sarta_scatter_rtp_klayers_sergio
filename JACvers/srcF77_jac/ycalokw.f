@@ -169,7 +169,7 @@ C-----------------------------------------------------------------------
        REAL   KWOP(MXOWLY)
        REAL   KWOP_T(MXOWLY)
        REAL   KWOP_1(MXOWLY)
-
+       REAL JUNK
 
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
@@ -226,6 +226,7 @@ C
        ENDDO
 C
 c************************************************************************
+
        IF (DOJAC) THEN
 cbaba TJAC
        DO LOP=LOPMIN,LOPMAX
@@ -244,7 +245,7 @@ C            Remove WAOP scaling factor
 C            WAOP depends on WAZOP(L)-WAZOP(L-1), and WAZOP are from a file so constant!
              KWOP_T(LOP)=KWOP_T(LOP)/WAOP(LOP)
 C            Check for negative value
-c             IF (KWOP_T(LOP) .LT. 0.0E+0) KWOP_T(LOP)=0.0E+0
+             IF (KWOP(LOP) .LT. 0.0E+0) KWOP_T(LOP)=0.0E+0
           ENDIF
        ENDDO
 C
@@ -270,7 +271,9 @@ C
          ENDIF
        ENDDO
 cbaba TJAC
-
+       END IF
+c************************************************************************
+       IF (DOJAC) THEN
 cbaba QJAC
        DO LOP=LOPMIN,LOPMAX
           IF (LOPUSE(LOP)) THEN
@@ -288,7 +291,7 @@ C            Remove WAOP scaling factor, which depends on wazop (sarta_pclsam.f)
 C            WAOP depends on WAZOP(L)-WAZOP(L-1), and WAZOP are from a file so constant!
              KWOP_1(LOP) = KWOP_1(LOP)/WAOP(LOP)
 C            Check for negative value
-c             IF (KWOP_1(LOP) .LT. 0.0E+0) KWOP_1(LOP)=0.0E+0
+             IF (KWOP(LOP) .LT. 0.0E+0) KWOP_1(LOP)=0.0E+0
           ENDIF
        ENDDO
 C
@@ -301,17 +304,22 @@ CCC       catch bug: KWOP_1(0)
           IF (LOPLOW(L) .GT. 0.0E+0) THEN
           
 C         Interpolate abs coef and convert to optical depth
-c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L)
-            KW_1(L)=( DAOP(L)*( KWOP_1(LOPLOW(L) + 1) -
+            JUNK = 10  !!! improves things in the 1400-1600 cm-1 region
+            KW_1(L)=JUNK*( DAOP(L)*( KWOP_1(LOPLOW(L) + 1) -
      $       KWOP_1(LOPLOW(L)) ) + KWOP_1(LOPLOW(L)) )*WAANG(L)
 
 c    ycalowp.f shows DAOP depends on T and WV
-            KW_1(L)=KW_1(L) + ( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
-     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*WAANG(L)
+c            KW_1(L)=KW_1(L) + ( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
+c     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*WAANG(L)
+            JUNK = 10 !!! improves things in the 1050 --1350 cm-1 region
+            KW_1(L)=KW_1(L) + JUNK*( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
+     $       KWOP(LOPLOW(L)) ))*WAANG(L)
 
 c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L) so d WAANG(L)/dQ = SECANG(L)
-            KW_1(L)=KW_1(L) + ( DAOP(L)*( KWOP(LOPLOW(L) + 1) -
+            JUNK = 1.0  !! works fine in window
+            KW_1(L)=KW_1(L) + JUNK*( DAOP(L)*( KWOP(LOPLOW(L) + 1) -
      $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*SECANG(L)
+
 
 c            IF (KW_T(L) .LT. 0.0E+0) KW(L)=0.0E+0
 C

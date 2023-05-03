@@ -839,22 +839,25 @@ C      --------------------------------------------------------------
       END IF
 
        IF (NCHAN .EQ. 2645) THEN
-         write(*,'(A)') 'SET(X) NCNHN(X)  IMIN(X) IMAX(X)  FMIN(X)  FMAX(X)'
-         write(*,'(A)') '--------------------------------------------------'
-         write(*,'(4(I8),2(F8.2))') 1,NCHN1,CLIST1(1),CLIST1(NCHN1),
-     $                                      MINVAL(FREQ(INDCHN(CLIST1(1:NCHN1)))),MAXVAL(FREQ(INDCHN(CLIST1(1:NCHN1))))
-         write(*,'(4(I8),2(F8.2))') 2,NCHN2,CLIST2(1),CLIST2(NCHN2),
-     $                                      MINVAL(FREQ(INDCHN(CLIST2(1:NCHN2)))),MAXVAL(FREQ(INDCHN(CLIST2(1:NCHN2))))
-         write(*,'(4(I8),2(F8.2))') 3,NCHN3,CLIST3(1),CLIST3(NCHN3),
-     $                                      MINVAL(FREQ(INDCHN(CLIST3(1:NCHN3)))),MAXVAL(FREQ(INDCHN(CLIST3(1:NCHN3))))
-         write(*,'(4(I8),2(F8.2))') 4,NCHN4,CLIST4(1),CLIST4(NCHN4),
-     $                                      MINVAL(FREQ(INDCHN(CLIST4(1:NCHN4)))),MAXVAL(FREQ(INDCHN(CLIST4(1:NCHN4))))
-         write(*,'(4(I8),2(F8.2))') 5,NCHN5,CLIST5(1),CLIST5(NCHN5),
-     $                                      MINVAL(FREQ(INDCHN(CLIST5(1:NCHN5)))),MAXVAL(FREQ(INDCHN(CLIST5(1:NCHN5))))
-         write(*,'(4(I8),2(F8.2))') 6,NCHN6,CLIST6(1),CLIST6(NCHN6),
-     $                                      MINVAL(FREQ(INDCHN(CLIST6(1:NCHN6)))),MAXVAL(FREQ(INDCHN(CLIST6(1:NCHN6))))
-         write(*,'(4(I8),2(F8.2))') 7,NCHN7,CLIST7(1),CLIST7(NCHN7),
-     $                                      MINVAL(FREQ(INDCHN(CLIST7(1:NCHN7)))),MAXVAL(FREQ(INDCHN(CLIST7(1:NCHN7))))
+         write(*,'(A)') '----------------------------------------------------------'
+         write(*,'(A)') 'SET(X) NCNHN(X)  IMIN(X) IMAX(X)  FMIN(X)  FMAX(X) COMMENT'
+         write(*,'(A)') '----------------------------------------------------------'
+         write(*,'(4(I8),2(F8.2),A)') 1,NCHN1,CLIST1(1),CLIST1(NCHN1),
+     $          MINVAL(FREQ(INDCHN(CLIST1(1:NCHN1)))),MAXVAL(FREQ(INDCHN(CLIST1(1:NCHN1)))),
+     $   ' 15um + 8-12 um WINDOW + WV 1400-1600 cm-1 OPTRAN'
+         write(*,'(4(I8),2(F8.2),A)') 2,NCHN2,CLIST2(1),CLIST2(NCHN2),
+     $          MINVAL(FREQ(INDCHN(CLIST2(1:NCHN2)))),MAXVAL(FREQ(INDCHN(CLIST2(1:NCHN2)))),' 10um O3'
+         write(*,'(4(I8),2(F8.2),A)') 3,NCHN3,CLIST3(1),CLIST3(NCHN3),
+     $          MINVAL(FREQ(INDCHN(CLIST3(1:NCHN3)))),MAXVAL(FREQ(INDCHN(CLIST3(1:NCHN3)))),' 6.7um OPTRAN WV near CH4,N2O'
+         write(*,'(4(I8),2(F8.2),A)') 4,NCHN4,CLIST4(1),CLIST4(NCHN4),
+     $          MINVAL(FREQ(INDCHN(CLIST4(1:NCHN4)))),MAXVAL(FREQ(INDCHN(CLIST4(1:NCHN4)))),' 5um CO'
+         write(*,'(4(I8),2(F8.2),A)') 5,NCHN5,CLIST5(1),CLIST5(NCHN5),
+     $          MINVAL(FREQ(INDCHN(CLIST5(1:NCHN5)))),MAXVAL(FREQ(INDCHN(CLIST5(1:NCHN5)))),' SW5'
+         write(*,'(4(I8),2(F8.2),A)') 6,NCHN6,CLIST6(1),CLIST6(NCHN6),
+     $          MINVAL(FREQ(INDCHN(CLIST6(1:NCHN6)))),MAXVAL(FREQ(INDCHN(CLIST6(1:NCHN6)))),' SW6'
+         write(*,'(4(I8),2(F8.2),A)') 7,NCHN7,CLIST7(1),CLIST7(NCHN7),
+     $          MINVAL(FREQ(INDCHN(CLIST7(1:NCHN7)))),MAXVAL(FREQ(INDCHN(CLIST7(1:NCHN7)))),' SW7'
+         write(*,'(A)') '----------------------------------------------------------'
 
 cc       write(*,'(4(I8),2(F8.2))') 1,NCHN1,CLIST1(1),CLIST1(NCHN1),FREQ(INDCHN(CLIST1(1))),FREQ(INDCHN(CLIST1(NCHN1)))
 cc       write(*,'(4(I8),2(F8.2))') 2,NCHN2,CLIST2(1),CLIST2(NCHN2),FREQ(INDCHN(CLIST2(1))),FREQ(INDCHN(CLIST2(NCHN2)))
@@ -866,6 +869,10 @@ cc       write(*,'(4(I8),2(F8.2))') 7,NCHN7,CLIST7(1),CLIST7(NCHN7),FREQ(INDCHN(
        END IF
 
 C      Calc OPTRAN absorption coefficient scaling factor WAOP
+C L = 001 : WAZOP(L), WAOP(L) =           1  1.5730401E-13  1.5730401E-13
+C L = 100 : WAZOP(L), WAOP(L) =         100  1.8001000E-09  1.1634993E-10
+C L = 200 : WAZOP(L), WAOP(L) =         200  1.4250700E-06  9.1989932E-08
+C L = 300 : WAZOP(L), WAOP(L) =         300  1.1267400E-03  7.2730007E-05
        WAOP(1)=WAZOP(1)
        DO L=2,MXOWLY
           WAOP(L)=WAZOP(L) - WAZOP(L-1)
