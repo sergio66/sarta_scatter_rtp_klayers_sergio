@@ -11,8 +11,8 @@ date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=newdayx_1_100_12
 
 if ~exist('p')
   [h,ha,p,pa] = rtpread('newdayx_1_100_12150.op.rtp');
-  xavg = p.gas_1/6.023e26;       xavg = xavg(1:97,1);    dx = xavg*0.1;
-  Tavg = p.ptemp;                Tavg = Tavg(1:97,1);
+  xavg = p.gas_1/6.023e26;       xavg = xavg(1:97,1);    dx = 0*xavg*0.1;
+  Tavg = p.ptemp;                Tavg = Tavg(1:97,1);    dx = ones(size(dx));
   pavg = plevs2plays(p.plevs);   pavg = pavg(1:97,1)/1013;
 
   %% line 236 in ycalowp.f
@@ -20,22 +20,22 @@ if ~exist('p')
   %%                                       1  2    3     4       5        6      7     8      9        10       11      12       13
   %% write(6,'(A,I3,X,8(E12.4))') 'YT 100',L,P(L),T(L),WAMNT(L),WAANG(L),WAZ(L),PZ(L),TZ(L),WAZSUM, WAANG_T(L),WAZ_T(L),PZ_T(L),TZ_T(L)
   %%                                       1  2    3     4       5        6      7     8      9        10       11      12       13
-  ugh0 = load('UGH_TEST_OPTRAN/V0_May3_2023/ugh01');  %% raw WV
-  ugh0 = load('ugh01');  %% raw WV
+  ugh0 = load('UGH_TEST_OPTRAN/V0_May3_2023/ugh0T');  %% raw T
+  ugh0 = load('ugh0T');  %% raw T
   boo = ugh0(:,1); 
-  if mean(boo) ~= 1; 
-    error('wxpeting 001 in first column, as this is G1');
+  if mean(boo) ~= 100; 
+    error('wxpeting 100 in first column, as this is TZ');
   else
     ugh0 = ugh0(:,2:14);
   end
 
-  ugh1 = load('UGH_TEST_OPTRAN/V0_May3_2023/ugh1');  %% WV * 1.1
-  ugh1 = load('ugh1');  %% WV * 1.1
-  boo = ugh1(:,1); 
-  if mean(boo) ~= 1; 
-    error('wxpeting 001 in first column, as this is G1');
+  ughT = load('UGH_TEST_OPTRAN/V0_May3_2023/ughT');  %% T + 1
+  ughT = load('ughT');  %% T + 1
+  boo = ughT(:,1); 
+  if mean(boo) ~= 100; 
+    error('wxpeting 100 in first column, as this is TZ');
   else
-    ugh1 = ugh1(:,2:14);
+    ughT = ughT(:,2:14);
   end
 
 end
@@ -45,9 +45,9 @@ figure(2); clf; ii = 3; plot(ugh0(:,ii),1:97,'b.-',Tavg,1:97,ugh0(:,ii+5),1:97,'
 figure(3); clf; ii = 4; plot(ugh0(:,ii),1:97,'b.-',xavg,1:97,ugh0(:,ii+1),1:97,'k'); set(gca,'ydir','reverse'); title('QAVG')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('THESE RESULTS SUGGEST PZ_1 and TZ_1 should be 0')
-disp('THESE RESULTS SUGGEST PZ_1 and TZ_1 should be 0')
-disp('THESE RESULTS SUGGEST PZ_1 and TZ_1 should be 0')
+disp('THESE RESULTS SUGGEST PZ_T and TZ_T should be 0,1')
+disp('THESE RESULTS SUGGEST PZ_T and TZ_T should be 0,1')
+disp('THESE RESULTS SUGGEST PZ_T and TZ_T should be 0,1')
 ii = input('Enter index WZ=WAANG WAZ, PZ, TZ  (5:8) : ');
 if ii < 5 | ii > 8
   ii = 5;
@@ -56,16 +56,14 @@ end
 ugh2 = zeros(size(ugh0)); %% goinna guesstimate this using dy/dx ~ delta y /delta x ... so delta y = dy/dx delta x
 ugh2(:,ii) = ugh0(:,ii) + dx.*ugh0(:,ii+5); 
 
-homejac = (ugh1(:,ii)-ugh0(:,ii))./dx;
-figure(1); clf; plot(ugh0(:,ii),1:97,ugh1(:,ii),1:97);         set(gca,'ydir','reverse'); title('Raw(b) Perturbed(r) Variable')
-figure(2); clf; plot(ugh1(:,ii)-ugh0(:,ii),1:97);              set(gca,'ydir','reverse'); title('Raw-Perturbed')
+homejac = (ughT(:,ii)-ugh0(:,ii))./dx;
+figure(1); clf; plot(ugh0(:,ii),1:97,ughT(:,ii),1:97);         set(gca,'ydir','reverse'); title('Raw(b) Perturbed(r) Variable')
+figure(2); clf; plot(ughT(:,ii)-ugh0(:,ii),1:97);              set(gca,'ydir','reverse'); title('Raw-Perturbed')
 figure(2); clf; plot(homejac,1:97);                            set(gca,'ydir','reverse'); title('(Raw-Perturbed)/dx')
 figure(3); clf; plot(ugh0(:,ii+5),1:97,'b',homejac,1:97,'r');  set(gca,'ydir','reverse'); title('Jacobian')
-if ii == 6
-  moo = 1./xavg; plot(cumsum(moo),1:97);                 figure(3); clf; plot(ugh0(:,ii+5),1:97,'b',cumsum(moo)/1e11,1:97);               set(gca,'ydir','reverse'); title('Jacobian')
-  moo = xavg; plot(cumsum(moo),1:97);                    figure(3); clf; plot(ugh0(:,ii+5),1:97,'b',xavg./cumsum(xavg),1:97);             set(gca,'ydir','reverse'); title('Jacobian')
-  boo = 0.5*[1; cumsum(xavg(1:length(xavg)-1))];         figure(3); clf; plot(ugh0(:,ii+5),1:97,'b',homejac,1:97,'r',xavg./boo,1:97,'k'); set(gca,'ydir','reverse'); title('Jacobian')
-  boo = 0.5 + [0; cumsum(xavg(1:length(xavg)-1))]./xavg; figure(3); clf; plot(ugh0(:,ii+5),1:97,'b',homejac,1:97,'r',sec(p.satzen(1)*pi/180)*boo,1:97,'k');       set(gca,'ydir','reverse'); title('Jacobian')
-end
-figure(4); clf; plot(ugh1(:,ii)-ugh0(:,ii),1:97,'bx-',ugh2(:,ii)-ugh0(:,ii),1:97,'r'); set(gca,'ydir','reverse'); 
+%if ii == 6
+%  moo = 1./xavg; plot(cumsum(moo),1:97);
+%  figure(3); clf; plot(ugh0(:,ii+5),1:97,cumsum(moo)/1e11,1:97); set(gca,'ydir','reverse'); title('Jacobian')
+%end
+figure(4); clf; plot(ughT(:,ii)-ugh0(:,ii),1:97,'bx-',ugh2(:,ii)-ugh0(:,ii),1:97,'r'); set(gca,'ydir','reverse'); 
   title('Did we fix it???? \newline red should lie on blue')

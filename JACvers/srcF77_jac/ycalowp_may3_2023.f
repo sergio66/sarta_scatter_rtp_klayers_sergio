@@ -220,37 +220,35 @@ c          write(6,'(A,I3,X,E11.4,X,E11.4)') 'calowp:WAZ(L),WAZSUM : ',L,WAZ(L),
            IF (DOJAC) THEN
              WAANG_T(L) = 0
              WAANG_1(L) = SECANG(L)
-
-! this is what we had on May 3, 2023
              WAZ_T(L)   = 0
              WAZ_1(L)   = 0.5*SECANG(L)
-! this is what the print statement results do suggest, if Q --> Q(1+x) !!!!!!!
-! and gives a factor of 10-20 between layers 40-100 hmmmmmmm
-             WAZ_1(L)   = 0.5*SECANG(L) + (WAZSUM-WAANG(L))/WAMNT(L)
-
              WAZSUM_T   = 0
              WAZSUM_1   = SECANG(L)
-             WAZSUM_1   = WAZSUM/WAMNT(L)   !!!! try this!!!!!!
-
              WPZSUM_T   = 0
              WPZSUM_1   = SECANG(L)*P(L)
              WTZSUM_T   = SECANG(L)*WAMNT(L)
              WTZSUM_1   = SECANG(L)*T(L)
-
-! this is what we had on May 3, 2023
              PZ_T(L)    = (WAZSUM*WPZSUM_T -  WPZSUM*WAZSUM_T)/WAZSUM/WAZSUM
-             TZ_T(L)    = (WAZSUM*WTZSUM_T -  WTZSUM*WAZSUM_T)/WAZSUM/WAZSUM
-! this is what the print statement results do suggest, if T --> T + 1 !!!!!!!
-             PZ_T(L)    = 0
-             TZ_T(L)    = 1
-
-! this is what we had on May 3, 2023
              PZ_1(L)    = (WAZSUM*WPZSUM_1 -  WPZSUM*WAZSUM_1)/WAZSUM/WAZSUM
+             TZ_T(L)    = (WAZSUM*WTZSUM_T -  WTZSUM*WAZSUM_T)/WAZSUM/WAZSUM
              TZ_1(L)    = (WAZSUM*WTZSUM_1 -  WTZSUM*WAZSUM_1)/WAZSUM/WAZSUM
 ! this is what the print statement results do suggest, if Q --> Q(1+x) !!!!!!!
-             PZ_1(L)    = 0
-             TZ_1(L)    = 0
-
+!             IF (L .EQ. 1) THEN
+!               WAZ_1(L)   = 0.5*SECANG(L)
+!             ELSEIF (L .LE. 10) THEN
+!               WAZ_1(L)   = 0.5*SUM(SECANG(1:L))
+!               WAZ_1(L)   = 0.5*(SECANG(L)+SECANG(L-1))
+!             ELSEIF (L .LE. 100) THEN
+!               WAZ_1(L)   = 0.5*SUM(SECANG(1:L))
+!               WAZ_1(L)   = 0.5*(SUM(SECANG(L-9:L)))
+!             END IF
+! this is what the print statement results do suggest, if Q --> Q(1+x) !!!!!!!
+!             PZ_1(L)    = 0
+!             TZ_1(L)    = 0
+! this is what the print statement results do suggest, if T --> T + 1 !!!!!!!
+!             WAZ_T(L)   = 0
+!             PZ_T(L)    = 0
+!             TZ_T(L)    = 1
            END IF
           !!! preferably do this for one channel only!!!! analyze this using test_optran_ycalowp_[Q/T]derivatives.m          
           !!!              1  2     3    4        5       6       7    8      <9>      10      11      12       13
@@ -389,8 +387,8 @@ c            H2OJACPRD(2,1:9,LOP)=H2OJACPRD(2,1:9,LOP)*(-100)
           !!! preferably do this for one channel only!!!! analyze this using test_optran_ycalowp_LOP_[Q/T]derivatives.m          
           !!!                                      1    2         3  4    5   6     7    8    9    10     11    12     13    14
           !!!                                                     [1 2   3    4     5    6]
-c          write(6,'(A,I4,X,13(E12.4))') 'LOP 001',LOP,WAZOP(LOP),DA,POP,TOP,PZOP,TZOP,ANGOP,DA_1,POP_1,TOP_1,PZOP_1,TZOP_1,ANGOP_1
-c          write(6,'(A,I4,X,13(E12.4))') 'LOP 100',LOP,WAZOP(LOP),DA,POP,TOP,PZOP,TZOP,ANGOP,DA_T,POP_T,TOP_T,PZOP_T,TZOP_T,ANGOP_T
+          write(6,'(A,I4,X,13(E12.4))') 'LOP 001',LOP,WAZOP(LOP),DA,POP,TOP,PZOP,TZOP,ANGOP,DA_1,POP_1,TOP_1,PZOP_1,TZOP_1,ANGOP_1
+c          write(6,'(A,I4,X,13(E12.4))') 'LOP 100',LOP,WZOP(LOP),DA,POP,TOP,PZOP,TZOP,ANGOP,DA_T,POP_T,TOP_T,PZOP_T,TZOP_T,ANGOP_T
 
 C
 C         Update LOP and loop

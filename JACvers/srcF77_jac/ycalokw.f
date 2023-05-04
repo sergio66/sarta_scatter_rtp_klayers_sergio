@@ -304,14 +304,16 @@ CCC       catch bug: KWOP_1(0)
           IF (LOPLOW(L) .GT. 0.0E+0) THEN
           
 C         Interpolate abs coef and convert to optical depth
-            JUNK = 10  !!! improves things in the 1400-1600 cm-1 region
+            JUNK = 10  !!! improves things in the 1400-1600 cm-1 region, May 2-3, 2023
+            JUNK = 1
             KW_1(L)=JUNK*( DAOP(L)*( KWOP_1(LOPLOW(L) + 1) -
      $       KWOP_1(LOPLOW(L)) ) + KWOP_1(LOPLOW(L)) )*WAANG(L)
 
 c    ycalowp.f shows DAOP depends on T and WV
 c            KW_1(L)=KW_1(L) + ( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
 c     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*WAANG(L)
-            JUNK = 10 !!! improves things in the 1050 --1350 cm-1 region
+            JUNK = 10 !!! improves things in the 1050 --1350 cm-1 region, May 2-3, 2023
+            JUNK = 1
             KW_1(L)=KW_1(L) + JUNK*( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
      $       KWOP(LOPLOW(L)) ))*WAANG(L)
 

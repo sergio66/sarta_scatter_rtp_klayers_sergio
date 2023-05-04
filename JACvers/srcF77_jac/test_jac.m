@@ -9,8 +9,8 @@ frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iPr
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;  %% satzen = -50  deg
 frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 59;    %% DCC
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 12150/2+45;  %% satzen = +50  deg
-frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 113;   %% almost clear
 frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 1;     %% same as profile 1 from cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp
+frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 113;   %% almost clear
 
 if ~exist('porig')
 
