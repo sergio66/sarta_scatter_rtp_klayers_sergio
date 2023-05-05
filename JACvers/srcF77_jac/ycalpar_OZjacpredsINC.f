@@ -120,6 +120,9 @@ C          ozone predictors for FOW = set2
            OJACPRED2(IWHICHJAC, 8,L)=(OJUNKZ*AZ_O_3 + OJUNKZ_3*AZ_O)
            OJACPRED2(IWHICHJAC, 9,L)=(OJUNKA*0.5/SQRT( OJUNKX )*OJUNKX_3 + OJUNKA_3*SQRT(OJUNKX))
            OJACPRED2(IWHICHJAC,10,L)=(OJUNKA*TAZ_O_3 + OJUNKA_3*TAZ_O)*SECANG(L)
+           !!! see test_o3_10um_preds_predjacs.m
+c           write(*,'(I3,X,15(ES12.5))') L,POAMNT(L),ROAMNT(L),SECANG(L),A_O,A_O_3,XZ_O,XZ_O_3,
+c     $                          OJUNKA,OJUNKA_3,OJUNKR,OJUNKR_3,OJUNKZ,OJUNKZ_3,OJUNKX,OJUNKX_3
 
 C          There are no ozone predictors for set3 = FMW (the ozone
 C          absorption in the region covered by FMW is negligible).

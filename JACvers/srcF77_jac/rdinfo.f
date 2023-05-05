@@ -1,7 +1,7 @@
 c rdinfo processes command line arguments
 c
-c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3 listc=445,449,1291,1614,2333 listj=-1
-c          would ive you radiances at 790,791,1231,1419,2616 cm-1
+c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3 listc=445,449,1092,1291,1614,2333 listj=-1
+c          would give you radiances at                           790,791,1092,1231,1419,2616 cm-1
 c
 c
 c to compile

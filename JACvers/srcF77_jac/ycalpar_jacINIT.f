@@ -204,18 +204,22 @@ c      A_O = POAMNT(L)/ROAMNT(L)
       A_O_T = 0.0
       A_O_1 = 0.0
       A_O_3 = 1/ROAMNT(L)
+
+CCCCC this is layer above stuff, so need to perturb ENTIRE layers 1--L, not just layer L
 CjacX      XZREF = XZREF + ROAMNT(L)
 CjacX      XZ = XZ + POAMNT(L)
 c      XZ_O = XZ/XZREF
       XZ_O_T = 0.0
       XZ_O_1 = 0.0
-      XZ_O_3 = 1/XZREF
+      XZ_O_3 = 1/XZREF          !!! this is just Layer L  being perturbed
+      XZ_O_3 = XZ_O/POAMNT(L)   !!! this is all layers above being perturbed, see notes book 47
 CjacX      OZREF = OZREF + PDP*ROAMNT(L)
 CjacX      OZ = OZ + PDP*POAMNT(L)
 c      AZ_O = OZ/OZREF
       AZ_O_T = 0.0
       AZ_O_1 = 0.0
-      AZ_O_3 = PDP/OZREF
+      AZ_O_3 = PDP/OZREF        !!! this is just Layer L  being perturbed
+      AZ_O_3 = AZ_O/POAMNT(L)   !!! this is all layers above being perturbed, see notes book 47
 
 CjacXC
 CjacXC     Carbon monoxide terms
@@ -230,7 +234,8 @@ c      AZ_C = CZ/CZREF
       AZ_C_T = 0.0
       AZ_C_1 = 0.0
       AZ_C_3 = 0.0
-      AZ_C_5 = PDP
+      AZ_C_5 = PDP              !!! this is just Layer L  being perturbed
+      AZ_C_5 = AZ_C/PCAMNT(L)   !!! this is all layers above being perturbed, see notes book 47
 CjacXC
 CjacXC     Methane terms
 c      A_M = PMAMNT(L)/RMAMNT(L)
@@ -243,9 +248,10 @@ CjacX      MZ = MZ + PDP*PMAMNT(L)
       MZ_T   = 0
       MZ_1   = 0
       MZ_3   = 0
-      MZ_6   = PDP
+      MZ_6   = PDP          
 c      AZ_M = MZ/MZREF
       AZ_M_T = MZ_T/MZREF
       AZ_M_1 = MZ_1/MZREF
       AZ_M_3 = MZ_3/MZREF
-      AZ_M_6 = MZ_6/MZREF
+      AZ_M_6 = MZ_6/MZREF    !!! this is just Layer L  being perturbed
+      AZ_M_6 = AZ_M/PMAMNT(L)   !!! this is all layers above being perturbed, see notes book 47

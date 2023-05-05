@@ -671,13 +671,12 @@ C      for jacobians
        REAL JAC_WGT_C(MAXLAY,MXCHAN), JAC_WGT_1(MAXLAY,MXCHAN), JAC_WGT_2(MAXLAY,MXCHAN), JAC_WGT_12(MAXLAY,MXCHAN)
        REAL TAU4(4,MAXLAY,MXCHAN) !  chan layer effective optical depth for CLR,CLD1,CLD2,CLD12
        REAL RAD4(4,MAXLAY,MXCHAN) ! -chan radiance + planck(TL)         for CLR,CLD1,CLD2,CLD12
-       REAL L2S4(4,MAXLAY,MXCHAN),WGT4(4,MAXLAY,MXCHAN)
-       REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
+       REAL L2S4(4,MAXLAY,MXCHAN),WGT4(4,MAXLAY,MXCHAN), L2S4above(4,MAXLAY,MXCHAN)
+       REAL DBTDT(MAXLAY,MXCHAN), RAMU(MAXLAY,MXCHAN),ONESSS(1,MXCHAN)  ! dBT(T,L)/dT
        INTEGER IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,IOUNG11,IOUNG12,IOUNG103,IOUNWGT,iFileErr
        INTEGER JAC_OUTPUT_UNITS           ! 0 for drad/dT and drad/dq, 1 for dBT/dT and dBT/d(log q) = q dBT/dq
        CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
      $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103
-
        INTEGER ijunk
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS

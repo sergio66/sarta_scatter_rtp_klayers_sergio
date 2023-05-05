@@ -278,6 +278,7 @@ c input
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
+       LOGICAL BADOZO
        INTEGER      IWHICHJAC,ITRYJAC,INTERSECT
        INTEGER      I
        INTEGER   ICO2
@@ -444,11 +445,16 @@ C            --------------------------
      $            ( COEF2(24,ILAY,I)*OPRED2( 9,ILAY) ) +
      $            ( COEF2(25,ILAY,I)*OPRED2(10,ILAY) )
 C
+             BADOZO = .FALSE.
              IF (KOZO .LT. 0.0E+0) THEN
                 KOZO=0.0E+0
+                BADOZO = .TRUE.
+c                print *,'BADOZO < 0',IY,J,ILAY
              ELSEIF (KOZO .GT. 1.0E+0) THEN
 c%%%%%%                KOZO=1.0E+1
                 KOZO=1.0E-10
+                BADOZO = .TRUE.
+c                print *,'BADOZO > 1',IY,J,ILAY
              ENDIF
 C
 
@@ -588,6 +594,9 @@ C            Limit -DK so it can never totally totally cancel KFIX
 
 C            Calc effective layer optical depth
              KLAYER = KCON + KFIX + KOZO + KWAT + DK
+
+c             print *,3,ILAY,KOZO,KLAYER      !! OZONE DEBUG, see test_o3_10um_jacs.m
+
              TAU(ILAY,J)=KLAYER
 C
 C            Calc layer-to-space optical depth
@@ -688,6 +697,9 @@ C            --------------------------
      $            ( COEF2(23,ILAY,I)*OJACPRED2(IWHICHJAC, 8,ILAY) ) +
      $            ( COEF2(24,ILAY,I)*OJACPRED2(IWHICHJAC, 9,ILAY) ) +
      $            ( COEF2(25,ILAY,I)*OJACPRED2(IWHICHJAC,10,ILAY) )
+             IF (BADOZO) KOZO = 0.0
+c             print *,300,ILAY,KOZO,0         !!!! OZONE DEBUG, see test_o3_10um_jacs.m
+
 C              IF ((ILAY .EQ. 1) .AND. (IWHICHJAC .EQ. 1)) write(*,'(A,10(ES12.5))') 'OJACPRED2',OJACPRED2(IWHICHJAC,1:10,ILAY)
 C
 c             IF (KOZO .LT. 0.0E+0) THEN
@@ -880,6 +892,7 @@ c             ENDIF
 C            Calc effective layer optical depth
              f1 = 1; f2 = 1; f3 = 1; f4 = 1; f5 = 1;
              KLAYER = KCON + KFIX + KOZO + KWAT + DK
+c             KLAYER = KOZO
 
 c             f1 = 1; f2 = 0; f3 = 0; f4 = 0; f5 = 0;
 c             f1 = 0; f2 = 1; f3 = 1; f4 = 0; f5 = 0;

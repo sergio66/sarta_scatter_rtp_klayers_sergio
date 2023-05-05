@@ -95,7 +95,7 @@ c output
        REAL    RAD(MXCHAN) ! chan radiance
        LOGICAL DOJAC       ! are we planning on jacs???
        REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12       
-       REAL RAD4(4,MAXLAY,MXCHAN) ! -chan radiance + planck(TL)         for CLR,CLD1,CLD2,CLD12
+       REAL RAD4(4,MAXLAY,MXCHAN) ! -radiance(L) + planck(TL)          for CLR,CLD1,CLD2,CLD12
        REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
 
 c local
@@ -176,8 +176,8 @@ C     Calculate clear radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(1,:,I) = TAU(:,I)   !!! CLDTAU is a dummy
-        ! RAD4(1,:,I) = (-RADLAY + RPLNCK)
-        RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAD4(1,:,I) = (-RADLAY + RPLNCK)
+        !RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
 
 C     Store original values
@@ -218,8 +218,8 @@ C    Calculate bottom cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(3,:,I) = CLDTAU
-        ! RAD4(3,:,I) = (-RADLAY + RPLNCK)
-        RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAD4(3,:,I) = (-RADLAY + RPLNCK)
+        !RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
 
 C      Calculate combined cloud1+cloud2 radiance
@@ -241,8 +241,8 @@ C      Calculate combined cloud1+cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(4,:,I) = CLDTAU
-        ! RAD4(4,:,I) = (-RADLAY + RPLNCK)
-        RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAD4(4,:,I) = (-RADLAY + RPLNCK)
+        !RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
 
 C     Restore original values
@@ -283,14 +283,14 @@ C     Calculate top cloud1 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(2,:,I) = CLDTAU
-        ! RAD4(2,:,I) = (-RADLAY + RPLNCK)
-        RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAD4(2,:,I) = (-RADLAY + RPLNCK)
+        !RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
 
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12
 
-      IF (  ((NWANTC .GT. 0) .AND. DEBUG) .OR. ((NWANTC .GT. 0) .AND. (NWANTC .LE. 5)) ) THEN
+      IF (  ((NWANTC .GT. 0) .AND. DEBUG) .OR. ((NWANTC .GT. 0) .AND. (NWANTC .LE. 6)) ) THEN
 c        write(*,'(A,I5,7(F12.4),6(ES12.4))') 'clr/cld Freq,Emis,Tsuf,4CldFrac,rads',I,FREQ(I),EMIS(I),TSURF,
 c     $           FCLEAR,CFRA1X,CFRA2X,CFRA12,
 c     $           RSURFE,RAD0,RADC1,RADC2,RADC12,RAD(I)
@@ -327,12 +327,16 @@ CC FORGET THIS  III = INTERSECT(I,CLISTN(1:NCHNTE),NCHNTE)
         END IF
       ENDIF
 
-      IF (DOJAC) THEN 
-        RAD4(1,1:LBOT,I) = RAD4(1,1:LBOT,I)/SECANG(1:LBOT)
-        RAD4(2,1:LBOT,I) = RAD4(2,1:LBOT,I)/SECANG(1:LBOT)
-        RAD4(3,1:LBOT,I) = RAD4(3,1:LBOT,I)/SECANG(1:LBOT)
-        RAD4(4,1:LBOT,I) = RAD4(4,1:LBOT,I)/SECANG(1:LBOT)
-      END IF
+      !!!! so we already do 
+      !!!!      RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG  etc == (-RADLAY + RPLNCK) /mu
+
+! orig code Apr 2023
+!      IF (DOJAC) THEN 
+!        RAD4(1,1:LBOT,I) = RAD4(1,1:LBOT,I)/SECANG(1:LBOT)
+!        RAD4(2,1:LBOT,I) = RAD4(2,1:LBOT,I)/SECANG(1:LBOT)
+!        RAD4(3,1:LBOT,I) = RAD4(3,1:LBOT,I)/SECANG(1:LBOT)
+!        RAD4(4,1:LBOT,I) = RAD4(4,1:LBOT,I)/SECANG(1:LBOT)
+!      END IF
 
       RETURN
       END
