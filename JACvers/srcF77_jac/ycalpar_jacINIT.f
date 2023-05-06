@@ -141,9 +141,16 @@ CjacX         TOZ = TOZ + PDP*DT*A_O
               TOZ_3 = PDP*(DT_3*A_O + DT*A_O_3)
 
 CjacX         TAZ_O = TOZ/PNORM
+              !!! this is just Layer L  being perturbed
               TAZ_O_T = TOZ_T/PNORM
               TAZ_O_1 = TOZ_1/PNORM
               TAZ_O_3 = TOZ_3/PNORM
+              !!! this is all layers above being perturbed, see notes book 47, BUT KILLS O3 JACS so forget it
+!              TAZ_O_T = OZ/PNORM
+!              TAZ_O_1 = 0
+!              TAZ_O_3 = DTZ_O/PNORM/POAMNT(L) 
+
+cSSM STOPPED HERE
 CjacXC
 CjacX         TMZ = TMZ + PDP*TR*A_M
 CjacX         TAZ_M = TMZ/PNORM
@@ -156,6 +163,7 @@ CjacX         TAZ_M = TMZ/PNORM
               TAZ_M_1 = 1/PNORM*TMZ_1
               TAZ_M_3 = 1/PNORM*TMZ_3
               TAZ_M_6 = 1/PNORM*TMZ_6
+cSSM STOPPED HERE
 
             ENDIF
 CjacXC
@@ -175,7 +183,7 @@ C      PWATER = KMOLE*PWAMNT(L)*PTEMP(L)/(STDDEN*STDTMP*100*DZREF(L))
       PWATER_T = PWATER/PTEMP(L)
       PWATER_1 = PWATER/PWAMNT(L)
       PWATER_3 = 0.0
-      A_F = ( 1 - PMULT*PWATER/PRES(L) )/( FX(L)*GSCAL )
+c      A_F = ( 1 - PMULT*PWATER/PRES(L) )/( FX(L)*GSCAL )
       A_F_T = 1/(FX(L)*GSCAL)/PRES(L)*(-PMULT*PWATER_T)
       A_F_1 = 1/(FX(L)*GSCAL)/PRES(L)*(-PMULT*PWATER_1)
       A_F_3 = 0.0
@@ -185,8 +193,9 @@ CCjacXccc
 CjacXC
 CjacXC     Water terms
 c     WZ  = WZ + PDP*PWANT(L)
-      WZ_T = 0
-      WZ_1 = PDP
+      WZ_T = 0 
+      WZ_1 = PDP              !!! this is just Layer L  being perturbed
+      WZ_1 = WZ/PWAMNT(L)     !!! this is all layers above being perturbed, see notes book 47
       WZ_3 = 0
 c     A_W = PWAMNT(L)/RWAMNT(L)
       A_W_T = 0.0
@@ -196,8 +205,11 @@ CjacX      WZREF = WZREF + PDP*RWAMNT(L)
 CjacX      WZ = WZ + PDP*PWAMNT(L)
 c      AZ_W = WZ/WZREF
       AZ_W_T = 0.0
-      AZ_W_1 = WZ_1/WZREF
+      AZ_W_1 = WZ_1/WZREF      !!! this is just Layer L  being perturbed
+      AZ_W_1 = AZ_W/PWAMNT(L)  !!! this is all layers above being perturbed, see notes book 47 !!!!! BUT KILLS O3 JACS so forget it
       AZ_W_3 = 0.0
+
+
 CjacXC
 CjacXC     Ozone terms
 c      A_O = POAMNT(L)/ROAMNT(L)

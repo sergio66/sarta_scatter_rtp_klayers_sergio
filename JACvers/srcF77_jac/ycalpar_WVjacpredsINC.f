@@ -162,6 +162,10 @@ C          -----
            WJUNKS_1=2*WJUNKA*WJUNKA_1
            WJUNKZ_1=WJUNKA_1*A_W/AZ_W + WJUNKA*(AZ_W*A_W_1 - A_W*AZ_W_1)/AZ_W/AZ_W
            WJUNK4_1=(SECANG(L)**0.25)*0.25/(A_W**(0.75))*A_W_1
+           !!! see test_wv_6um_preds_predjacs.m
+c           write(*,'(I3,X,19(ES12.5))') L,PWAMNT(L),RWAMNT(L),SECANG(L),A_W,A_W_1,AZ_W,AZ_W_1,
+c     $                          WJUNKA,WJUNKA_1,WJUNKR,WJUNKR_1,WJUNKS,WJUNKS_1,WJUNKZ,WJUNKZ_1,WJUNK4,WJUNK4_1,MJUNKZ,MJUNKZ_1
+
 
 C          Water predictors for FWO = set1
            WJACPRED1(IWHICHJAC, 1,L)=WJUNKA_1

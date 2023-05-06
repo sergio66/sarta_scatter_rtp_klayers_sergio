@@ -170,6 +170,7 @@ C-----------------------------------------------------------------------
        REAL   KWOP_T(MXOWLY)
        REAL   KWOP_1(MXOWLY)
        REAL JUNK
+       REAL SMOOTH(MAXLAY)
 
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
@@ -305,7 +306,7 @@ CCC       catch bug: KWOP_1(0)
           
 C         Interpolate abs coef and convert to optical depth
             JUNK = 10  !!! improves things in the 1400-1600 cm-1 region, May 2-3, 2023
-            JUNK = 1
+            JUNK = 1   !!! fixed some "layers above" derivaives so no longer need this
             KW_1(L)=JUNK*( DAOP(L)*( KWOP_1(LOPLOW(L) + 1) -
      $       KWOP_1(LOPLOW(L)) ) + KWOP_1(LOPLOW(L)) )*WAANG(L)
 
@@ -313,7 +314,7 @@ c    ycalowp.f shows DAOP depends on T and WV
 c            KW_1(L)=KW_1(L) + ( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
 c     $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*WAANG(L)
             JUNK = 10 !!! improves things in the 1050 --1350 cm-1 region, May 2-3, 2023
-            JUNK = 1
+            JUNK = 1   !!! fixed some "layers above" derivaives so no longer need this
             KW_1(L)=KW_1(L) + JUNK*( DAOPJAC(2,L)*( KWOP(LOPLOW(L) + 1) -
      $       KWOP(LOPLOW(L)) ))*WAANG(L)
 
@@ -322,12 +323,31 @@ c    ycalowp.f shows WAANG(L)=WAMNT(L)*SECANG(L) so d WAANG(L)/dQ = SECANG(L)
             KW_1(L)=KW_1(L) + JUNK*( DAOP(L)*( KWOP(LOPLOW(L) + 1) -
      $       KWOP(LOPLOW(L)) ) + KWOP(LOPLOW(L)) )*SECANG(L)
 
-
 c            IF (KW_T(L) .LT. 0.0E+0) KW(L)=0.0E+0
 C
          ENDIF
        ENDDO
 cbaba TJAC
+       SMOOTH = 0
+       SMOOTH = KW_1
+c       DO L=2,LBOT-1
+c         SMOOTH(L) = (KW_1(L-1) + KW_1(L) + KW_1(L+1))/3
+c       END DO
+       DO L=3,LBOT-2
+         SMOOTH(L) = (KW_1(L-2) + KW_1(L-1) + KW_1(L) + KW_1(L+1) + KW_1(L+2))/5
+       END DO
+       KW_1 = SMOOTH
+
+       SMOOTH = 0
+       SMOOTH = KW_T
+c       DO L=2,LBOT-1
+c         SMOOTH(L) = (KW_T(L-1) + KW_T(L) + KW_T(L+1))/3
+c       END DO
+       DO L=3,LBOT-2
+         SMOOTH(L) = (KW_T(L-2) + KW_T(L-1) + KW_T(L) + KW_T(L+1) + KW_T(L+2))/5
+       END DO
+       KW_T = SMOOTH
+
        END IF
 
        RETURN

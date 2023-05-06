@@ -5,6 +5,10 @@
 
 date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=newdayx_1_100_12150.op.rtp  fout=newdayx_1_100_12150.rad.rtp         listp=1  listj=1  listc=1614 >& ughLOP_10
 date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=newdayx_1_100_12150_g1_x1.1.op.rtp  fout=newdayx_1_100_12150.rad.rtp listp=1  listj=1  listc=1614 >& ughLOP_1
+
+date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=newdayx_1_100_12150.op.rtp  fout=newdayx_1_100_12150.rad.rtp         listp=1  listj=1  listc=1603 >& ughLOP_10
+date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=newdayx_1_100_12150_g1_x1.1.op.rtp  fout=newdayx_1_100_12150.rad.rtp listp=1  listj=1  listc=1603 >& ughLOP_1
+
 %} 
 
 
@@ -20,6 +24,7 @@ if ~exist('p')
   %%       write(6,'(A,I4,X,12(E12.4))') 'LOP 001',LOP,WAZOP(LOP),DA,POP,TOP,PZOP,TZOP,ANGOP,DA_1,POP_1,TOP_1,PZOP_1,TZOP_1,ANGOP_1
   %%       write(6,'(A,I4,X,12(E12.4))') 'LOP 100',LOP,WAZOP(LOP),DA,POP,TOP,PZOP,TZOP,ANGOP,DA_T,POP_T,TOP_T,PZOP_T,TZOP_T,ANGOP_T
   ugh0 = load('UGH_TEST_OPTRAN/V0_May3_2023/ughLOP_10');  %% raw WV
+  ugh0 = load('UGH_TEST_OPTRAN/V2_May5_2023/ughLOP_10');  %% raw WV
   ugh0 = load('ughLOP_10');  %% raw WV
   boo = ugh0(:,1); 
   if mean(boo) ~= 1; 
@@ -29,6 +34,7 @@ if ~exist('p')
   end
 
   ugh1 = load('UGH_TEST_OPTRAN/V0_May3_2023/ughLOP_1');  %% WV * 1.1
+  ugh1 = load('UGH_TEST_OPTRAN/V2_May5_2023/ughLOP_1');  %% WV * 1.1
   ugh1 = load('ughLOP_1');  %% WV * 1.1
   boo = ugh1(:,1); 
   if mean(boo) ~= 001; 
@@ -60,7 +66,7 @@ homejac = (ugh1(:,ii)-ugh0(:,ii))./dx;
 figure(1); clf; plot(ugh0(:,ii),1:len,ugh1(:,ii),1:len);         set(gca,'ydir','reverse'); title('Raw(b) Perturbed(r) Variable')
 figure(2); clf; plot(ugh1(:,ii)-ugh0(:,ii),1:len);              set(gca,'ydir','reverse'); title('Raw-Perturbed')
 figure(2); clf; plot(homejac,1:len);                            set(gca,'ydir','reverse'); title('(Raw-Perturbed)/dx')
-figure(3); clf; plot(ugh0(:,ii+6),1:len,'b',homejac,1:len,'r');  set(gca,'ydir','reverse'); title('Jacobian')
+figure(3); clf; plot(ugh0(:,ii+6),1:len,'b.-',homejac,1:len,'r');  set(gca,'ydir','reverse'); title('Jacobian')
 %if ii == 6
 %  moo = 1./xavg; plot(cumsum(moo),1:len);
 %  figure(3); clf; plot(ugh0(:,ii+6),1:len,cumsum(moo)/1e11,1:len); set(gca,'ydir','reverse'); title('Jacobian')

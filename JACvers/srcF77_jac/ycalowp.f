@@ -229,27 +229,34 @@ c          write(6,'(A,I3,X,E11.4,X,E11.4)') 'calowp:WAZ(L),WAZSUM : ',L,WAZ(L),
              WAZ_1(L)   = 0.5*SECANG(L) + (WAZSUM-WAANG(L))/WAMNT(L)
 
              WAZSUM_T   = 0
-             WAZSUM_1   = SECANG(L)
-             WAZSUM_1   = WAZSUM/WAMNT(L)   !!!! try this!!!!!!
+             WAZSUM_1   = SECANG(L)          !!! this is just Layer L  being perturbed
+             WAZSUM_1   = WAZSUM/WAMNT(L)    !!! this is all layers above being perturbed, see notes book 47
 
              WPZSUM_T   = 0
-             WPZSUM_1   = SECANG(L)*P(L)
-             WTZSUM_T   = SECANG(L)*WAMNT(L)
-             WTZSUM_1   = SECANG(L)*T(L)
+             WPZSUM_1   = SECANG(L)*P(L)     !!! this is just Layer L  being perturbed
+             WPZSUM_1   = WPZSUM/WAMNT(L)    !!! this is all layers above being perturbed, see notes book 47
+
+             WTZSUM_T   = SECANG(L)*WAMNT(L) !!! this is just Layer L  being perturbed
+             WTZSUM_1   = SECANG(L)*T(L)     !!! this is just Layer L  being perturbed
+             WTZSUM_1   = WTZSUM/WAMNT(L)    !!! this is all layers above being perturbed, see notes book 47
+             WTZSUM_T   = WAZSUM             !!! this is all layers above being perturbed, see notes book 47
 
 ! this is what we had on May 3, 2023
              PZ_T(L)    = (WAZSUM*WPZSUM_T -  WPZSUM*WAZSUM_T)/WAZSUM/WAZSUM
              TZ_T(L)    = (WAZSUM*WTZSUM_T -  WTZSUM*WAZSUM_T)/WAZSUM/WAZSUM
 ! this is what the print statement results do suggest, if T --> T + 1 !!!!!!!
-             PZ_T(L)    = 0
-             TZ_T(L)    = 1
+             PZ_T(L)    = 0                  !!! this is all layers above being perturbed, see notes book 47
+             TZ_T(L)    = 1                  !!! this is all layers above being perturbed, see notes book 47
 
 ! this is what we had on May 3, 2023
              PZ_1(L)    = (WAZSUM*WPZSUM_1 -  WPZSUM*WAZSUM_1)/WAZSUM/WAZSUM
              TZ_1(L)    = (WAZSUM*WTZSUM_1 -  WTZSUM*WAZSUM_1)/WAZSUM/WAZSUM
-! this is what the print statement results do suggest, if Q --> Q(1+x) !!!!!!!
+! this is what the print statement results do suggest, if Q --> Q(1+x) !!!!!!!, though my notes Bk 47 suggest otherwise
              PZ_1(L)    = 0
              TZ_1(L)    = 0
+! this is what my notes Bk 47 suggest otherwise, but I did n approximation there so lets comment it out
+!             PZ_1(L) = PZ(L)/WAMNT(L)
+!             TZ_1(L) = TZ(L)/WAMNT(L)
 
            END IF
           !!! preferably do this for one channel only!!!! analyze this using test_optran_ycalowp_[Q/T]derivatives.m          
@@ -333,14 +340,13 @@ c rdcoef.f reads in the fixed values of wavgop from a data file, so they are FIX
 
 c LL = LL(LOP) and LU = LU(LOP) so have to do the LL and the LU derivatives
           IF (DOJAC) THEN
-            DA_T = -1/(WAZ(LU) - WAZ(LL)) * WAZ_T(LL) - 
-     $             (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(-WAZ_T(LL))
-            DA_T = DA_T + 
-     $              (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(WAZ_T(LU))
-            DA_1 = -1/(WAZ(LU) - WAZ(LL)) * WAZ_1(LL) - 
-     $             (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(-WAZ_1(LL))
-            DA_1 = DA_1 + 
-     $             (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(WAZ_1(LU))
+            DA_T = -1/(WAZ(LU) - WAZ(LL)) * WAZ_T(LL) 
+     $             - (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(-WAZ_T(LL))
+     $             - (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(+WAZ_T(LU))
+
+            DA_1 = -1/(WAZ(LU) - WAZ(LL)) * WAZ_1(LL)
+     $             - (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(-WAZ_1(LL))
+     $             - (WAZOP(LOP) - WAZ(LL))/(WAZ(LU) - WAZ(LL))/(WAZ(LU) - WAZ(LL))*(+WAZ_1(LU))
 
             JUNK = P(LU) -  P(LL)
             POP_T = 1/WAVGOP(1,LOP)*(DA_T*JUNK + DA*0 + 0)

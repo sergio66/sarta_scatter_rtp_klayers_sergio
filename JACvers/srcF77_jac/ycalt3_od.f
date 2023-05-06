@@ -620,6 +620,13 @@ C            Limit -DK so it can never totally totally cancel KFIX
 
 C            Calc total layer optical depth
              KLAYER = KCON + KFIX + KMET + KW(ILAY) + DK
+cDEBUG             IF (LH2O) THEN
+cDEBUG               !! line
+cDEBUG               print *,1,ILAY,KW(ILAY),KLAYER      !! WATER DEBUG, see test_wv_6um_jacs.m
+cDEBUG             ELSE
+cDEBUG               !! optran
+cDEBUG               print *,2,ILAY,KW(ILAY),KLAYER      !! WATER DEBUG, see test_wv_6um_jacs.m
+cDEBUG             END IF
              TAU(ILAY,J)=KLAYER
 C
 C            Calc layer-to-space optical depth
@@ -742,8 +749,10 @@ C               Not an OPTRAN water channel
      $               ( COEF3(33,ILAY,I)*WJACPRED3(IWHICHJAC, 9,ILAY) ) +
      $               ( COEF3(34,ILAY,I)*WJACPRED3(IWHICHJAC,10,ILAY) ) +
      $               ( COEF3(35,ILAY,I)*WJACPRED3(IWHICHJAC,11,ILAY) )
-C
 c                IF (KW(ILAY) .LT. 0.0E+0) KW(ILAY)=0.0E+0
+ccDEBUG                print *,101,ILAY,KW(ILAY),0         !!!! WATER DEBUG, see test_wv_6um_jacs.m
+ccDEBUG              ELSE
+ccDEBUG                print *,102,ILAY,KW_1(ILAY),0         !!!! WATER DEBUG, see test_wv_6um_jacs.m
              ENDIF
 C
 C            Update KZFMW

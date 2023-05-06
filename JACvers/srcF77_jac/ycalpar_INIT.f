@@ -27,7 +27,8 @@ C
 C     Temperature terms
       DT = PTEMP(L) - RTEMP(L)
       TR = PTEMP(L)/RTEMP(L)
-C
+      DTZ_O = DTZ_O + PDP*DT/ROAMNT(L)
+C     
 C     Calc the fixed gases correction term for this layer
       PWATER = KMOLE*PWAMNT(L)*PTEMP(L)/(STDDEN*STDTMP*100*DZREF(L))
       A_F = ( 1 - PMULT*PWATER/PRES(L) )/( FX(L)*GSCAL )

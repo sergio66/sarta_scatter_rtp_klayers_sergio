@@ -519,7 +519,7 @@ C-----------------------------------------------------------------------
        INTEGER      L, IWHICHJAC
        REAL    PDP
        REAL  PNORM
-       REAL     DT, DT_T, DT_1, DT_3, DT_5, DT_6
+       REAL     DT, DTZ_O, DT_T, DT_1, DT_3, DT_5, DT_6
        REAL     TR, TR_T, TR_1, TR_3,       TR_6
        REAL     TZ, TZ_T, TZ_1, TZ_3, TZ_N
        REAL    TRZ, TRZ_T, TRZ_1, TRZ_3, TRZ_N
@@ -617,6 +617,7 @@ C      Initialize the sum terms to zero
        MZ     = 0.0E+0
        TMZ    = 0.0E+0
        CO2TOP = 0.0E+0
+       DTZ_O  = 0.0E+0
 C
        if (DEBUG) write(6,'(A,L3,ES11.3)') 'calpar: LCO2PM,CO2PPM ',LCO2PM,CO2PPM
 C      --------------------
