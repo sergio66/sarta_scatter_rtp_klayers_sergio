@@ -8,7 +8,7 @@
      $  MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $  MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $  QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
-     $  RAD, DOJAC, TAU4, RAD4, DBTDT)
+     $  RAD, DOJAC, TAU4, RAD4, RTHERM4, DBTDT)
 
       IMPLICIT NONE
       include "incFTC.f"
@@ -96,9 +96,11 @@ c output
        LOGICAL DOJAC       ! are we planning on jacs???
        REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12       
        REAL RAD4(4,MAXLAY,MXCHAN) ! -radiance(L) + planck(TL)          for CLR,CLD1,CLD2,CLD12
+       REAL RTHERM4(4,MAXLAY,MXCHAN)      ! downwell thermal background term at surface (about same for all 4 calcs but whatever)
        REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
 
 c local
+       REAL RTHERM         ! downwell thermal background term at surface
        REAL C1C2V4         ! rad constant c1c2 times freq^4
        REAL C1V3           ! rad constant c1 times freq^3
        REAL C2V            ! rad constant c2 times freq
@@ -170,12 +172,13 @@ C     Calculate clear radiance
       IF (FCLEAR .GT. 0.0) THEN
          CALL CALRAD0( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $       TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY )
+     $       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM )
       ELSE
         RAD0=0.0
       ENDIF
       IF (DOJAC) THEN
         TAU4(1,:,I) = TAU(:,I)   !!! CLDTAU is a dummy
+        RTHERM4(1,:,I) = RTHERM*SECANG
         RAD4(1,:,I) = (-RADLAY + RPLNCK)
         !RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -206,18 +209,19 @@ C    Calculate bottom cloud2 radiance
          IF (LBLAC2) THEN
             CALL CALRAD0( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
      $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC2, DOJAC, CLDTAU, RADLAY )
+     $          RHOTHR, LABOVE, COEFF, RADC2, DOJAC, CLDTAU, RADLAY, RTHERM )
          ELSE
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL2, MASEC2, MASUN2, COSDAZ,
-     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC2, DOJAC, CLDTAU, RADLAY )
+     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC2, DOJAC, CLDTAU, RADLAY, RTHERM )
          ENDIF
       ELSE
          RADC2=0.0
       ENDIF
       IF (DOJAC) THEN
         TAU4(3,:,I) = CLDTAU
+        RTHERM4(3,:,I) = RTHERM*SECANG
         RAD4(3,:,I) = (-RADLAY + RPLNCK)
         !RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -228,19 +232,20 @@ C      Calculate combined cloud1+cloud2 radiance
             CALL CALRAD1( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12, DOJAC, CLDTAU, RADLAY )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12, DOJAC, CLDTAU, RADLAY, RTHERM )
          ELSE
             CALL CALRAD2( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, NEXTO1,
      $          NSCAO1, G_ASY1, LCTOP1, LCBOT1, CFRCL2, MASEC2, MASUN2,
-     $          COSDAZ, NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC12, DOJAC, CLDTAU, RADLAY )
+     $          COSDAZ, NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC12, DOJAC, CLDTAU, RADLAY, RTHERM )
          ENDIF
       ELSE
          RADC12=0.0
       ENDIF
       IF (DOJAC) THEN
         TAU4(4,:,I) = CLDTAU
+        RTHERM4(4,:,I) = RTHERM*SECANG
         RAD4(4,:,I) = (-RADLAY + RPLNCK)
         !RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -271,18 +276,19 @@ C     Calculate top cloud1 radiance
          IF (LBLAC1) THEN
             CALL CALRAD0( DOSUN, I, LCTOP1, RPLNCK, RSURFC, SECANG,
      $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC1, DOJAC, CLDTAU, RADLAY )
+     $          RHOTHR, LABOVE, COEFF, RADC1, DOJAC, CLDTAU, RADLAY, RTHERM )
          ELSE
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC1, DOJAC, CLDTAU, RADLAY )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC1, DOJAC, CLDTAU, RADLAY, RTHERM )
          ENDIF
       ELSE
          RADC1=0.0
       ENDIF
       IF (DOJAC) THEN
         TAU4(2,:,I) = CLDTAU
+        RTHERM4(2,:,I) = RTHERM*SECANG
         RAD4(2,:,I) = (-RADLAY + RPLNCK)
         !RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF

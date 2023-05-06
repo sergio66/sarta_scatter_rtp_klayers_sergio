@@ -22,7 +22,7 @@ C    Calculate channel radiance for a clear atmosphere above a surface.
 !CALL PROTOCOL:
 C    CALRAD0(DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
 C       TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
-C       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY )
+C       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM )
 
 
 !INPUT PARAMETERS:
@@ -105,7 +105,7 @@ C    29 Mar 2006 Scott Hannon   Updated RTHERM for sartaV107
 C      =================================================================
        SUBROUTINE CALRAD0( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $    TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
-     $    RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY )
+     $    RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -150,6 +150,7 @@ C      Output
        REAL   RAD0                ! upwelling radiance at satellite
        REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
        REAL RADLAY(MAXLAY)        ! chan layer radiance                for CLDONLY
+       REAL RTHERM                ! reflected downwelling thermal radiance, now an output
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -159,7 +160,6 @@ C-----------------------------------------------------------------------
        REAL      F         ! reflected therm "F" (fudge) factor
        REAL RADUP          ! upward radiance
        REAL RSUN           ! reflected solar radiance
-       REAL RTHERM         ! reflected downwelling thermal radiance
 
 C      Downwelling atmospheric thermal emission terms
        REAL TDOWNN ! "near-side" layer-to-surface trans

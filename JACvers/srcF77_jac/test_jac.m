@@ -49,9 +49,11 @@ frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 1;     %% same as profile 1 from cl
 
 frtp = 'newdayx_clr.op.rtp'; iProf = 1;  %% satzen = 22  deg  *** HAVE KCARTA JACS ***, at 22 deg
 
+frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45; %% satzen =  0  deg   *** HAVE KCARTA JACS ***, at -00 deg
+
+frtp = 'newdayx_nocldfields_unityemiss.op.rtp'; iProf = 1; %% satzen =  23  deg   
 frtp = 'newdayx_nocldfields.op.rtp'; iProf = 1; %% satzen =  23  deg   
 
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45; %% satzen =  0  deg   *** HAVE KCARTA JACS ***, at -00 deg
 frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;  %% satzen = -50  deg  *** HAVE KCARTA JACS ***, at -50 deg
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -155,6 +157,8 @@ figure(17); clf; plot(h.vchan,jacx.jac(:,1),'b.-',h.vchan,sum(g1jac_sarta_fast,2
    title('Comparing G1 (WV) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([1000 1500])
 figure(18); clf; plot(h.vchan,jacx.jac(:,3),'b.-',h.vchan,sum(g3jac_sarta_fast,2),'r')
    title('Comparing G3 (O3) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([900 1200])
+figure(19); clf; plot(h.vchan,jacx.jac(:,8),'b.-',h.vchan,sum(ptempjac_sarta_fast,2),'r')
+   title('Comparing TZ jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([650 1000])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 if length(iExtraGas) == 1
@@ -184,16 +188,16 @@ if length(iExtraGas) == 1
      hl = legend('TZ','WV','O3',strG,'location','best','fontsize',10);
   
   if iExtraGas == 2
-    figure(19); clf; plot(h.vchan,jacx.jac(:,2),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
+    figure(20); clf; plot(h.vchan,jacx.jac(:,2),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
      title('Comparing G2 (CO2) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([640 1000])
   elseif iExtraGas == 4
-    figure(19); clf; plot(h.vchan,jacx.jac(:,4),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
+    figure(20); clf; plot(h.vchan,jacx.jac(:,4),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
      title('Comparing G4 (N2O) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([1000 1500])
   elseif iExtraGas == 5
-    figure(19); clf; plot(h.vchan,jacx.jac(:,5),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
+    figure(20); clf; plot(h.vchan,jacx.jac(:,5),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
      title('Comparing G5 (CO) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([2150 2250])
   elseif iExtraGas == 6
-    figure(19); clf; plot(h.vchan,jacx.jac(:,6),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
+    figure(20); clf; plot(h.vchan,jacx.jac(:,6),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
      title('Comparing G6 (CH4) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([1000 1500])
   end
 
@@ -225,7 +229,7 @@ end
 %{
 handO3jac = load('o3_jac_column_sum.mat');
 i1041 = find(h.vchan >= 1041,1);
-figure(19); clf;
+figure(20); clf;
 plot(jacx.o3jac(i1041,1:97),1:97,'b',g3jac_sarta_fast(i1041,1:97),1:97,'r',handO3jac.jacBT,1:97,'k'); set(gca,'ydir','reverse')
 hl = legend('SARTA finite diff','SARTA analystic','hand jac','location','best');
 [sum(jacx.o3jac(i1041,1:97)) sum(g3jac_sarta_fast(i1041,1:97)) sum(handO3jac.jacBT)]
@@ -249,31 +253,5 @@ frtp = 'newdayx_clr.op.rtp'; iProf = 1;  %% satzen = 22  deg  *** HAVE KCARTA JA
 kcrads = load('individual_prof_convolved_kcarta_airs_CLR_1.mat');
 kcjacs = load('individual_prof_convolved_kcarta_airs_CLR_1_jac.mat');
 
-usechans = h.ichan;
-figure(19); plot(h.vchan - kcrads.fKc(usechans))
-figure(19); plot(h.vchan,rad2bt(h.vchan,porig.rcalc),h.vchan,rad2bt(h.vchan,kcrads.rKc(usechans)));
-figure(19); plot(h.vchan,rad2bt(h.vchan,porig.rcalc) - rad2bt(h.vchan,kcrads.rKc(usechans)));
-
-%figure(19); clf; plot(h.vchan,rad2bt(h.vchan,porig.rcalc)-rad2bt(h.vchan,pnew.rcalc),'kx-',h.vchan,jacx.jac(:,7),'b',h.vchan,stempjac_sarta_fast,'r',h.vchan,kcjacs.rKc(usechans,389),'g'); xlim([640 1640]); 
-%  hl = legend('BT DIFF orig-new','STEMP JAC finite diff','STEMP JAC analytic','STEMP JAC kcarta','location','best','fontsize',10);
-figure(19); clf; plot(h.vchan,jacx.jac(:,7),'b',h.vchan,stempjac_sarta_fast,'r',h.vchan,kcjacs.rKc(usechans,389),'k'); xlim([640 1640]); 
-  hl = legend('SARTA finite diff','SARTA analytic','KCARTA','location','best','fontsize',10); title('Comparing STEMP jacs')
-xlim([840 1440])
-
-figure(19); clf; ind = 3; ind = (1:nlays) + (ind-1)*nlays; plot(h.vchan,sum(jacx.tjac,2),'b',h.vchan,sum(ptempjac_sarta_fast,2),'r',h.vchan,sum(kcjacs.rKc(usechans,ind),2),'k');
-  title('Comparing column Tjacs'); hl = legend('SARTA Finite','SARTA analytic','KCARTA','location','best','fontsize',10); xlim([640 1640])
-xlim([640 840])
-
-figure(19); clf; ind = 1; ind = (1:nlays) + (ind-1)*nlays; plot(h.vchan,sum(jacx.wvjac,2),'b',h.vchan,sum(g1jac_sarta_fast,2),'r',h.vchan,sum(kcjacs.rKc(usechans,ind),2),'k');
-  title('Comparing column WVjacs'); hl = legend('SARTA Finite','SARTA analytic','KCARTA','location','best','fontsize',10); xlim([640 1640]) 
-xlim([1240 1440])
-
-figure(19); clf; ind = 2; ind = (1:nlays) + (ind-1)*nlays; plot(h.vchan,sum(jacx.o3jac,2),'b',h.vchan,sum(g3jac_sarta_fast,2),'r',h.vchan,sum(kcjacs.rKc(usechans,ind),2),'k');
-  title('Comparing column O3jacs'); hl = legend('SARTA Finite','SARTA analytic','KCARTA','location','best','fontsize',10); xlim([640 1640])
-xlim([640 840])
-xlim([940 1140])
-
-figure(19); clf; ind = 3; ind = (1:nlays) + (ind-1)*nlays; plot(h.vchan,0*sum(jacx.o3jac,2),'b',h.vchan,sum(wgtfcn_sarta_fast,2),'r',h.vchan,sum(kcjacs.rKc(usechans,ind),2),'k');
-  title('Comparing WGT FCNs'); hl = legend('SARTA Finite','SARTA analytic','KCARTA','location','best','fontsize',10); xlim([640 1640])
-xlim([640 840])
+plot_test_jac_kcartaVSsarta
 %}

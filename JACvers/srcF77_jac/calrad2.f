@@ -27,7 +27,7 @@ C       ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
 C       RHOTHR, LABOVE, COEFF,
 C       CFRCL1, MASEC1, MASUN1, NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1,
 C       CFRCL2, MASEC2, MASUN2, COSDAZ,
-C       NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RAD2, DOJAC, CLDTAU, RADLAY )
+C       NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RAD2, DOJAC, CLDTAU, RADLAY, RTHERM )
 
 
 !INPUT PARAMETERS:
@@ -214,6 +214,7 @@ C      Output
        REAL   RAD2         ! upwelling radiance at satellite
        REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
        REAL RADLAY(MAXLAY)        ! chan layer radiance                for CLDONLY
+       REAL RTHERM         ! reflected downwelling thermal radiance, used to be local
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -235,7 +236,6 @@ C-----------------------------------------------------------------------
        REAL RADUP          ! upward radiance
        REAL RSUN           ! reflected solar radiance
        REAL RSUNSC         ! scatter solar radiance
-       REAL RTHERM         ! reflected downwelling thermal radiance
        REAL  SSECL(MAXLAY) ! solar angle secant
        REAL  SCOSL(MAXLAY) ! solar angle cosine
        REAL  TAULX(MAXLAY) ! layer transmittance

@@ -26,7 +26,7 @@ C    CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
 C       ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
 C       RHOTHR, LABOVE, COEFF,
 C       CFRCL1, MASEC1, MASUN1, COSDAZ,
-C       NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RAD1, DOJAC, CLDTAU, RADLAY )
+C       NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RAD1, DOJAC, CLDTAU, RADLAY, RTHERM )
 
 
 !INPUT PARAMETERS:
@@ -138,7 +138,7 @@ C      =================================================================
        SUBROUTINE CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $    ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
      $    RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $    NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1, RAD1, DOJAC, CLDTAU, RADLAY )
+     $    NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1, RAD1, DOJAC, CLDTAU, RADLAY, RTHERM )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -195,6 +195,7 @@ C      Output
        REAL   RAD1         ! upwelling radiance at satellite
        REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
        REAL RADLAY(MAXLAY)        ! chan layer radiance                for CLDONLY
+       REAL RTHERM         ! reflected downwelling thermal radiance, used to be local param
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -212,7 +213,6 @@ C-----------------------------------------------------------------------
        REAL RADUP          ! upward radiance
        REAL RSUN           ! reflected solar radiance
        REAL RSUNSC         ! scatter solar radiance
-       REAL RTHERM         ! reflected downwelling thermal radiance
        REAL  SSECL(MAXLAY) ! solar angle secant
        REAL  SCOSL(MAXLAY) ! solar angle cosine
        REAL  TAULX(MAXLAY) ! layer transmittance
