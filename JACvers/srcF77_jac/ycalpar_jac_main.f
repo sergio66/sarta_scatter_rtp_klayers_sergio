@@ -569,6 +569,7 @@ C-----------------------------------------------------------------------
        REAL MJUNKA, MJUNKA_T, MJUNKA_1, MJUNKA_3, MJUNKA_6  !! CH4
        REAL MJUNKR, MJUNKR_T, MJUNKR_1, MJUNKR_3, MJUNKR_6  !! CH4
        REAL MJUNKZ, MJUNKZ_T, MJUNKZ_1, MJUNKZ_3, MJUNKZ_6  !! CH4
+       REAL SUM_PDP_OVER_TREF
        INTEGER INTERSECT
 
 C      Variables for fixed gases adjustment
@@ -618,6 +619,7 @@ C      Initialize the sum terms to zero
        TMZ    = 0.0E+0
        CO2TOP = 0.0E+0
        DTZ_O  = 0.0E+0
+       SUM_PDP_OVER_TREF= 0.0E+0
 C
        if (DEBUG) write(6,'(A,L3,ES11.3)') 'calpar: LCO2PM,CO2PPM ',LCO2PM,CO2PPM
 C      --------------------

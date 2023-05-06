@@ -5,13 +5,13 @@ c       FCLEAR = 0.0; CFRA1X = 0.0; CFRA2X = 0.0; CFRA12 = 1.0
 c       FCLEAR = 1.0; CFRA1X = 0.0; CFRA2X = 0.0; CFRA12 = 0.0
 
 !!!!!! V1 orig code, all of April 2023
-        L2S4above = 0  !!! L2S4above(4,MAXLAY,MXCHAN)
-        L2S4above(:,1:NLAY,1:NCHAN) =  L2S4(:,1:NLAY,1:NCHAN)
+!        L2S4above = 0  !!! L2S4above(4,MAXLAY,MXCHAN)
+!        L2S4above(:,1:NLAY,1:NCHAN) =  L2S4(:,1:NLAY,1:NCHAN)
 
 !!!!!! V2 new code, May 3, 2023, T is very good
-        L2S4above = 0  !!! L2S4above(4,MAXLAY,MXCHAN)
-        L2S4above(:,2:NLAY,1:NCHAN) =  L2S4(:,1:NLAY-1,1:NCHAN)
-        L2S4above(:,NLAY+1,1:NCHAN) =  L2S4(:,NLAY,    1:NCHAN)
+!        L2S4above = 0  !!! L2S4above(4,MAXLAY,MXCHAN)
+!        L2S4above(:,2:NLAY,1:NCHAN) =  L2S4(:,1:NLAY-1,1:NCHAN)
+!        L2S4above(:,NLAY+1,1:NCHAN) =  L2S4(:,NLAY,    1:NCHAN)
 
 !!!!!! V3 orig code, May2023
         L2S4above = 0  !!! L2S4above(4,MAXLAY,MXCHAN)

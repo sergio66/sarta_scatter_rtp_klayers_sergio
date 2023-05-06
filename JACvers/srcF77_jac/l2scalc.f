@@ -29,12 +29,12 @@ c local
 
 !! V2 new code, May 3, 2023
 !! recall 1 = topmost layer, LBOT = GND, ST is good, T(z) is very good
-      L2S4 = 0          ! initialize
-      iL = 1
-      L2S4(:,iL,1:NCHAN) = TAU4(:,IL,1:NCHAN)
-      DO iL = 2, NLAY
-        L2S4(:,iL,1:NCHAN) = L2S4(:,iL-1,1:NCHAN) + TAU4(:,IL,1:NCHAN)
-      END DO
+!      L2S4 = 0          ! initialize
+!      iL = 1
+!      L2S4(:,iL,1:NCHAN) = TAU4(:,IL,1:NCHAN)
+!      DO iL = 2, NLAY
+!        L2S4(:,iL,1:NCHAN) = L2S4(:,iL-1,1:NCHAN) + TAU4(:,IL,1:NCHAN)
+!      END DO
 
 !! V3 new code, May 4, 2023
       L2S4 = 0          ! initialize

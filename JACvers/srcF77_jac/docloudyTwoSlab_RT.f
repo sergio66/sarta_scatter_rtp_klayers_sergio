@@ -178,7 +178,9 @@ C     Calculate clear radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(1,:,I) = TAU(:,I)   !!! CLDTAU is a dummy
-        RTHERM4(1,:,I) = RTHERM*SECANG
+        RTHERM4(1,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
+                                           !!! - RTHERM4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                           !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(1,:,I) = (-RADLAY + RPLNCK)
         !RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -221,7 +223,9 @@ C    Calculate bottom cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(3,:,I) = CLDTAU
-        RTHERM4(3,:,I) = RTHERM*SECANG
+        RTHERM4(3,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
+                                           !!! - RTHERM4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                           !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(3,:,I) = (-RADLAY + RPLNCK)
         !RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -245,7 +249,9 @@ C      Calculate combined cloud1+cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(4,:,I) = CLDTAU
-        RTHERM4(4,:,I) = RTHERM*SECANG
+        RTHERM4(4,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
+                                           !!! - RTHERM4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                           !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(4,:,I) = (-RADLAY + RPLNCK)
         !RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -288,7 +294,9 @@ C     Calculate top cloud1 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(2,:,I) = CLDTAU
-        RTHERM4(2,:,I) = RTHERM*SECANG
+        RTHERM4(2,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
+                                           !!! - RTHERM4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                           !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(2,:,I) = (-RADLAY + RPLNCK)
         !RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF

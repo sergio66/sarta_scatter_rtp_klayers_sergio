@@ -126,7 +126,8 @@ CjacX         TZ = TZ + PDP*TR
               TZ_3 = 0.0
 
 CjacX         TRZ = TZ/PNORM
-              TRZ_T = TZ_T/PNORM
+              TRZ_T = TZ_T/PNORM   !!! this is just Layer L  being perturbed
+              TRZ_T = SUM_PDP_OVER_TREF/PNORM !!! this is all layers above being perturbed, see notes book 47,
               TRZ_1 = 0
               TRZ_3 = 0
 CjacXC
