@@ -373,6 +373,8 @@ C      --------------
 C      Total radiance
 C      --------------
        RAD1=RADUP + RSUN + RTHERM
+
+       IF ((DOJAC) .AND. (DOSUN)) RTHERM = RSUN + RTHERM
 C
        RETURN
        END

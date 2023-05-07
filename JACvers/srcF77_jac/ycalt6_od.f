@@ -348,6 +348,8 @@ C         Determine whether or not to do variable HDO calc
           ELSE
              LHDO=.FALSE.
           ENDIF
+c          print *,'ycalt6_od.f',LHDO
+
 C
 C         Initialize the layer-to-space optical depth
           KZ=0.0E+0
@@ -659,10 +661,16 @@ C     $               ( COFHDO(10,ILAY,IHDO)*DJACPRED(IWHICHJAC,10,ILAY) ) +
 C     $               ( COFHDO(11,ILAY,IHDO)*DJACPRED(IWHICHJAC,11,ILAY) )
 C
 C                IF (KHDO .LT. 0.0E+0) KHDO=0.0E+0
-                KHDO=KHDO*HDOMLT(ILAY)
+                KHDO=KHDO*HDOJACMLT(ILAY)
              ELSE
                 KHDO=0.0
              ENDIF
+
+             IF (LHDO) THEN
+               QDKHDO = RAQDKHDO(ILAY)*HDOJACMLT(ILAY)
+               print *,ILAY,KHDO,HDOJACMLT(ILAY),RAQDKHDO(ILAY),HDOJACMLT(ILAY)
+             END IF
+
 C
 C            ----------------------------------
 C            Calc the total layer transmittance

@@ -1,7 +1,8 @@
 c rdinfo processes command line arguments
 c
-c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3 listc=445,449,1092,1291,1614,2333 listj=-1
-c          would give you radiances at                           790,791,1092,1231,1419,2616 cm-1
+c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3 listc=445,449,1092,1291,1614,2070,2333,2353 listj=-1
+c          would give you radiances at                           790,791,1042,1231,1419,2350,2616,2637 cm-1
+c                                                                 CO2Q    O3   WIN  WV  NLTE  WIN  HDO
 c
 c
 c to compile
@@ -397,6 +398,13 @@ C      -------------------------------------
 C      Sort chan numbers & check for repeats
 C      -------------------------------------
        IF ((NWANTC .EQ. 1) .AND. (LISTC(1) .EQ. -1)) NWANTC = -1
+
+       IF ((NWANTC .EQ. 1) .AND. (LISTC(1) .EQ. -100)) THEN
+         write (*,'(A)') 'LISCT = -100 so doing AIRS Channel ID 445,449,1092,1291,1614,2070,2333,2353'
+         NWANTC = 8
+         LISTC = 0
+         LISTC(1:NWANTC) = (/445,449,1092,1291,1614,2070,2333,2353/)
+       END IF
 
        IF (NWANTC .GT. 0) THEN
 C

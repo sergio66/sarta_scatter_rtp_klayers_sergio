@@ -240,7 +240,7 @@ C          Water predictors for FWO sun mfmw = set6
 
 C          Water predictors for FWO sun mfbw = set7
            WJACPRED7(IWHICHJAC, 1,L)=WJUNKA_1
-           WJACPRED7(IWHICHJAC, 2,L)=(WJUNKR*WJUNKA_1 - WJUNKA*WJUNKR_1)/WJUNKR/WJUNKR
+           WJACPRED7(IWHICHJAC, 2,L)=(WJUNKR*WJUNKA_1 + WJUNKA*WJUNKR_1)
            WJACPRED7(IWHICHJAC, 3,L)=WJUNKA_1*DT + WJUNKA*DT_1
            WJACPRED7(IWHICHJAC, 4,L)=WJUNKS_1
            WJACPRED7(IWHICHJAC, 5,L)=WJUNKA_1*WJUNKR*DT + WJUNKA*WJUNKR_1*DT + WJUNKA*WJUNKR*DT_1
@@ -272,6 +272,9 @@ C          ---------------
 c           if (DEBUG) then
 c             IF(L .EQ. 96) write(6,'(A,X,I4,X,F6.2)') 'calpar: L,HDOFCT ',L,HDOFCT
 c           endif
+c incFTC.f:223:       REAL HDOFCT ! vary proportion of HDO in H2O from std depletion
+c incFTC.f:225:       PARAMETER( HDOFCT = 0.00 )
+
            DJUNKA_1=SECANG(L)*(A_W_1*(1 - HDOFCT) + A_W*(-1))      ! *(1 - HDOFCT)
            DJUNKA_1=SECANG(L)*(A_W_1*(1 - HDOFCT) + A_W*(0))       ! *(1 - HDOFCT = const)
            DJUNKR_1=0.5/SQRT( DJUNKA ) * DJUNKA_1

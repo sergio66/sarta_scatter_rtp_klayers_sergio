@@ -456,6 +456,7 @@ C      for CALPAR
        REAL CO2TOP                ! top layers CO2 mixing ratio
 C
 C FOR JACS
+       REAL  NLTEJACPRED5T(5,MXCHAN),NLTEJACPRED7Q(MXCHAN)
        REAL CO2JACMLT(MAXLAY)
        REAL SO2JACMLT(MAXLAY)
        REAL HNOJACMLT(MAXLAY)
@@ -673,7 +674,7 @@ C      for jacobians
        REAL RAD4(4,MAXLAY,MXCHAN) ! -chan radiance + planck(TL)         for CLR,CLD1,CLD2,CLD12
        REAL L2S4(4,MAXLAY,MXCHAN),WGT4(4,MAXLAY,MXCHAN), L2S4above(4,MAXLAY,MXCHAN)
        REAL DBTDT(MAXLAY,MXCHAN), RAMU(MAXLAY,MXCHAN),ONESSS(1,MXCHAN)  ! dBT(T,L)/dT
-       REAL RTHERM4(4,MAXLAY,MXCHAN)      ! downwell thermal background term at surface (about same for all 4 calcs but whatever)
+       REAL RTHERM4_SOLAR4(4,MAXLAY,MXCHAN)      ! downwell thermal background term at surface (about same for all 4 calcs but whatever)
        INTEGER IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,IOUNG11,IOUNG12,IOUNG103,IOUNWGT,iFileErr
        INTEGER JAC_OUTPUT_UNITS           ! 0 for drad/dT and drad/dq, 1 for dBT/dT and dBT/d(log q) = q dBT/dq
        CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
@@ -854,9 +855,9 @@ C      --------------------------------------------------------------
          write(*,'(4(I8),2(F8.2),A)') 5,NCHN5,CLIST5(1),CLIST5(NCHN5),
      $          MINVAL(FREQ(INDCHN(CLIST5(1:NCHN5)))),MAXVAL(FREQ(INDCHN(CLIST5(1:NCHN5)))),' SW5'
          write(*,'(4(I8),2(F8.2),A)') 6,NCHN6,CLIST6(1),CLIST6(NCHN6),
-     $          MINVAL(FREQ(INDCHN(CLIST6(1:NCHN6)))),MAXVAL(FREQ(INDCHN(CLIST6(1:NCHN6)))),' SW6'
+     $          MINVAL(FREQ(INDCHN(CLIST6(1:NCHN6)))),MAXVAL(FREQ(INDCHN(CLIST6(1:NCHN6)))),' SW6 HDO'
          write(*,'(4(I8),2(F8.2),A)') 7,NCHN7,CLIST7(1),CLIST7(NCHN7),
-     $          MINVAL(FREQ(INDCHN(CLIST7(1:NCHN7)))),MAXVAL(FREQ(INDCHN(CLIST7(1:NCHN7)))),' SW7'
+     $          MINVAL(FREQ(INDCHN(CLIST7(1:NCHN7)))),MAXVAL(FREQ(INDCHN(CLIST7(1:NCHN7)))),' SW '
          write(*,'(A)') '----------------------------------------------------------'
 
 cc       write(*,'(4(I8),2(F8.2))') 1,NCHN1,CLIST1(1),CLIST1(NCHN1),FREQ(INDCHN(CLIST1(1))),FREQ(INDCHN(CLIST1(NCHN1)))
@@ -1129,7 +1130,8 @@ C        Calculate cloudy radiance; also no NLTE if needed
      $      MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $      MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $      QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
-     $      RAD, DOJAC, TAU4, RAD4, RTHERM4, DBTDT)
+     $      RAD, DOJAC, TAU4, RAD4, RTHERM4_SOLAR4, DBTDT, 
+     $               NLTEJACPRED5T,NLTEJACPRED7Q)
 
        ENDDO ! channels
 

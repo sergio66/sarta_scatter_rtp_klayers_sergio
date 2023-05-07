@@ -305,7 +305,7 @@ C         Determine whether or not to do variable CO2
           ELSE
              LN2O=.FALSE.
           ENDIF
-C
+
 C         Initialize the layer-to-space optical depth
           KZ=0.0E+0
 C
@@ -618,7 +618,7 @@ C            ----------------------------
                QDKN2O=0.0
              ENDIF
 
-             IF (LCO2) THEN
+             IF (LN2O) THEN
                QDKN2O = RAQDKN2O(ILAY)*N2OJACMLT(ILAY)
              END IF
 

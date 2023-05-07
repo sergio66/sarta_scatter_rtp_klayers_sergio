@@ -80,7 +80,7 @@ if ~exist('porig')
   sartaer = ['!date; time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
   eval(sartaer);
   [h,ha,porig,pa] = rtpread('newdayx.rtp');
-  fprintf(1,'nlevs = %3i scanang = %8.6f \n',porig.nlevs,porig.satzen)
+  fprintf(1,'nlevs = %3i satzen = %8.6f solzen = %8.6f\n',porig.nlevs,porig.satzen,porig.solzen)
   %jacx = quicksartajac(h,porig,1,1,-1);
   t1 = datetime("now");
   jacx = quicksartajac(h,porig,1,1,-1,iExtraGas);
@@ -221,6 +221,7 @@ if iAX > 0
   figure(06); figure(07); figure(08); pause(1)
   figure(09); figure(10); figure(11); pause(1)
   figure(12); figure(13); figure(14); pause(1)
+  figure(15); figure(16); figure(17); figure(18); figure(19); figure(20); pause(1)
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

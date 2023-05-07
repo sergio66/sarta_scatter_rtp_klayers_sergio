@@ -8,7 +8,8 @@
      $  MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $  MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $  QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
-     $  RAD, DOJAC, TAU4, RAD4, RTHERM4, DBTDT)
+     $  RAD, DOJAC, TAU4, RAD4, RTHERM4_SOLAR4, DBTDT,
+     $               NLTEJACPRED5T,NLTEJACPRED7Q)
 
       IMPLICIT NONE
       include "incFTC.f"
@@ -92,11 +93,12 @@ c input
        REAL  COEFN(NNCOEF,MXCNTE)        ! non-LTE coefficients
 
 c output
+       REAL  NLTEJACPRED5T(5,MXCHAN),NLTEJACPRED7Q(MXCHAN)
        REAL    RAD(MXCHAN) ! chan radiance
        LOGICAL DOJAC       ! are we planning on jacs???
        REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12       
        REAL RAD4(4,MAXLAY,MXCHAN) ! -radiance(L) + planck(TL)          for CLR,CLD1,CLD2,CLD12
-       REAL RTHERM4(4,MAXLAY,MXCHAN)      ! downwell thermal background term at surface (about same for all 4 calcs but whatever)
+       REAL RTHERM4_SOLAR4(4,MAXLAY,MXCHAN)    ! downwell solar/ thermal background term at surface (about same for all 4 calcs but whatever)
        REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
 
 c local
@@ -178,9 +180,9 @@ C     Calculate clear radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(1,:,I) = TAU(:,I)   !!! CLDTAU is a dummy
-        RTHERM4(1,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
-                                           !!! - RTHERM4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
-                                           !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
+        RTHERM4_SOLAR4(1,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
+                                                  !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                                  !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(1,:,I) = (-RADLAY + RPLNCK)
         !RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -223,9 +225,9 @@ C    Calculate bottom cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(3,:,I) = CLDTAU
-        RTHERM4(3,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
-                                           !!! - RTHERM4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
-                                           !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
+        RTHERM4_SOLAR4(3,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
+                                                  !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                                  !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(3,:,I) = (-RADLAY + RPLNCK)
         !RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -249,9 +251,9 @@ C      Calculate combined cloud1+cloud2 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(4,:,I) = CLDTAU
-        RTHERM4(4,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
-                                           !!! - RTHERM4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
-                                           !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
+        RTHERM4_SOLAR4(4,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
+                                                  !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                                  !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(4,:,I) = (-RADLAY + RPLNCK)
         !RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -294,9 +296,9 @@ C     Calculate top cloud1 radiance
       ENDIF
       IF (DOJAC) THEN
         TAU4(2,:,I) = CLDTAU
-        RTHERM4(2,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
-                                           !!! - RTHERM4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
-                                           !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
+        RTHERM4_SOLAR4(2,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
+                                                  !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                                  !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(2,:,I) = (-RADLAY + RPLNCK)
         !RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
       END IF
@@ -304,7 +306,11 @@ C     Calculate top cloud1 radiance
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12
 
-      IF (  ((NWANTC .GT. 0) .AND. DEBUG) .OR. ((NWANTC .GT. 0) .AND. (NWANTC .LE. 6)) ) THEN
+c rdinfo.f : these are noice chans to look at
+c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3 listc=445,449,1092,1291,1614,2070,2333,2353 listj=-1
+c          would give you radiances at                           790,791,1042,1231,1419,2350,2616,2637 cm-1
+c                                                                 CO2Q    O3   WIN  WV  NLTE  WIN  HDO
+      IF (  ((NWANTC .GT. 0) .AND. DEBUG) .OR. ((NWANTC .GT. 0) .AND. (NWANTC .LE. 8)) ) THEN
 c        write(*,'(A,I5,7(F12.4),6(ES12.4))') 'clr/cld Freq,Emis,Tsuf,4CldFrac,rads',I,FREQ(I),EMIS(I),TSURF,
 c     $           FCLEAR,CFRA1X,CFRA2X,CFRA12,
 c     $           RSURFE,RAD0,RADC1,RADC2,RADC12,RAD(I)
@@ -335,9 +341,10 @@ CC FORGET THIS  III = INTERSECT(I,CLISTN(1:NCHNTE),NCHNTE)
         IF (III .GT. 0) THEN
           RADNTE = RAD(I)
           CALL YCALNTE ( INDCHN, TEMP, SUNCOS, SCOS1, SECANG(1),
-     $                        NCHNTE, CLISTN, COEFN, CO2TOP, RADNTE, III )
-          IF (NWANTC .GT. 0) print *,'NLTE',I,III,RAD(I),RADNTE
-          RAD(I) = RADNTE
+     $                        NCHNTE, CLISTN, COEFN, CO2TOP, RADNTE, III,
+     $                        DOJAC,NLTEJACPRED5T,NLTEJACPRED7Q,I)
+c          IF (NWANTC .GT. 0) print *,'NLTE',I,III,RAD(I),RADNTE
+          RAD(I) = RADNTE           
         END IF
       ENDIF
 

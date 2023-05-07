@@ -20,7 +20,8 @@ C    Adjust a LTE atmospheric radiance for a non-LTE upper atmosphere.
 
 !CALL PROTOCOL:
 C    ICALNTE( INDCHN, TEMP, SUNCOS, SCOS1, VSEC1, 
-C       NCHNTE, CLISTN, COEFN, CO2TOP, RADI, I)
+C       NCHNTE, CLISTN, COEFN, CO2TOP, RADI, I, 
+C       DOJAC,NLTEJACPRED5T,NLTEJACPRED7Q)
 
 
 !INPUT PARAMETERS:
@@ -36,6 +37,10 @@ C    INT arr   CLISTN  non-LTE channel list        none
 C    REAL arr  COEFN   non-LTE coefficients        various
 C    REAL arr  CO2TOP  top layers CO2 mixing ratio ppmv
 C    INTEGER   IY      which index to do nlte      none
+C    LOGICAL   DOJAC   do d/dT or d/dQ             none
+C    REAL      NLTEJACPRED5T  temperature jac
+C    REAL      NLTEJACPRED7Q  amount      jac
+C    INTEGER   IACTUAL
 
 !OUTPUT PARAMETERS:
 C    none
@@ -105,7 +110,8 @@ C                               CO2TOP
 
 C      =================================================================
        SUBROUTINE YCALNTE ( INDCHN, TEMP, SUNCOS, SCOS1, VSEC1,
-     $    NCHNTE, CLISTN, COEFN, CO2TOP, RAD, IY )
+     $    NCHNTE, CLISTN, COEFN, CO2TOP, RAD, IY,
+     $    DOJAC,NLTEJACPRED5T,NLTEJACPRED7Q,IACTUAL)
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -139,11 +145,12 @@ C      Input
        INTEGER CLISTN(MXCNTE)
        REAL  COEFN(NNCOEF,MXCNTE)
        REAL CO2TOP ! CO2 mixing ratio in top layers (ppmv)
-       INTEGER IY
+       INTEGER IY,IACTUAL
 C
 C      Input/Output
        REAL    RAD
-
+       REAL  NLTEJACPRED5T(5,MXCHAN),NLTEJACPRED7Q(MXCHAN)
+       LOGICAL DOJAC
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -158,7 +165,7 @@ C-----------------------------------------------------------------------
        REAL  PRED5
        REAL  PRED6
        REAL  THIGH
-
+       REAL DRAD0
 
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
@@ -202,12 +209,25 @@ C
 C
 C         Adjust DRAD for CO2 mixing ratio
           DRAD=DRAD*(COEFN(7,I)*(CO2TOP - CO2NTE) + 1.0)
-C
+          DRAD0 = DRAD/1000       ! convert DRAD to Watts
+          
 C         Adjust RAD for the non-LTE contribution
           RAD = RAD + DRAD/1000.0 ! convert DRAD to Watts
 C
-C       write(6,'(A,X,I3,X,E11.3)') 'calnte: I, XCO2 ',I,(COEFN(7,I)*(CO2TOP - CO2NTE) + 1.0)
-C
+C         write(6,'(A,X,I3,X,E11.3)') 'calnte: I, XCO2 ',I,(COEFN(7,I)*(CO2TOP - CO2NTE) + 1.0)
+    
+c so small, forget NLTE jacs and set to 0
+c          NLTEJACPRED7Q = 0
+c          NLTEJACPRED5T = 0
+          IF (DOJAC) THEN   
+            NLTEJACPRED5T(1,IACTUAL) = 1.0/5.0*SCOS1*COEFN(5,I)*(COEFN(7,I)*(CO2TOP - CO2NTE) + 1.0)/1000 
+            NLTEJACPRED5T(2,IACTUAL) = 1.0/5.0*SCOS1*COEFN(5,I)*(COEFN(7,I)*(CO2TOP - CO2NTE) + 1.0)/1000 
+            NLTEJACPRED5T(3,IACTUAL) = 1.0/5.0*SCOS1*COEFN(5,I)*(COEFN(7,I)*(CO2TOP - CO2NTE) + 1.0)/1000 
+            NLTEJACPRED5T(4,IACTUAL) = 1.0/5.0*SCOS1*COEFN(5,I)*(COEFN(7,I)*(CO2TOP - CO2NTE) + 1.0)/1000 
+            NLTEJACPRED5T(5,IACTUAL) = 1.0/5.0*SCOS1*COEFN(5,I)*(COEFN(7,I)*(CO2TOP - CO2NTE) + 1.0)/1000 
+            NLTEJACPRED7Q(IACTUAL)   = DRAD0*COEFN(7,I)/1000*0   !!! hmm this is in ppm but we have kilomoles/cm2 oooooppppssssyy, put 0
+          END IF
+
 C       ENDDO
 C      End loops on channel number (frequency)
 C
