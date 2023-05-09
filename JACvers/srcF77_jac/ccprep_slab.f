@@ -23,7 +23,8 @@ C    CCPREP( NCHAN, LBOT, INDMIE, MIENPS,
 C       CNGWAT, CPSIZE, CPRTOP, CPRBOT, PLEV, TEMP, SECANG, SECSUN,
 C       MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT, LCTOP, CLEARB, CLEART,
 C       TCBOT, TCTOP, MASEC, MSSEC, CFRCL, G_ASYM, NEXTOD, NSCAOD )
-
+C       DOJAC, JACA_G_ASY, JACA_NEXTO, JACA_NSCAO, JACA_FINAL, 
+C              JACS_G_ASY, JACS_NEXTO, JACS_NSCAO, JACS_FINAL)
 
 !INPUT PARAMETERS:
 C    type      name    purpose                     units
@@ -118,7 +119,10 @@ C      =================================================================
      $    CNGWAT, CPSIZE, CPRTOP, CPRBOT, PLEV, TEMP, SECANG, SECSUN,
      $    MIEPS, MIEABS, MIEEXT, MIEASY,
      $    LCBOT, LCTOP, CLEARB, CLEART, TCBOT, TCTOP, MASEC, MSSEC,
-     $    CFRCL, G_ASYM, NEXTOD, NSCAOD )
+     $    CFRCL, G_ASYM, NEXTOD, NSCAOD, 
+     $    DOJAC, JACA_G_ASYM, JACA_NEXTOD, JACA_NSCAOD, JACA_FINAL, 
+     $           JACS_G_ASYM, JACS_NEXTOD, JACS_NSCAOD, JACS_FINAL)
+
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -159,6 +163,7 @@ C      Input
        REAL MIEABS(MXCHAN,MXMIEA,NMIETY) ! scattering absorption
        REAL MIEEXT(MXCHAN,MXMIEA,NMIETY) ! scattering extinction
        REAL MIEASY(MXCHAN,MXMIEA,NMIETY) ! scattering asymmetry
+       LOGICAL DOJAC
 
 C      Output
        INTEGER  LCBOT         ! layer containing cloud bottom
@@ -173,7 +178,8 @@ C      Output
        REAL G_ASYM(MXCHAN)    ! "g" asymmetry
        REAL NEXTOD(MXCHAN)    ! nadir extinction optical depth
        REAL NSCAOD(MXCHAN)    ! nadir scattering optical depth
-
+       REAL JACA_G_ASYM(MXCHAN),JACA_NEXTOD(MXCHAN),JACA_NSCAOD(MXCHAN),JACA_FINAL(MXCHAN)  !! amount jacs
+       REAL JACS_G_ASYM(MXCHAN),JACS_NEXTOD(MXCHAN),JACS_NSCAOD(MXCHAN),JACS_FINAL(MXCHAN)  !! sze jacs
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -188,6 +194,7 @@ C-----------------------------------------------------------------------
        REAL   PAVG            ! layer average pressure
        REAL  PAVG2            ! adjacent layer average pressure
        REAL      X            ! generic junk real variable
+       REAL  JACABSOD,DX      ! temporary variables for jacobians
 
 
 C-----------------------------------------------------------------------
@@ -326,15 +333,35 @@ C      Minimum particle size
              NSCAOD(I)=CNGWAT*(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
              G_ASYM(I)=MIEASY(I,1,INDMIE)
           ENDDO
+          IF (DOJAC) THEN
+            DO I=1,NCHAN
+               JACA_NEXTOD(I)=MIEEXT(I,1,INDMIE)
+               JACA_NSCAOD(I)=(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
+               JACA_G_ASYM(I)=0
+               JACS_NEXTOD(I)=0.0001*MIEEXT(I,1,INDMIE)
+               JACS_NSCAOD(I)=0.0001*(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
+               JACS_G_ASYM(I)=0
+            ENDDO
+          END IF
+
 C
 C      Maximum particle size
        ELSEIF (CPSIZE .GE. MIEPS(NPS,INDMIE)) THEN
           DO I=1,NCHAN
              NEXTOD(I)=CNGWAT*MIEEXT(I,NPS,INDMIE)
-             NSCAOD(I)=CNGWAT*(MIEEXT(I,NPS,INDMIE) - 
-     $                         MIEABS(I,NPS,INDMIE))
+             NSCAOD(I)=CNGWAT*(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
              G_ASYM(I)=MIEASY(I,NPS,INDMIE)
           ENDDO
+          IF (DOJAC) THEN
+            DO I=1,NCHAN
+               JACA_NEXTOD(I)=MIEEXT(I,NPS,INDMIE)
+               JACA_NSCAOD(I)=(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
+               JACA_G_ASYM(I)=0
+               JACS_NEXTOD(I)=0.0001*MIEEXT(I,NPS,INDMIE)
+               JACS_NSCAOD(I)=0.0001*(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
+               JACS_G_ASYM(I)=0
+            ENDDO
+          END IF
 C
 C      Intermediate particle size
        ELSE
@@ -357,8 +384,39 @@ C
              G_ASYM(I)=MIEASY(I,ILO,INDMIE) +
      $          X*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
           ENDDO
+
+          IF (DOJAC) THEN
+c      from eg calrad1
+C      Optical depth of cloud1 including scattering adjustment
+c       K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
+cccc    so
+c       d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d(G_ASY1(I)))
+            DO I=1,NCHAN
+               ABSOD    =CNGWAT*( MIEABS(I,ILO,INDMIE) +
+     $          X*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
+
+               JACA_NEXTOD(I)=( MIEEXT(I,ILO,INDMIE) +
+     $            X*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
+               JACABSOD    =( MIEABS(I,ILO,INDMIE) +
+     $            X*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
+               JACA_NSCAOD(I)=JACA_NEXTOD(I) - JACABSOD
+               JACA_G_ASYM(I)=0
+               JACA_FINAL(I) = JACA_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACA_G_ASYM(I)
+
+               DX = 1/CPSIZE / ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
+               JACS_NEXTOD(I)=CNGWAT*( 0*MIEEXT(I,ILO,INDMIE) +
+     $            DX*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
+               JACABSOD    =CNGWAT*( 0*MIEABS(I,ILO,INDMIE) +
+     $            DX*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
+               JACS_NSCAOD(I)=JACS_NEXTOD(I) - JACABSOD
+               JACS_G_ASYM(I)=MIEASY(I,ILO,INDMIE) +
+     $                  DX*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
+               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACS_G_ASYM(I)
+
+            END DO
+          END IF
        ENDIF
-C
+
 C
        RETURN
        END

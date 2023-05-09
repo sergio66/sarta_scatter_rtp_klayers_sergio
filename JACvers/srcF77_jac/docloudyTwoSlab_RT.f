@@ -9,7 +9,8 @@
      $  MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $  QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
      $  RAD, DOJAC, TAU4, RAD4, RTHERM4_SOLAR4, DBTDT,
-     $               NLTEJACPRED5T,NLTEJACPRED7Q)
+     $               NLTEJACPRED5T,NLTEJACPRED7Q,
+     $               RAACLDOD4,CLDEFFOD1,CLDEFFOD2)
 
       IMPLICIT NONE
       include "incFTC.f"
@@ -99,14 +100,16 @@ c output
        REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12       
        REAL RAD4(4,MAXLAY,MXCHAN) ! -radiance(L) + planck(TL)          for CLR,CLD1,CLD2,CLD12
        REAL RTHERM4_SOLAR4(4,MAXLAY,MXCHAN)    ! downwell solar/ thermal background term at surface (about same for all 4 calcs but whatever)
-       REAL DBTDT(MAXLAY,MXCHAN)  ! dBT(T,L)/dT
+       REAL DBTDT(MAXLAY,MXCHAN)           ! dBT(T,L)/dT
+       REAL RAACLDOD4(4,MAXLAY,MXCHAN)     ! cloud ods for the 4 streams
+       REAL CLDEFFOD1, CLDEFFOD2  ! calrad1 computes K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0 = total OD overr CLDL layers
 
 c local
        REAL RTHERM         ! downwell thermal background term at surface
        REAL C1C2V4         ! rad constant c1c2 times freq^4
        REAL C1V3           ! rad constant c1 times freq^3
        REAL C2V            ! rad constant c2 times freq
-       INTEGER L, III
+       INTEGER L, III,IJUNK
        REAL RADNTE                       ! temporary NLTE rad                        
 
        REAL RPLNCK(MAXLAY) ! layer Planck
@@ -121,9 +124,9 @@ c local
        REAL  RADC2         ! radiance cloud2
        REAL RADC12         ! radiance cloud1+cloud2
 
-       REAL RADLAY(MAXLAY)          ! chan layer radiance                for CLDONLY
+       REAL RADLAY(MAXLAY)        ! chan layer radiance                for CLDONLY
        REAL CLDTAU(MAXLAY)        ! chan layer effective optical depth for CLDONLY
-       REAL VSTORE(6)      ! temporary storage for various variables
+       REAL VSTORE(6)             ! temporary storage for various variables
        REAL QIKEXP, RJUNK1, RJUNK2, RAD2BT
 
 c************************************************************************
@@ -185,6 +188,7 @@ C     Calculate clear radiance
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(1,:,I) = (-RADLAY + RPLNCK)
         !RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAACLDOD4(1,:,I) = TAU(:,I)  !!! so this is clear OD
       END IF
 
 C     Store original values
@@ -218,7 +222,7 @@ C    Calculate bottom cloud2 radiance
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL2, MASEC2, MASUN2, COSDAZ,
-     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC2, DOJAC, CLDTAU, RADLAY, RTHERM )
+     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC2, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD2 )
          ENDIF
       ELSE
          RADC2=0.0
@@ -230,6 +234,7 @@ C    Calculate bottom cloud2 radiance
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(3,:,I) = (-RADLAY + RPLNCK)
         !RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAACLDOD4(3,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld1 OD
       END IF
 
 C      Calculate combined cloud1+cloud2 radiance
@@ -238,7 +243,7 @@ C      Calculate combined cloud1+cloud2 radiance
             CALL CALRAD1( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12, DOJAC, CLDTAU, RADLAY, RTHERM )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD1 )
          ELSE
             CALL CALRAD2( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
@@ -256,6 +261,7 @@ C      Calculate combined cloud1+cloud2 radiance
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(4,:,I) = (-RADLAY + RPLNCK)
         !RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAACLDOD4(4,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld1+cld2 OD
       END IF
 
 C     Restore original values
@@ -289,7 +295,7 @@ C     Calculate top cloud1 radiance
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC1, DOJAC, CLDTAU, RADLAY, RTHERM )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC1, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD1 )
          ENDIF
       ELSE
          RADC1=0.0
@@ -301,7 +307,13 @@ C     Calculate top cloud1 radiance
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         RAD4(2,:,I) = (-RADLAY + RPLNCK)
         !RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAACLDOD4(2,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld2 OD
+        RAACLDOD4(1,:,I) = 0                           !!! so now say this is zero as there is no cloud in the first stream
       END IF
+       
+      DO IJUNK = 1,LBOT
+        write(*,'(A,I4,5(F12.4))') 'check taucldOD',IJUNK,TAU4(1,IJUNK,I),RAACLDOD4(1:4,IJUNK,I)
+      END DO
 
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12

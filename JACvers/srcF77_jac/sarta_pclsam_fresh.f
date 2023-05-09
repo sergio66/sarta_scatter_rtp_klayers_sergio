@@ -657,8 +657,10 @@ C      for function intersect
        INTEGER intersect
 
 C      for jacobians
+! optran
        REAL  DAOPJAC(OPTRANJAC, MAXLAY)        !!!! OPTRAN
        REAL  H2OJACPRD(OPTRANJAC,NH2O,MXOWLY)  !!!! OPTRAN
+! usual jacs (, G1,G2,G3,G4,G5,G6,G9,G12
        REAL JAC_ST_C(MXCHAN),         JAC_ST_1(MXCHAN),         JAC_ST_2(MXCHAN),         JAC_ST_12(MXCHAN)
        REAL JAC_TZ_C(MAXLAY,MXCHAN),  JAC_TZ_1(MAXLAY,MXCHAN),  JAC_TZ_2(MAXLAY,MXCHAN),  JAC_TZ_12(MAXLAY,MXCHAN)
        REAL JAC_G1_C(MAXLAY,MXCHAN),  JAC_G1_1(MAXLAY,MXCHAN),  JAC_G1_2(MAXLAY,MXCHAN),  JAC_G1_12(MAXLAY,MXCHAN)
@@ -670,15 +672,28 @@ C      for jacobians
        REAL JAC_G9_C(MAXLAY,MXCHAN),  JAC_G9_1(MAXLAY,MXCHAN),  JAC_G9_2(MAXLAY,MXCHAN),  JAC_G9_12(MAXLAY,MXCHAN)
        REAL JAC_G12_C(MAXLAY,MXCHAN), JAC_G12_1(MAXLAY,MXCHAN), JAC_G12_2(MAXLAY,MXCHAN), JAC_G12_12(MAXLAY,MXCHAN)
        REAL JAC_WGT_C(MAXLAY,MXCHAN), JAC_WGT_1(MAXLAY,MXCHAN), JAC_WGT_2(MAXLAY,MXCHAN), JAC_WGT_12(MAXLAY,MXCHAN)
+!  cloud jacs
+       REAL JACA_G_ASY1(MXCHAN),JACA_NEXTO1(MXCHAN),JACA_NSCAO1(MXCHAN),JACA_FINAL_1(MXCHAN)  !! amount jacs
+       REAL JACS_G_ASY1(MXCHAN),JACS_NEXTO1(MXCHAN),JACS_NSCAO1(MXCHAN),JACS_FINAL_1(MXCHAN)  !! sze jacs
+       REAL JACA_G_ASY2(MXCHAN),JACA_NEXTO2(MXCHAN),JACA_NSCAO2(MXCHAN),JACA_FINAL_2(MXCHAN)  !! amount jacs
+       REAL JACS_G_ASY2(MXCHAN),JACS_NEXTO2(MXCHAN),JACS_NSCAO2(MXCHAN),JACS_FINAL_2(MXCHAN)  !! sze jacs
+       INTEGER IEFFCLD_TOP1,IEFFCLD_TOP2,IEFFCLD_BOT1,IEFFCLD_BOT2,IFOUND1,IFOUND2
+       REAL RAACLDOD4(4,MAXLAY,MXCHAN)  ! cloud ods for the 4 streams
+       REAL JAC_CLD_C(MAXLAY,MXCHAN),JAC_CLD_1(MAXLAY,MXCHAN),JAC_CLD_2(MAXLAY,MXCHAN),JAC_CLD_12(MAXLAY,MXCHAN)            
+       REAL JAC_CLD_OUT(7,MXCHAN)
+       REAL CLDEFFOD1, CLDEFFOD2  ! calrad1 computes K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0 = total OD over CFRCL1,CFRCL2 layers
+! generic stuff needed for jacs
        REAL TAU4(4,MAXLAY,MXCHAN) !  chan layer effective optical depth for CLR,CLD1,CLD2,CLD12
        REAL RAD4(4,MAXLAY,MXCHAN) ! -chan radiance + planck(TL)         for CLR,CLD1,CLD2,CLD12
        REAL L2S4(4,MAXLAY,MXCHAN),WGT4(4,MAXLAY,MXCHAN), L2S4above(4,MAXLAY,MXCHAN)
        REAL DBTDT(MAXLAY,MXCHAN), RAMU(MAXLAY,MXCHAN),ONESSS(1,MXCHAN)  ! dBT(T,L)/dT
        REAL RTHERM4_SOLAR4(4,MAXLAY,MXCHAN)      ! downwell thermal background term at surface (about same for all 4 calcs but whatever)
-       INTEGER IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,IOUNG11,IOUNG12,IOUNG103,IOUNWGT,iFileErr
+! jac output
+       INTEGER IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,IOUNG11,IOUNG12,IOUNG103,IOUNWGT,IOUNCLD,iFileErr
        INTEGER JAC_OUTPUT_UNITS           ! 0 for drad/dT and drad/dq, 1 for dBT/dT and dBT/d(log q) = q dBT/dq
        CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
-     $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103
+     $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD
+
        INTEGER ijunk
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
@@ -720,7 +735,7 @@ C      ---------------------
        CALL RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC, 
      $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
      $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
-     $     caJACG6,caJACG9,caJACG11,caJACG12,caJACG103)
+     $     caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD)
 ccc
        if (DEBUG) then
          print *, 'nwantp=', NWANTP
@@ -749,8 +764,9 @@ ccc
          print *,'for NUMPROF = ',numprof,' profiles with NUMCHAN = ',numchan,' channels '
          print *, 'want this # jacs nwantj = ',nwantj,' followed by list (100=ST/T, 200=WGT, 1,3 = WV/OZ)....'
          print *,listj(1:nwantj)
-         IOUNWGT = 400
-         IOUNTZ  = 200
+         IOUNCLD = 300
+         IOUNWGT = 200
+         IOUNTZ  = 100
          IOUNG1  = 21
          IOUNG2  = 22
          IOUNG3  = 23
@@ -834,9 +850,10 @@ C      --------------------------------------------------------------
 
        IF (NWANTJ .GT. 0) THEN
          CALL write_header_jac_files(LISTJ,NWANTJ,NUMPROF,NUMCHAN,FREQ,
-     $      IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,IOUNG11,IOUNG12,IOUNG103,IOUNWGT,
+     $      IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,
+     $      IOUNG11,IOUNG12,IOUNG103,IOUNWGT,IOUNCLD,
      $      caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
-     $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103)
+     $      caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD)
       END IF
 
        IF (NCHAN .EQ. 2645) THEN
@@ -1072,8 +1089,12 @@ C      --------------------------------------
      $    LCBOT1, LCTOP1, CLRB1, CLRT1, TCBOT1, TCTOP1, MASEC1, MASUN1,
      $    CFRCL1, G_ASY1, NEXTO1, NSCAO1, TEMPC1, 
      $    LCBOT2, LCTOP2, CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2,
-     $    CFRCL2, G_ASY2, NEXTO2, NSCAO2, TEMPC2
-     $    )
+     $    CFRCL2, G_ASY2, NEXTO2, NSCAO2, TEMPC2,
+     $    DOJAC, 
+     $    JACA_G_ASY1, JACA_NEXTO1, JACA_NSCAO1, JACA_FINAL_1, 
+     $    JACS_G_ASY1, JACS_NEXTO1, JACS_NSCAO1, JACS_FINAL_1,
+     $    JACA_G_ASY2, JACA_NEXTO2, JACA_NSCAO2, JACA_FINAL_2, 
+     $    JACS_G_ASY2, JACS_NEXTO2, JACS_NSCAO2, JACS_FINAL_2)
 
        SUNFAC=SUNCOS*PI*(RADSUN/DISTES)**2
 C      Note: PI*(RADSUN/DISTES)^2 = solid angle [steradians] of
@@ -1131,7 +1152,8 @@ C        Calculate cloudy radiance; also no NLTE if needed
      $      MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $      QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
      $      RAD, DOJAC, TAU4, RAD4, RTHERM4_SOLAR4, DBTDT, 
-     $               NLTEJACPRED5T,NLTEJACPRED7Q)
+     $               NLTEJACPRED5T,NLTEJACPRED7Q,
+     $               RAACLDOD4,CLDEFFOD1,CLDEFFOD2)
 
        ENDDO ! channels
 
@@ -1165,10 +1187,17 @@ C      -------------------
        ISTAT=rtpclose(IOPCO)
 
        IF (DOJAC) THEN
-         IF (INTERSECT(  1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNTZ)
+         IF (INTERSECT(  1,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG1)
+         IF (INTERSECT(  2,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG2)
          IF (INTERSECT(  3,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG3)
+         IF (INTERSECT(  4,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG4)
+         IF (INTERSECT(  5,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG5)
+         IF (INTERSECT(  6,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG6)
+         IF (INTERSECT(  9,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG9)
+         IF (INTERSECT( 12,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNG12)
          IF (INTERSECT(100,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNTZ)
          IF (INTERSECT(200,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNWGT)
+         IF (INTERSECT(300,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNCLD)
        END IF
 C
        STOP

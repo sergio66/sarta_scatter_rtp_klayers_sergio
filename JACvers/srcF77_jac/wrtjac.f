@@ -71,7 +71,7 @@ c************************************************************************
         DO iL = 1,NLAY
           WRITE(IOUNG1) (JAC_G1_C(IL,iC),iC=1,NCHAN)
         END DO
-      ELSEIF ((IGASID .LE. 12) .AND. (JAC_OUTPUT_UNITS .EQ. 1)) THEN
+      ELSEIF (((IGASID .LE. 12) .OR. (IGASID .EQ. 103)) .AND. (JAC_OUTPUT_UNITS .EQ. 1)) THEN
         !! JAC_OUTPUT_UNITS = 1  ==> output q dBT/dq = dBT/dlog(q)) 
         a = c1*c2*(FREQ(1:NCHAN)**4)
         b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
@@ -80,6 +80,49 @@ c************************************************************************
         raDeriv_Rad(1:NCHAN) = a/(b*c*d)
         DO iL = 1,NLAY
           WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_G1_C(IL,iC) * GAMNT(IL),iC=1,NCHAN)
+        END DO
+      END IF
+
+      RETURN 
+      END
+
+c************************************************************************
+      SUBROUTINE WRTJAC_CLD(IOUNG1,IPROF,NLAY,NCHAN,iGASID,FREQ,RAD,JAC_OUTPUT_UNITS,JAC_CLD_OUT)
+
+      IMPLICIT NONE
+
+      include 'incFTC.f'
+
+      INTEGER iGasID   !!! gasID
+      INTEGER IOUNG1   !!! I/O unit ID
+      INTEGER IPROF    !!! current profile number
+      INTEGER NLAY     !!! number of layers to be written out = 7 cfac1,cfrac2,cfrac12,cng1,cng2,csze1,csze2
+      INTEGER NCHAN    !!! number of chan to be written out
+      REAL    JAC_CLD_OUT(7,MXCHAN) !!! GN jacobian
+
+      REAL RAD(MXCHAN),FREQ(MXCHAN)
+      INTEGER JAC_OUTPUT_UNITS
+
+      INTEGER iC,iL
+      REAL     raDeriv_Rad(MXCHAN),a(MXCHAN),b(MXCHAN),c(MXCHAN),d(MXCHAN)
+
+      !! prof number, number of layers to write, number of chans to write, what jac being done
+      WRITE(IOUNG1) IPROF,NLAY,NCHAN,iGASID  
+      IF (JAC_OUTPUT_UNITS .EQ. 0) THEN
+        DO iL = 1,NLAY
+          WRITE(IOUNG1) (JAC_CLD_OUT(IL,iC),iC=1,NCHAN)
+        END DO
+      ELSEIF (JAC_OUTPUT_UNITS .EQ. 1) THEN
+        !! JAC_OUTPUT_UNITS = 1  ==> output q dBT/dq = dBT/dlog(q)) 
+        a = c1*c2*(FREQ(1:NCHAN)**4)
+        b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
+        c = (log(b))**2
+        d = (RAD(1:NCHAN))**2
+        raDeriv_Rad(1:NCHAN) = a/(b*c*d)
+        DO iL = 1,NLAY
+          print *,'jac output',iL,NCHAN
+!          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC) * CLDAMT(IL),iC=1,NCHAN)
+          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC),iC=1,NCHAN)
         END DO
       END IF
 

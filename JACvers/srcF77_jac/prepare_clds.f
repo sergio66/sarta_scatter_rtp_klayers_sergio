@@ -8,8 +8,12 @@
      $    LCBOT1, LCTOP1, CLRB1, CLRT1, TCBOT1, TCTOP1, MASEC1, MASUN1,
      $    CFRCL1, G_ASY1, NEXTO1, NSCAO1, TEMPC1, 
      $    LCBOT2, LCTOP2, CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2,
-     $    CFRCL2, G_ASY2, NEXTO2, NSCAO2, TEMPC2
-     $    )
+     $    CFRCL2, G_ASY2, NEXTO2, NSCAO2, TEMPC2,
+     $    DOJAC, 
+     $    JACA_G_ASY1, JACA_NEXTO1, JACA_NSCAO1, JACA_FINAL_1, 
+     $    JACS_G_ASY1, JACS_NEXTO1, JACS_NSCAO1, JACS_FINAL_1,
+     $    JACA_G_ASY2, JACA_NEXTO2, JACA_NSCAO2, JACA_FINAL_2, 
+     $    JACS_G_ASY2, JACS_NEXTO2, JACS_NSCAO2, JACS_FINAL_2)      
 
       IMPLICIT NONE
 
@@ -57,6 +61,7 @@ c input from GETCLD
        REAL MIEABS(MXCHAN,MXMIEA,NMIETY) ! Mie absorption table
        REAL MIEEXT(MXCHAN,MXMIEA,NMIETY) ! Mie extinction table
        REAL MIEASY(MXCHAN,MXMIEA,NMIETY) ! Mie asymmetry table
+       LOGICAL DOJAC
 
 c output
 C      for CCPREP cloud1
@@ -89,6 +94,11 @@ C      for CCPREP cloud2
        REAL TEMPC1            ! cloud1 frac layer (above cloud) mean temp
        REAL TEMPC2            ! cloud2 frac layer (above cloud) mean temp
 
+       REAL JACA_G_ASY1(MXCHAN),JACA_NEXTO1(MXCHAN),JACA_NSCAO1(MXCHAN),JACA_FINAL_1(MXCHAN)  !! amount jacs
+       REAL JACS_G_ASY1(MXCHAN),JACS_NEXTO1(MXCHAN),JACS_NSCAO1(MXCHAN),JACS_FINAL_1(MXCHAN)  !! sze jacs
+       REAL JACA_G_ASY2(MXCHAN),JACA_NEXTO2(MXCHAN),JACA_NSCAO2(MXCHAN),JACA_FINAL_2(MXCHAN)  !! amount jacs
+       REAL JACS_G_ASY2(MXCHAN),JACS_NEXTO2(MXCHAN),JACS_NSCAO2(MXCHAN),JACS_FINAL_2(MXCHAN)  !! sze jacs
+
 c local
        INTEGER IERR1, IERR2
        INTEGER INDMI1  ! index in MIETYP for CTYPE1
@@ -111,7 +121,9 @@ C           Prepare selected lookup table for given cpsize
      $          CNGWA1, CPSIZ1, CPRTO1, CPRBO1, PLEV, TEMP, SECANG,
      $          SECSUN, MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT1, LCTOP1,
      $          CLRB1, CLRT1, TCBOT1, TCTOP1, MASEC1, MASUN1,
-     $          CFRCL1, G_ASY1, NEXTO1, NSCAO1 )
+     $          CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
+     $          DOJAC, JACA_G_ASY1, JACA_NEXTO1, JACA_NSCAO1, JACA_FINAL_1, 
+     $                 JACS_G_ASY1, JACS_NEXTO1, JACS_NSCAO1, JACS_FINAL_1)
           ENDIF
        ENDIF
 
@@ -130,7 +142,9 @@ C          Prepare lookup data for cloud2
      $          CNGWA2, CPSIZ2, CPRTO2, CPRBO2, PLEV, TEMP, SECANG,
      $          SECSUN, MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT2, LCTOP2,
      $          CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2,
-     $          CFRCL2, G_ASY2, NEXTO2, NSCAO2 )
+     $          CFRCL2, G_ASY2, NEXTO2, NSCAO2, 
+     $          DOJAC, JACA_G_ASY2, JACA_NEXTO2, JACA_NSCAO2, JACA_FINAL_2,
+     $                 JACS_G_ASY2, JACS_NEXTO2, JACS_NSCAO2, JACS_FINAL_2)
          ENDIF
        ELSE
 C         Safe default for non-existant cloud2

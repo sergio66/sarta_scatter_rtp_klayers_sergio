@@ -30,7 +30,9 @@ C    files, the channel list, and list of profile numbers.
 
 !CALL PROTOCOL:
 C       SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
-C     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, caJacTZ, caJacG1, caJacG3, caJacWgt)
+C     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
+C     $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
+C     $     caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD)
 
 !INPUT PARAMETERS:
 C    none
@@ -150,7 +152,7 @@ C      =================================================================
        SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
      $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
      $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
-     $     caJACG6,caJACG9,caJacG11,caJACG12,caJacG103)
+     $     caJACG6,caJACG9,caJacG11,caJACG12,caJacG103,caJACCLD)
 C      =================================================================
 
 C      use unix_library
@@ -191,7 +193,7 @@ C      Output:
        INTEGER NWANTJ,NUMPROF,NUMCHAN,XNUMPROF,XNUMCHAN
        INTEGER  LISTJ(MAXPRO)
        CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
-     $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103
+     $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -494,6 +496,7 @@ C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 G2 G3 G4 G5 G6 
           caJACG11 = trim(trim(FOUT) // '_jacG11')
           caJACG12 = trim(trim(FOUT) // '_jacG12')
           caJACG103= trim(trim(FOUT) // '_jacG103')
+          caJACCLD = trim(trim(FOUT) // '_jacCLD')
           caJACWGT = trim(trim(FOUT) // '_WGTFCN')
 
           IF ((NWANTJX .EQ. 1) .AND. (LISTJX(1) .EQ. -1)) THEN
@@ -527,6 +530,20 @@ C remember : 0 = NO jacs, -1 = all jacs (T,WV,O3), 1,3 = only G1 G2 G3 G4 G5 G6 
             LISTJ(8) = 12
             LISTJ(9)  = 100
             LISTJ(10) = 200
+
+            LISTJ = 0
+            NWANTJ = 11
+            LISTJ(1) = 1
+            LISTJ(2) = 2
+            LISTJ(3) = 3
+            LISTJ(4) = 4
+            LISTJ(5) = 5
+            LISTJ(6) = 6
+            LISTJ(7) = 9
+            LISTJ(8) = 12
+            LISTJ(9)  = 100  !! T(z) jac
+            LISTJ(10) = 200  !! WGT
+            LISTJ(11) = 300  !! CLD JAC
           END IF            
        ENDIF
 
