@@ -8,7 +8,7 @@
      $  MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $  MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $  QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
-     $  RAD, DOJAC, TAU4, RAD4, RTHERM4_SOLAR4, DBTDT,
+     $  RAD, DOJAC, TAU4, PLANCK_RAD4, PURE_RAD4, RTHERM4_SOLAR4, DBTDT,
      $               NLTEJACPRED5T,NLTEJACPRED7Q,
      $               RAACLDOD4,CLDEFFOD1,CLDEFFOD2)
 
@@ -98,7 +98,8 @@ c output
        REAL    RAD(MXCHAN) ! chan radiance
        LOGICAL DOJAC       ! are we planning on jacs???
        REAL TAU4(4,MAXLAY,MXCHAN) ! chan layer effective optical depth for CLR,CLD1,CLD2,CLD12       
-       REAL RAD4(4,MAXLAY,MXCHAN) ! -radiance(L) + planck(TL)          for CLR,CLD1,CLD2,CLD12
+       REAL PLANCK_RAD4(4,MAXLAY,MXCHAN) ! -radiance(L) + planck(TL)          for CLR,CLD1,CLD2,CLD12
+       REAL PURE_RAD4(4,MAXLAY,MXCHAN)   ! +radiance(L)                       for CLR,CLD1,CLD2,CLD12
        REAL RTHERM4_SOLAR4(4,MAXLAY,MXCHAN)    ! downwell solar/ thermal background term at surface (about same for all 4 calcs but whatever)
        REAL DBTDT(MAXLAY,MXCHAN)           ! dBT(T,L)/dT
        REAL RAACLDOD4(4,MAXLAY,MXCHAN)     ! cloud ods for the 4 streams
@@ -186,9 +187,10 @@ C     Calculate clear radiance
         RTHERM4_SOLAR4(1,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
                                                   !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
-        RAD4(1,:,I) = (-RADLAY + RPLNCK)
-        !RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
-        RAACLDOD4(1,:,I) = TAU(:,I)  !!! so this is clear OD
+        PURE_RAD4(1,:,I)   = (+RADLAY)
+        PLANCK_RAD4(1,:,I) = (-RADLAY + RPLNCK)
+        !PLANCK_RAD4(1,:,I) = (-RADLAY + RPLNCK)*SECANG
+        RAACLDOD4(1,:,I) = TAU(:,I)  !!! so this is clear OD, which we need to keep substracting from (clr_cld) OD ... need to reset this to zero at the end
       END IF
 
 C     Store original values
@@ -227,14 +229,16 @@ C    Calculate bottom cloud2 radiance
       ELSE
          RADC2=0.0
       ENDIF
+      RAACLDOD4(3,:,I) = 0
       IF (DOJAC) THEN
         TAU4(3,:,I) = CLDTAU
         RTHERM4_SOLAR4(3,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
                                                   !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
-        RAD4(3,:,I) = (-RADLAY + RPLNCK)
-        !RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
-        RAACLDOD4(3,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld1 OD
+        PURE_RAD4(3,:,I)   = (+RADLAY)
+        PLANCK_RAD4(3,:,I) = (-RADLAY + RPLNCK)
+        !PLANCK_RAD4(3,:,I) = (-RADLAY + RPLNCK)*SECANG
+        IF (CFRA2X .GT. 0.0) RAACLDOD4(3,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld1 OD
       END IF
 
 C      Calculate combined cloud1+cloud2 radiance
@@ -254,14 +258,16 @@ C      Calculate combined cloud1+cloud2 radiance
       ELSE
          RADC12=0.0
       ENDIF
+      RAACLDOD4(4,:,I) = 0
       IF (DOJAC) THEN
         TAU4(4,:,I) = CLDTAU
         RTHERM4_SOLAR4(4,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
                                                   !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
-        RAD4(4,:,I) = (-RADLAY + RPLNCK)
-        !RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
-        RAACLDOD4(4,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld1+cld2 OD
+        PURE_RAD4(4,:,I)   = (+RADLAY)
+        PLANCK_RAD4(4,:,I) = (-RADLAY + RPLNCK)
+        !PLANCK_RAD4(4,:,I) = (-RADLAY + RPLNCK)*SECANG
+        IF (CFRA12 .GT. 0) RAACLDOD4(4,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld1+cld2 OD
       END IF
 
 C     Restore original values
@@ -300,16 +306,18 @@ C     Calculate top cloud1 radiance
       ELSE
          RADC1=0.0
       ENDIF
+      RAACLDOD4(2,:,I) = 0
       IF (DOJAC) THEN
         TAU4(2,:,I) = CLDTAU
         RTHERM4_SOLAR4(2,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
                                                   !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
-        RAD4(2,:,I) = (-RADLAY + RPLNCK)
-        !RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
-        RAACLDOD4(2,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld2 OD
-        RAACLDOD4(1,:,I) = 0                           !!! so now say this is zero as there is no cloud in the first stream
+        PURE_RAD4(2,:,I)   = (+RADLAY)
+        PLANCK_RAD4(2,:,I) = (-RADLAY + RPLNCK)
+        !PLANCK_RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG
+        IF (CFRA1X .GT. 0) RAACLDOD4(2,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld2 OD
       END IF
+      RAACLDOD4(1,:,I) = 0                           !!! so now say this is zero as there is no cloud in the first stream
        
       DO IJUNK = 1,LBOT
         write(*,'(A,I4,5(F12.4))') 'check taucldOD',IJUNK,TAU4(1,IJUNK,I),RAACLDOD4(1:4,IJUNK,I)
@@ -361,14 +369,19 @@ c          IF (NWANTC .GT. 0) print *,'NLTE',I,III,RAD(I),RADNTE
       ENDIF
 
       !!!! so we already do 
-      !!!!      RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG  etc == (-RADLAY + RPLNCK) /mu
+      !!!!      PLANCK_RAD4(2,:,I) = (-RADLAY + RPLNCK)*SECANG  etc == (-RADLAY + RPLNCK) /mu
+      !!!!      PURERAD4(2,:,I)    = (+RADLAY)         *SECANG  etc == (RADLAY) /mu
 
 ! orig code Apr 2023
 !      IF (DOJAC) THEN 
-!        RAD4(1,1:LBOT,I) = RAD4(1,1:LBOT,I)/SECANG(1:LBOT)
-!        RAD4(2,1:LBOT,I) = RAD4(2,1:LBOT,I)/SECANG(1:LBOT)
-!        RAD4(3,1:LBOT,I) = RAD4(3,1:LBOT,I)/SECANG(1:LBOT)
-!        RAD4(4,1:LBOT,I) = RAD4(4,1:LBOT,I)/SECANG(1:LBOT)
+!        PLANCK_RAD4(1,1:LBOT,I) = PLANCK_RAD4(1,1:LBOT,I)/SECANG(1:LBOT)
+!        PLANCK_RAD4(2,1:LBOT,I) = PLANCK_RAD4(2,1:LBOT,I)/SECANG(1:LBOT)
+!        PLANCK_RAD4(3,1:LBOT,I) = PLANCK_RAD4(3,1:LBOT,I)/SECANG(1:LBOT)
+!        PLANCK_RAD4(4,1:LBOT,I) = PLANCK_RAD4(4,1:LBOT,I)/SECANG(1:LBOT)
+!        PURE_RAD4(1,1:LBOT,I) = PURE_RAD4(1,1:LBOT,I)/SECANG(1:LBOT)
+!        PURE_RAD4(2,1:LBOT,I) = PURE_RAD4(2,1:LBOT,I)/SECANG(1:LBOT)
+!        PURE_RAD4(3,1:LBOT,I) = PURE_RAD4(3,1:LBOT,I)/SECANG(1:LBOT)
+!        PURE_RAD4(4,1:LBOT,I) = PURE_RAD4(4,1:LBOT,I)/SECANG(1:LBOT)
 !      END IF
 
       RETURN

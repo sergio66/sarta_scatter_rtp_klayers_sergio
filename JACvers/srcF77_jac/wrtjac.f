@@ -87,7 +87,7 @@ c************************************************************************
       END
 
 c************************************************************************
-      SUBROUTINE WRTJAC_CLD(IOUNG1,IPROF,NLAY,NCHAN,iGASID,FREQ,RAD,JAC_OUTPUT_UNITS,JAC_CLD_OUT)
+      SUBROUTINE WRTJAC_CLD(IOUNG1,IPROF,NLAY,NCHAN,iGASID,FREQ,RAD,JAC_OUTPUT_UNITS,CLDJACFAKEAMT,JAC_CLD_OUT)
 
       IMPLICIT NONE
 
@@ -98,7 +98,8 @@ c************************************************************************
       INTEGER IPROF    !!! current profile number
       INTEGER NLAY     !!! number of layers to be written out = 7 cfac1,cfrac2,cfrac12,cng1,cng2,csze1,csze2
       INTEGER NCHAN    !!! number of chan to be written out
-      REAL    JAC_CLD_OUT(7,MXCHAN) !!! GN jacobian
+      REAL    JAC_CLD_OUT(CLDJAC,MXCHAN) !!! GN jacobian
+      REAL    CLDJACFAKEAMT(CLDJAC)
 
       REAL RAD(MXCHAN),FREQ(MXCHAN)
       INTEGER JAC_OUTPUT_UNITS
@@ -120,9 +121,8 @@ c************************************************************************
         d = (RAD(1:NCHAN))**2
         raDeriv_Rad(1:NCHAN) = a/(b*c*d)
         DO iL = 1,NLAY
-          print *,'jac output',iL,NCHAN
-!          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC) * CLDAMT(IL),iC=1,NCHAN)
-          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC),iC=1,NCHAN)
+          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC) * CLDJACFAKEAMT(IL),iC=1,NCHAN)
+!          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC),iC=1,NCHAN)
         END DO
       END IF
 

@@ -680,11 +680,12 @@ C      for jacobians
        INTEGER IEFFCLD_TOP1,IEFFCLD_TOP2,IEFFCLD_BOT1,IEFFCLD_BOT2,IFOUND1,IFOUND2
        REAL RAACLDOD4(4,MAXLAY,MXCHAN)  ! cloud ods for the 4 streams
        REAL JAC_CLD_C(MAXLAY,MXCHAN),JAC_CLD_1(MAXLAY,MXCHAN),JAC_CLD_2(MAXLAY,MXCHAN),JAC_CLD_12(MAXLAY,MXCHAN)            
-       REAL JAC_CLD_OUT(7,MXCHAN)
+       REAL JAC_CLD_OUT(CLDJAC,MXCHAN),CLDJACFAKEAMT(CLDJAC)
        REAL CLDEFFOD1, CLDEFFOD2  ! calrad1 computes K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0 = total OD over CFRCL1,CFRCL2 layers
 ! generic stuff needed for jacs
        REAL TAU4(4,MAXLAY,MXCHAN) !  chan layer effective optical depth for CLR,CLD1,CLD2,CLD12
-       REAL RAD4(4,MAXLAY,MXCHAN) ! -chan radiance + planck(TL)         for CLR,CLD1,CLD2,CLD12
+       REAL PLANCK_RAD4(4,MAXLAY,MXCHAN) ! -chan radiance(L) + planck(TL)         for CLR,CLD1,CLD2,CLD12
+       REAL PURE_RAD4(4,MAXLAY,MXCHAN)   ! +chan radiance(L)                      for CLR,CLD1,CLD2,CLD12
        REAL L2S4(4,MAXLAY,MXCHAN),WGT4(4,MAXLAY,MXCHAN), L2S4above(4,MAXLAY,MXCHAN)
        REAL DBTDT(MAXLAY,MXCHAN), RAMU(MAXLAY,MXCHAN),ONESSS(1,MXCHAN)  ! dBT(T,L)/dT
        REAL RTHERM4_SOLAR4(4,MAXLAY,MXCHAN)      ! downwell thermal background term at surface (about same for all 4 calcs but whatever)
@@ -694,7 +695,7 @@ C      for jacobians
        CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
      $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD
 
-       INTEGER ijunk
+       INTEGER ijunk,icldjac
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
 C-----------------------------------------------------------------------
@@ -1151,7 +1152,7 @@ C        Calculate cloudy radiance; also no NLTE if needed
      $      MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $      MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
      $      QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
-     $      RAD, DOJAC, TAU4, RAD4, RTHERM4_SOLAR4, DBTDT, 
+     $      RAD, DOJAC, TAU4, PLANCK_RAD4, PURE_RAD4, RTHERM4_SOLAR4, DBTDT, 
      $               NLTEJACPRED5T,NLTEJACPRED7Q,
      $               RAACLDOD4,CLDEFFOD1,CLDEFFOD2)
 

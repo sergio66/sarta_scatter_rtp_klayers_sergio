@@ -194,6 +194,8 @@ C-----------------------------------------------------------------------
        REAL   PAVG            ! layer average pressure
        REAL  PAVG2            ! adjacent layer average pressure
        REAL      X            ! generic junk real variable
+c to help with jacs
+       REAL  ASYM             ! interpolated asymmetry
        REAL  JACABSOD,DX      ! temporary variables for jacobians
 
 
@@ -325,9 +327,16 @@ C      Note: extinction = scattering + absorption, so sca=ext - abs
 C
 C      Number of particle sizes for current CTYPE
        NPS=MIENPS(INDMIE)
-C
+c
+C      *************************
 C      Minimum particle size
        IF (CPSIZE .LE. MIEPS(1,INDMIE)) THEN
+          !!! need these 3 lines for jacos
+          ILO = 1
+          IHI = 2
+          X=( LOG(CPSIZE) - LOG(MIEPS(ILO,INDMIE)) ) /
+     $      ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
+          print *,'MIN PARTICLE SIZE',CPSIZE,MIEPS(1,INDMIE),ILO,IHI,X
           DO I=1,NCHAN
              NEXTOD(I)=CNGWAT*MIEEXT(I,1,INDMIE)
              NSCAOD(I)=CNGWAT*(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
@@ -335,18 +344,35 @@ C      Minimum particle size
           ENDDO
           IF (DOJAC) THEN
             DO I=1,NCHAN
-               JACA_NEXTOD(I)=MIEEXT(I,1,INDMIE)
-               JACA_NSCAOD(I)=(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
-               JACA_G_ASYM(I)=0
-               JACS_NEXTOD(I)=0.0001*MIEEXT(I,1,INDMIE)
-               JACS_NSCAOD(I)=0.0001*(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
-               JACS_G_ASYM(I)=0
+              JACA_NEXTOD(I)=MIEEXT(I,1,INDMIE)
+              JACA_NSCAOD(I)=(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
+              JACA_G_ASYM(I)=0
+              JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
+              JACA_FINAL(I) = 1/(CNGWAT+1e-16)*JACA_FINAL(I)
+               
+               DX = 1 / ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
+               DX = DX / CPSIZE   !!!! since we have log(sze) ==> d/dsze = 1/sze
+               JACS_NEXTOD(I)=CNGWAT*( 0*MIEEXT(I,ILO,INDMIE) +
+     $            DX*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
+               JACABSOD    =CNGWAT*( 0*MIEABS(I,ILO,INDMIE) +
+     $            DX*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
+               JACS_NSCAOD(I)=JACS_NEXTOD(I) - JACABSOD
+               JACS_G_ASYM(I)=0*MIEASY(I,ILO,INDMIE) +
+     $                  DX*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
+               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACS_G_ASYM(I)
+
             ENDDO
           END IF
 
-C
+C      *************************
 C      Maximum particle size
        ELSEIF (CPSIZE .GE. MIEPS(NPS,INDMIE)) THEN
+          !!! need these 3 lines for jacos
+          IHI = NPS
+          ILO = IHI - 1
+          X=( LOG(CPSIZE) - LOG(MIEPS(ILO,INDMIE)) ) /
+     $      ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
+          print *,'MAX PARTICLE SIZE',CPSIZE,MIEPS(NPS,INDMIE),ILO,IHI,X
           DO I=1,NCHAN
              NEXTOD(I)=CNGWAT*MIEEXT(I,NPS,INDMIE)
              NSCAOD(I)=CNGWAT*(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
@@ -354,17 +380,30 @@ C      Maximum particle size
           ENDDO
           IF (DOJAC) THEN
             DO I=1,NCHAN
-               JACA_NEXTOD(I)=MIEEXT(I,NPS,INDMIE)
-               JACA_NSCAOD(I)=(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
-               JACA_G_ASYM(I)=0
-               JACS_NEXTOD(I)=0.0001*MIEEXT(I,NPS,INDMIE)
-               JACS_NSCAOD(I)=0.0001*(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
-               JACS_G_ASYM(I)=0
+              JACA_NEXTOD(I)=MIEEXT(I,NPS,INDMIE)
+              JACA_NSCAOD(I)=(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
+              JACA_G_ASYM(I)=0
+              JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
+              JACA_FINAL(I) = 1/(CNGWAT+1e-16)*JACA_FINAL(I)
+
+               DX = 1 / ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
+               DX = DX / CPSIZE   !!!! since we have log(sze) ==> d/dsze = 1/sze
+               JACS_NEXTOD(I)=CNGWAT*( 0*MIEEXT(I,ILO,INDMIE) +
+     $            DX*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
+               JACABSOD    =CNGWAT*( 0*MIEABS(I,ILO,INDMIE) +
+     $            DX*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
+               JACS_NSCAOD(I)=JACS_NEXTOD(I) - JACABSOD
+               JACS_G_ASYM(I)=0*MIEASY(I,ILO,INDMIE) +
+     $                  DX*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
+               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACS_G_ASYM(I)
+
             ENDDO
           END IF
-C
+
+C      *************************
 C      Intermediate particle size
        ELSE
+          print *,'YAY PARTICLE SIZE'
           IHI=1
  10       IF (MIEPS(IHI,INDMIE) .LT. CPSIZE .AND. IHI .LT. NPS) THEN
              IHI=IHI + 1
@@ -386,14 +425,16 @@ C
           ENDDO
 
           IF (DOJAC) THEN
-c      from eg calrad1
-C      Optical depth of cloud1 including scattering adjustment
-c       K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
-cccc    so
-c       d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d(G_ASY1(I)))
+c           from eg calrad1
+C           Optical depth of cloud1 including scattering adjustment
+c           K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
+cccc        so
+c           d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d(G_ASY1(I)))
             DO I=1,NCHAN
-               ABSOD    =CNGWAT*( MIEABS(I,ILO,INDMIE) +
+               ABSOD  = CNGWAT*( MIEABS(I,ILO,INDMIE) +
      $          X*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
+               ASYM = MIEASY(I,ILO,INDMIE) +
+     $          X*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
 
                JACA_NEXTOD(I)=( MIEEXT(I,ILO,INDMIE) +
      $            X*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
@@ -401,22 +442,32 @@ c       d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d(G_A
      $            X*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
                JACA_NSCAOD(I)=JACA_NEXTOD(I) - JACABSOD
                JACA_G_ASYM(I)=0
-               JACA_FINAL(I) = JACA_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACA_G_ASYM(I)
+               JACA_FINAL(I) = JACA_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I))    !!!!!  - 0.5*ABSOD*JACA_G_ASYM(I)
 
-               DX = 1/CPSIZE / ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
+               JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
+               JACA_FINAL(I) = 1/(CNGWAT+1e-16)*JACA_FINAL(I)
+
+               DX = 1 / ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
+               DX = DX / CPSIZE   !!!! since we have log(sze) ==> d/dsze = 1/sze
                JACS_NEXTOD(I)=CNGWAT*( 0*MIEEXT(I,ILO,INDMIE) +
      $            DX*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
                JACABSOD    =CNGWAT*( 0*MIEABS(I,ILO,INDMIE) +
      $            DX*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
                JACS_NSCAOD(I)=JACS_NEXTOD(I) - JACABSOD
-               JACS_G_ASYM(I)=MIEASY(I,ILO,INDMIE) +
+               JACS_G_ASYM(I)=0*MIEASY(I,ILO,INDMIE) +
      $                  DX*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
                JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACS_G_ASYM(I)
 
             END DO
-          END IF
+          END IF           
        ENDIF
 
+       IF (DOJAC) THEN
+         !! remember SARTA uncompresses ODs at angle theta, so automatically doing 1/mu dtau_atmosphere_nadir/dX
+         !! so turn these cloud nadir jacs into cloud view angle jacs using masec = 1/cos(theta)
+         JACA_FINAL(1:NCHAN) = MASEC * JACA_FINAL(1:NCHAN)
+         JACS_FINAL(1:NCHAN) = MASEC * JACS_FINAL(1:NCHAN)
+       END IF
 C
        RETURN
        END
