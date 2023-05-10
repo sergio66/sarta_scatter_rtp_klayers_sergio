@@ -24,7 +24,8 @@ C       CNGWAT, CPSIZE, CPRTOP, CPRBOT, PLEV, TEMP, SECANG, SECSUN,
 C       MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT, LCTOP, CLEARB, CLEART,
 C       TCBOT, TCTOP, MASEC, MSSEC, CFRCL, G_ASYM, NEXTOD, NSCAOD )
 C       DOJAC, JACA_G_ASY, JACA_NEXTO, JACA_NSCAO, JACA_FINAL, 
-C              JACS_G_ASY, JACS_NEXTO, JACS_NSCAO, JACS_FINAL)
+C              JACS_G_ASY, JACS_NEXTO, JACS_NSCAO, JACS_FINAL,
+C              JACTOP_CFRCL,JACBOT_CFRCL,JACTOP_CFRCL_v,JACBOT_CFRCL_v)
 
 !INPUT PARAMETERS:
 C    type      name    purpose                     units
@@ -121,7 +122,8 @@ C      =================================================================
      $    LCBOT, LCTOP, CLEARB, CLEART, TCBOT, TCTOP, MASEC, MSSEC,
      $    CFRCL, G_ASYM, NEXTOD, NSCAOD, 
      $    DOJAC, JACA_G_ASYM, JACA_NEXTOD, JACA_NSCAOD, JACA_FINAL, 
-     $           JACS_G_ASYM, JACS_NEXTOD, JACS_NSCAOD, JACS_FINAL)
+     $           JACS_G_ASYM, JACS_NEXTOD, JACS_NSCAOD, JACS_FINAL,
+     $           JACTOP_CFRCL,JACBOT_CFRCL,JACTOP_CFRCL_v,JACBOT_CFRCL_v)
 
 C      =================================================================
 
@@ -180,7 +182,8 @@ C      Output
        REAL NSCAOD(MXCHAN)    ! nadir scattering optical depth
        REAL JACA_G_ASYM(MXCHAN),JACA_NEXTOD(MXCHAN),JACA_NSCAOD(MXCHAN),JACA_FINAL(MXCHAN)  !! amount jacs
        REAL JACS_G_ASYM(MXCHAN),JACS_NEXTOD(MXCHAN),JACS_NSCAOD(MXCHAN),JACS_FINAL(MXCHAN)  !! sze jacs
-
+       REAL JACTOP_CFRCL(MAXLAY),JACBOT_CFRCL(MAXLAY)    ! derivatives of fraction of cloud in layer
+       REAL JACTOP_CFRCL_v(MAXLAY,MXCHAN),JACBOT_CFRCL_v(MAXLAY,MXCHAN)    ! spectral derivatives of fraction of cloud in layer
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
@@ -311,6 +314,10 @@ C         other layers
              MSSEC=MSSEC + SECSUN(L)
              X=X + 1
              CFRCL(L)=(PLEV(L+1)-PLEV(L))/(CPRBOT-CPRTOP)
+             IF (DOJAC) THEN
+               JACTOP_CFRCL(L) = -(PLEV(L+1)-PLEV(L))/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP)*(-1)
+               JACBOT_CFRCL(L) = -(PLEV(L+1)-PLEV(L))/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP)*(+1)
+             END IF
           ENDDO
 C         Divide secant sum by weight sum to get mean secant
           MASEC=MASEC/X
@@ -347,11 +354,16 @@ c          print *,'MIN PARTICLE SIZE',CPSIZE,MIEPS(1,INDMIE),ILO,IHI,X
               JACA_NEXTOD(I)=MIEEXT(I,1,INDMIE)
               JACA_NSCAOD(I)=(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
               JACA_G_ASYM(I)=0
+
               JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
+              DO L = LCTOP+1,LCBOT-1
+                JACTOP_CFRCL_v(L,I) = JACA_FINAL(I) * JACTOP_CFRCL(L)
+                JACBOT_CFRCL_v(L,I) = JACA_FINAL(I) * JACBOT_CFRCL(L)
+              END DO
               JACA_FINAL(I) = 1/(CNGWAT+1e-16)*JACA_FINAL(I)
-               
+                
                DX = 1 / ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
-               DX = DX / CPSIZE   !!!! since we have log(sze) ==> d/dsze = 1/sze
+               DX = DX / (CPSIZE+1e-16)   !!!! since we have log(sze) ==> d/dsze = 1/sze
                JACS_NEXTOD(I)=CNGWAT*( 0*MIEEXT(I,ILO,INDMIE) +
      $            DX*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
                JACABSOD    =CNGWAT*( 0*MIEABS(I,ILO,INDMIE) +
@@ -382,11 +394,16 @@ c          print *,'MAX PARTICLE SIZE',CPSIZE,MIEPS(NPS,INDMIE),ILO,IHI,X
               JACA_NEXTOD(I)=MIEEXT(I,NPS,INDMIE)
               JACA_NSCAOD(I)=(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
               JACA_G_ASYM(I)=0
+
               JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
+              DO L = LCTOP+1,LCBOT-1
+                JACTOP_CFRCL_v(L,I) = JACA_FINAL(I) * JACTOP_CFRCL(L)
+                JACBOT_CFRCL_v(L,I) = JACA_FINAL(I) * JACBOT_CFRCL(L)
+              END DO
               JACA_FINAL(I) = 1/(CNGWAT+1e-16)*JACA_FINAL(I)
 
                DX = 1 / ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
-               DX = DX / CPSIZE   !!!! since we have log(sze) ==> d/dsze = 1/sze
+               DX = DX / (CPSIZE+1e-16)   !!!! since we have log(sze) ==> d/dsze = 1/sze
                JACS_NEXTOD(I)=CNGWAT*( 0*MIEEXT(I,ILO,INDMIE) +
      $            DX*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
                JACABSOD    =CNGWAT*( 0*MIEABS(I,ILO,INDMIE) +
@@ -442,11 +459,16 @@ c           d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d
                JACA_G_ASYM(I)=0
                JACA_FINAL(I) = JACA_NEXTOD(I) - 0.5*JACA_NSCAOD(I)*(1+G_ASYM(I))    !!!!!  - 0.5*NSCAOD*JACA_G_ASYM(I) == 0
 
+               !!! this is simple and correct form of derivative, except make sure you use (CNGWAT+1e-16) in denominator
                JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
+               DO L = LCTOP+1,LCBOT-1
+                 JACTOP_CFRCL_v(L,I) = JACA_FINAL(I) * JACTOP_CFRCL(L)
+                 JACBOT_CFRCL_v(L,I) = JACA_FINAL(I) * JACBOT_CFRCL(L)
+               END DO
                JACA_FINAL(I) = 1/(CNGWAT+1e-16)*JACA_FINAL(I)
 
                DX = 1 / ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
-               DX = DX / CPSIZE   !!!! since we have log(sze) ==> d/dsze = 1/sze
+               DX = DX / (CPSIZE+1e-16)   !!!! since we have log(sze) ==> d/dsze = 1/sze
                JACS_NEXTOD(I)=CNGWAT*( 0*MIEEXT(I,ILO,INDMIE) +
      $            DX*(MIEEXT(I,IHI,INDMIE) - MIEEXT(I,ILO,INDMIE)) )
                JACABSOD    =CNGWAT*( 0*MIEABS(I,ILO,INDMIE) +
@@ -465,6 +487,10 @@ c           d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d
          !! so turn these cloud nadir jacs into cloud view angle jacs using masec = 1/cos(theta)
          JACA_FINAL(1:NCHAN) = MASEC * JACA_FINAL(1:NCHAN)
          JACS_FINAL(1:NCHAN) = MASEC * JACS_FINAL(1:NCHAN)
+         JACTOP_CFRCL = MASEC * JACTOP_CFRCL
+         JACBOT_CFRCL = MASEC * JACBOT_CFRCL
+         JACTOP_CFRCL_v(:,1:NCHAN) = MASEC * JACTOP_CFRCL_v(:,1:NCHAN)
+         JACBOT_CFRCL_v(:,1:NCHAN) = MASEC * JACBOT_CFRCL_v(:,1:NCHAN)
        END IF
 C
 c see test_cld_jacs.m

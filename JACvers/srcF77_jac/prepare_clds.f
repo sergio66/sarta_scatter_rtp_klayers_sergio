@@ -12,8 +12,10 @@
      $    DOJAC, 
      $    JACA_G_ASY1, JACA_NEXTO1, JACA_NSCAO1, JACA_FINAL_1, 
      $    JACS_G_ASY1, JACS_NEXTO1, JACS_NSCAO1, JACS_FINAL_1,
+     $    JACTOP_CFRCL1,JACBOT_CFRCL1,JACTOP_CFRCL1_v,JACBOT_CFRCL1_v,
      $    JACA_G_ASY2, JACA_NEXTO2, JACA_NSCAO2, JACA_FINAL_2, 
-     $    JACS_G_ASY2, JACS_NEXTO2, JACS_NSCAO2, JACS_FINAL_2)      
+     $    JACS_G_ASY2, JACS_NEXTO2, JACS_NSCAO2, JACS_FINAL_2,
+     $    JACTOP_CFRCL2,JACBOT_CFRCL2,JACTOP_CFRCL2_v,JACBOT_CFRCL2_v)
 
       IMPLICIT NONE
 
@@ -98,7 +100,10 @@ C      for CCPREP cloud2
        REAL JACS_G_ASY1(MXCHAN),JACS_NEXTO1(MXCHAN),JACS_NSCAO1(MXCHAN),JACS_FINAL_1(MXCHAN)  !! sze jacs
        REAL JACA_G_ASY2(MXCHAN),JACA_NEXTO2(MXCHAN),JACA_NSCAO2(MXCHAN),JACA_FINAL_2(MXCHAN)  !! amount jacs
        REAL JACS_G_ASY2(MXCHAN),JACS_NEXTO2(MXCHAN),JACS_NSCAO2(MXCHAN),JACS_FINAL_2(MXCHAN)  !! sze jacs
-
+       REAL JACTOP_CFRCL1(MAXLAY),JACBOT_CFRCL1(MAXLAY)    ! derivatives of fraction of cloud in layer
+       REAL JACTOP_CFRCL2(MAXLAY),JACBOT_CFRCL2(MAXLAY)    ! derivatives of fraction of cloud in layer
+       REAL JACTOP_CFRCL1_v(MAXLAY,MXCHAN),JACBOT_CFRCL1_v(MAXLAY,MXCHAN)    ! spectral derivatives of fraction of cloud in laye
+       REAL JACTOP_CFRCL2_v(MAXLAY,MXCHAN),JACBOT_CFRCL2_v(MAXLAY,MXCHAN)    ! spectral derivatives of fraction of cloud in layer
 c local
        INTEGER IERR1, IERR2
        INTEGER INDMI1  ! index in MIETYP for CTYPE1
@@ -123,7 +128,8 @@ C           Prepare selected lookup table for given cpsize
      $          CLRB1, CLRT1, TCBOT1, TCTOP1, MASEC1, MASUN1,
      $          CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $          DOJAC, JACA_G_ASY1, JACA_NEXTO1, JACA_NSCAO1, JACA_FINAL_1, 
-     $                 JACS_G_ASY1, JACS_NEXTO1, JACS_NSCAO1, JACS_FINAL_1)
+     $                 JACS_G_ASY1, JACS_NEXTO1, JACS_NSCAO1, JACS_FINAL_1,
+     $                 JACTOP_CFRCL1,JACBOT_CFRCL1,JACTOP_CFRCL1_v,JACBOT_CFRCL1_v)
           ENDIF
        ENDIF
 
@@ -144,7 +150,8 @@ C          Prepare lookup data for cloud2
      $          CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2,
      $          CFRCL2, G_ASY2, NEXTO2, NSCAO2, 
      $          DOJAC, JACA_G_ASY2, JACA_NEXTO2, JACA_NSCAO2, JACA_FINAL_2,
-     $                 JACS_G_ASY2, JACS_NEXTO2, JACS_NSCAO2, JACS_FINAL_2)
+     $                 JACS_G_ASY2, JACS_NEXTO2, JACS_NSCAO2, JACS_FINAL_2,
+     $                 JACTOP_CFRCL2,JACBOT_CFRCL2,JACTOP_CFRCL2_v,JACBOT_CFRCL2_v)
          ENDIF
        ELSE
 C         Safe default for non-existant cloud2

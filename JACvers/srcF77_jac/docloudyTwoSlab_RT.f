@@ -320,12 +320,12 @@ C     Calculate top cloud1 radiance
       RAACLDOD4(1,:,I) = 0                           !!! so now say this is zero as there is no cloud in the first stream
 
 c see test_cld_jacs_rads.m       
-      DO IJUNK = 1,LBOT
-        write(*,'(A,I4,13(F12.4))') 'check taucldOD and radpure',IJUNK,TAU4(1,IJUNK,I),
-     $                          RAACLDOD4(1,IJUNK,I),RAACLDOD4(2,IJUNK,I),RAACLDOD4(3,IJUNK,I),RAACLDOD4(4,IJUNK,I),
-     $                          PURE_RAD4(1,IJUNK,I),PURE_RAD4(2,IJUNK,I),PURE_RAD4(3,IJUNK,I),PURE_RAD4(4,IJUNK,I),
-     $                          PLANCK_RAD4(1,IJUNK,I),PLANCK_RAD4(2,IJUNK,I),PLANCK_RAD4(3,IJUNK,I),PLANCK_RAD4(4,IJUNK,I)
-      END DO
+c      DO IJUNK = 1,LBOT
+c        write(*,'(A,I4,13(ES16.7))') 'check taucldOD and radpure',IJUNK,TAU4(1,IJUNK,I),
+c     $                          RAACLDOD4(1,IJUNK,I),RAACLDOD4(2,IJUNK,I),RAACLDOD4(3,IJUNK,I),RAACLDOD4(4,IJUNK,I),
+c     $                          PURE_RAD4(1,IJUNK,I),PURE_RAD4(2,IJUNK,I),PURE_RAD4(3,IJUNK,I),PURE_RAD4(4,IJUNK,I),
+c     $                          PLANCK_RAD4(1,IJUNK,I),PLANCK_RAD4(2,IJUNK,I),PLANCK_RAD4(3,IJUNK,I),PLANCK_RAD4(4,IJUNK,I)
+c      END DO
 
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12
