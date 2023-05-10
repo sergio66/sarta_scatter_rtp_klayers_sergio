@@ -145,10 +145,10 @@ C 29 Apr 2009 S.Hannon       Bug fix: initialize RDOWN and TDOWNN
 C      =================================================================
        SUBROUTINE CALRAD2( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $    ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
-     $    RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1,
-     $    NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1,
-     $    CFRCL2, MASEC2, MASUN2, COSDAZ,
-     $    NEXTO2, NSCAO2, G_ASY2, LCTOP2,LCBOT2, RAD2, DOJAC, CLDTAU, RADLAY )
+     $    RHOTHR, LABOVE, COEFF, COSDAZ, 
+     $    CFRCL1, MASEC1, MASUN1, NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1,
+     $    CFRCL2, MASEC2, MASUN2, NEXTO2, NSCAO2, G_ASY2, LCTOP2,LCBOT2, 
+     $    RAD2, DOJAC, CLDTAU, RADLAY, RTHERM )
 C      =================================================================
 
 C-----------------------------------------------------------------------

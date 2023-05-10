@@ -131,7 +131,6 @@ c local
        REAL QIKEXP, RJUNK1, RJUNK2, RAD2BT
 
 c************************************************************************
-
 C     Radiation constants for current channel
       C1V3=C1*(FREQ(I)**3)
       C2V=C2*FREQ(I)
@@ -251,9 +250,10 @@ C      Calculate combined cloud1+cloud2 radiance
          ELSE
             CALL CALRAD2( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, NEXTO1,
-     $          NSCAO1, G_ASY1, LCTOP1, LCBOT1, CFRCL2, MASEC2, MASUN2,
-     $          COSDAZ, NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC12, DOJAC, CLDTAU, RADLAY, RTHERM )
+     $          RHOTHR, LABOVE, COEFF, COSDAZ,
+     $          CFRCL1, MASEC1, MASUN1, NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, 
+     $          CFRCL2, MASEC2, MASUN2, NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, 
+     $          RADC12, DOJAC, CLDTAU, RADLAY, RTHERM )
          ENDIF
       ELSE
          RADC12=0.0
@@ -318,9 +318,13 @@ C     Calculate top cloud1 radiance
         IF (CFRA1X .GT. 0) RAACLDOD4(2,:,I) = CLDTAU - RAACLDOD4(1,:,I)   !!! so this is cld2 OD
       END IF
       RAACLDOD4(1,:,I) = 0                           !!! so now say this is zero as there is no cloud in the first stream
-       
+
+c see test_cld_jacs_rads.m       
       DO IJUNK = 1,LBOT
-        write(*,'(A,I4,5(F12.4))') 'check taucldOD',IJUNK,TAU4(1,IJUNK,I),RAACLDOD4(1:4,IJUNK,I)
+        write(*,'(A,I4,13(F12.4))') 'check taucldOD and radpure',IJUNK,TAU4(1,IJUNK,I),
+     $                          RAACLDOD4(1,IJUNK,I),RAACLDOD4(2,IJUNK,I),RAACLDOD4(3,IJUNK,I),RAACLDOD4(4,IJUNK,I),
+     $                          PURE_RAD4(1,IJUNK,I),PURE_RAD4(2,IJUNK,I),PURE_RAD4(3,IJUNK,I),PURE_RAD4(4,IJUNK,I),
+     $                          PLANCK_RAD4(1,IJUNK,I),PLANCK_RAD4(2,IJUNK,I),PLANCK_RAD4(3,IJUNK,I),PLANCK_RAD4(4,IJUNK,I)
       END DO
 
 c      Total the clear & various cloudy radiances

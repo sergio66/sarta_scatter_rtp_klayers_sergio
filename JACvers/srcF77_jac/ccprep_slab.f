@@ -336,7 +336,7 @@ C      Minimum particle size
           IHI = 2
           X=( LOG(CPSIZE) - LOG(MIEPS(ILO,INDMIE)) ) /
      $      ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
-          print *,'MIN PARTICLE SIZE',CPSIZE,MIEPS(1,INDMIE),ILO,IHI,X
+c          print *,'MIN PARTICLE SIZE',CPSIZE,MIEPS(1,INDMIE),ILO,IHI,X
           DO I=1,NCHAN
              NEXTOD(I)=CNGWAT*MIEEXT(I,1,INDMIE)
              NSCAOD(I)=CNGWAT*(MIEEXT(I,1,INDMIE) - MIEABS(I,1,INDMIE))
@@ -359,8 +359,7 @@ C      Minimum particle size
                JACS_NSCAOD(I)=JACS_NEXTOD(I) - JACABSOD
                JACS_G_ASYM(I)=0*MIEASY(I,ILO,INDMIE) +
      $                  DX*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
-               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACS_G_ASYM(I)
-
+               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACS_NSCAOD(I)*(1+G_ASYM(I)) - 0.5*NSCAOD(I)*JACA_G_ASYM(I)
             ENDDO
           END IF
 
@@ -372,7 +371,7 @@ C      Maximum particle size
           ILO = IHI - 1
           X=( LOG(CPSIZE) - LOG(MIEPS(ILO,INDMIE)) ) /
      $      ( LOG(MIEPS(IHI,INDMIE)) - LOG(MIEPS(ILO,INDMIE)) )
-          print *,'MAX PARTICLE SIZE',CPSIZE,MIEPS(NPS,INDMIE),ILO,IHI,X
+c          print *,'MAX PARTICLE SIZE',CPSIZE,MIEPS(NPS,INDMIE),ILO,IHI,X
           DO I=1,NCHAN
              NEXTOD(I)=CNGWAT*MIEEXT(I,NPS,INDMIE)
              NSCAOD(I)=CNGWAT*(MIEEXT(I,NPS,INDMIE) - MIEABS(I,NPS,INDMIE))
@@ -395,15 +394,14 @@ C      Maximum particle size
                JACS_NSCAOD(I)=JACS_NEXTOD(I) - JACABSOD
                JACS_G_ASYM(I)=0*MIEASY(I,ILO,INDMIE) +
      $                  DX*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
-               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACS_G_ASYM(I)
-
+               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACS_NSCAOD(I)*(1+G_ASYM(I)) - 0.5*NSCAOD(I)*JACA_G_ASYM(I)
             ENDDO
           END IF
 
 C      *************************
 C      Intermediate particle size
        ELSE
-          print *,'YAY PARTICLE SIZE'
+c          print *,'YAY PARTICLE SIZE'
           IHI=1
  10       IF (MIEPS(IHI,INDMIE) .LT. CPSIZE .AND. IHI .LT. NPS) THEN
              IHI=IHI + 1
@@ -442,7 +440,7 @@ c           d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d
      $            X*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
                JACA_NSCAOD(I)=JACA_NEXTOD(I) - JACABSOD
                JACA_G_ASYM(I)=0
-               JACA_FINAL(I) = JACA_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I))    !!!!!  - 0.5*ABSOD*JACA_G_ASYM(I)
+               JACA_FINAL(I) = JACA_NEXTOD(I) - 0.5*JACA_NSCAOD(I)*(1+G_ASYM(I))    !!!!!  - 0.5*NSCAOD*JACA_G_ASYM(I) == 0
 
                JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
                JACA_FINAL(I) = 1/(CNGWAT+1e-16)*JACA_FINAL(I)
@@ -456,7 +454,7 @@ c           d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d
                JACS_NSCAOD(I)=JACS_NEXTOD(I) - JACABSOD
                JACS_G_ASYM(I)=0*MIEASY(I,ILO,INDMIE) +
      $                  DX*(MIEASY(I,IHI,INDMIE) - MIEASY(I,ILO,INDMIE))
-               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACABSOD*(1+G_ASYM(I)) - 0.5*ABSOD*JACS_G_ASYM(I)
+               JACS_FINAL(I) = JACS_NEXTOD(I) - 0.5*JACS_NSCAOD(I)*(1+G_ASYM(I)) - 0.5*NSCAOD(I)*JACA_G_ASYM(I)
 
             END DO
           END IF           
@@ -469,5 +467,12 @@ c           d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d
          JACS_FINAL(1:NCHAN) = MASEC * JACS_FINAL(1:NCHAN)
        END IF
 C
+c see test_cld_jacs.m
+c       I = 1
+c       write (*,'(A,I4,12(F12.4))') 'cld jacs',I,NEXTOD(I),NSCAOD(I),G_ASYM(I),
+c     $ NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0,
+c     $ JACA_NEXTOD(I),JACA_NSCAOD(I),JACA_G_ASYM(I),JACA_FINAL(I),
+c     $ JACS_NEXTOD(I),JACS_NSCAOD(I),JACS_G_ASYM(I),JACS_FINAL(I)
+
        RETURN
        END
