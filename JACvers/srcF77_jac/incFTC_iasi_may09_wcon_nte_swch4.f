@@ -548,7 +548,8 @@ C
        PARAMETER(FNFX  =
      $ '/asl/data/sarta_database/Data_IASI_may09/Coef/fx.txt')
        PARAMETER(FNPREF=
-     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/profref_trace385')
+c     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/profref_trace385')
+     $ '/asl/rta/sarta_coef/Data_CrIS_oct16/Coef/refprof_400_tra')
        PARAMETER(FNSUN =
      $ '/asl/data/sarta_database/Data_IASI_may09/Solar/solardata.txt')
 

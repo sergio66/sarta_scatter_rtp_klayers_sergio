@@ -5,73 +5,14 @@ addpath /home/sergio/KCARTA/MATLAB
 addpath /asl/matlib/aslutil
 addpath /asl/matlib/h4tools
 
-%{
-%%%%%%%%%%%%%%%%%%%%%%%%%
-clear all
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; 
-[h,ha,p,pa] = rtpread(frtp); 
-inds = 1:100:12150; [hx,px] = subset_rtp_allcloudfields(h,p,[],[],inds); 
-rtpwrite('newdayx_1_100_12150.op.rtp',hx,ha,px,pa);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-clear all
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; %% does not have rcalc!!!
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.rp.rtp'; %% this does have rcalc
-[h,ha,p,pa] = rtpread(frtp); 
-
-plot(abs(p.stemp-rad2bt(1231,p.robs1(1520,:))))
-junk0 = abs(p.stemp-rad2bt(1231,p.robs1(1520,:)));
-junk = abs(p.stemp-rad2bt(1231,p.rcalc(1520,:)));
-plot(junk); iclr0 = find(junk == min(junk));  plot(h.vchan,rad2bt(h.vchan,p.robs1(:,iclr0)),h.vchan,rad2bt(h.vchan,p.rcalc(:,iclr0))); [iclr0 p.satzen(iclr0) p.stemp(iclr0)] %%%% clearest of them all; 
-iclr = find(junk <= 5); iclr = find(junk <= 5 & junk0 <= 5); plot(h.vchan,rad2bt(h.vchan,p.robs1(:,iclr)));
-plot(h.vchan,rad2bt(h.vchan,p.robs1(:,iclr(1))),h.vchan,rad2bt(h.vchan,p.rcalc(:,iclr(1)))); [iclr(1) p.satzen(iclr(1)) p.stemp(iclr(1))] %%%% clearest of them all; 
-[hx,px] = subset_rtp_allcloudfields(h,p,[],[],iclr); 
-rtpwrite('newdayx_clr.op.rtp',hx,ha,px,pa);
-
-px.cngwat  = 0 * px.cngwat;
-px.cngwat2 = 0 * px.cngwat;
-px.cfrac   = 0 * px.cngwat;
-px.cfrac2  = 0 * px.cngwat;
-px.cfrac12 = 0 * px.cngwat;
-rtpwrite('newdayx_nocldfields.op.rtp',hx,ha,px,pa);
-
-pxx = px; pxx.gas_1 = pxx.gas_1 *1.1; rtpwrite('newdayx_nocldfields_pertWVx1.1.op.rtp',hx,ha,pxx,pa);
-pxx = px; pxx.gas_2 = pxx.gas_2 *1.1; rtpwrite('newdayx_nocldfields_pertCO2x1.1.op.rtp',hx,ha,pxx,pa);
-pxx = px; pxx.gas_3 = pxx.gas_3 *1.1; rtpwrite('newdayx_nocldfields_pertO3x1.1.op.rtp',hx,ha,pxx,pa);
-pxx = px; pxx.ptemp = pxx.ptemp + 1;  rtpwrite('newdayx_nocldfields_pertT_p1.op.rtp',hx,ha,pxx,pa);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%}
-
-frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 59;    %% DCC
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 12150/2+45;  %% satzen = +50  deg
-frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 113;   %% almost clear
-frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 1;     %% same as profile 1 from cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp *** HAVE KCARTA JACS ***, at -50 deg
-
-frtp = 'newdayx_nocldfields_unityemiss.op.rtp'; iProf = 1; %% satzen =  23  deg   
-
-frtp = 'newdayx_clr.op.rtp'; iProf = 1;  %% satzen = 22  deg  *** HAVE KCARTA JACS ***, at 22 deg
-frtp = 'newdayx_nocldfields.op.rtp'; iProf = 1; %% satzen =  23  deg   
-
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;   %% satzen = -50  deg  *** HAVE KCARTA JACS ***, at -50 deg
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45;  %% satzen =  0  deg   *** HAVE KCARTA JACS ***, at -00 deg
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 287;  %% cfrac2 == 0
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1438; %% cfrac2 == 0
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%{
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 01;     %% *** HAVE KCARTA JACS ***, at -50 deg
-kcrads = load('individual_prof_convolved_kcarta_airs_1.mat');
-kcjacs = load('individual_prof_convolved_kcarta_airs_1_jac.mat');
-
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45;     %% *** HAVE KCARTA JACS ***, at 0 deg
-kcrads = load('individual_prof_convolved_kcarta_airs_45.mat');
-kcjacs = load('individual_prof_convolved_kcarta_airs_45_jac.mat');
-%}
+frtp = 'TEST_RTP/interp_analysis_cloudy_airs_l1c_ecm_sarta_baum_ice.2019.04.25.214.op.rtp'; iProf = 1;
+frtp = 'TEST_RTP/test_cris_jac.rtp';                                                        iProf = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if ~exist('porig')
+  rmer = ['!/bin/rm jactest.rtp jactest.rtp_jac* jactest.rtp_WGTFCN ']; eval(rmer);
 
   iExtraGas = [];
   iExtraGas = [2 4 5 6 9 12];
@@ -85,13 +26,15 @@ if ~exist('porig')
   disp('MAKE SURE THE quicksartajac FINITE JACS use < dQ = 0.01;  dT = 0.1 > ... if you make them smaller, perversely the accuracy gets worse!!!!')
   disp('MAKE SURE THE quicksartajac FINITE JACS use < dQ = 0.01;  dT = 0.1 > ... if you make them smaller, perversely the accuracy gets worse!!!!')
 
-  sartaer = ['!date; time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
+  sarta_exec0 = '/home/chepplew/gitLib/sarta/bin/crisg4_hires_dec17_iceGHMbaum_wdrop_ddust_sc_hg3_new';
+  sarta_exec0 = '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/bin/jac_crisg4_hires_dec17_iceGHMbaum_wdrop_ddust_sc_hg3_new';
+  sartaer = ['!date; time ' sarta_exec0 ' fin=' frtp ' fout=jactest.rtp listp=' num2str(iProf)];
   eval(sartaer);
-  [h,ha,porig,pa] = rtpread('newdayx.rtp');
+  [h,ha,porig,pa] = rtpread('jactest.rtp');
   fprintf(1,'nlevs = %3i satzen = %8.6f solzen = %8.6f\n',porig.nlevs,porig.satzen,porig.solzen)
-  %jacx = quicksartajac(h,porig,1,1,-1);
+  %jacx = quicksartajac(h,porig,1,2,-1);
   t1 = datetime("now");
-  jacx = quicksartajac(h,porig,1,1,-1,iExtraGas);
+  jacx = quicksartajac(h,porig,1,2,-1,iExtraGas);
   t2 = datetime("now");
 end
 nlays = porig.nlevs-1;
@@ -101,29 +44,28 @@ nlays = porig.nlevs-1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% time with and without jacs
 
-sarta_exec = '../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug_save3';
-sarta_exec = '../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug';
+sarta_exec = '../bin/jac_crisg4_hires_dec17_iceGHMbaum_wdrop_ddust_sc_hg3_new';
 
 fprintf(1,'sarta_exec = %s \n',sarta_exec);
 
-sartaer = ['!ls -lt ' sarta_exec ';  date; time ' sarta_exec ' fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
+sartaer = ['!ls -lt ' sarta_exec ';  date; time ' sarta_exec ' fin=' frtp ' fout=jactest.rtp listp=' num2str(iProf)];
 eval(sartaer);
-sartaer = ['!ls -lt ' sarta_exec '; date; time ' sarta_exec ' fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)  ' listj=100'];
-sartaer = ['!ls -lt ' sarta_exec '; date; time ' sarta_exec ' fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)  ' listj=-1'];
+sartaer = ['!ls -lt ' sarta_exec '; date; time ' sarta_exec ' fin=' frtp ' fout=jactest.rtp listp=' num2str(iProf)  ' listj=100'];
+sartaer = ['!ls -lt ' sarta_exec '; date; time ' sarta_exec ' fin=' frtp ' fout=jactest.rtp listp=' num2str(iProf)  ' listj=-1'];
 t3 = datetime("now");
 eval(sartaer);
 t4 = datetime("now");
 fprintf(1,'time to run FINITE DIFF vs ANALYTIC = %8.6f %8.6f \n',etime(datevec(t2),datevec(t1)),etime(datevec(t4),datevec(t3)))
-[h,ha,pnew,pa] = rtpread('newdayx.rtp');
+[h,ha,pnew,pa] = rtpread('jactest.rtp');
 
 figure(1); clf; plot(h.vchan,rad2bt(h.vchan,porig.rcalc)-rad2bt(h.vchan,pnew.rcalc)); xlim([640 1640]); title('BT DIFF orig-new')
 
-[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_WGTFCN',200);  dd = squeeze(d(1,:,:)); % whos dd d
+[w,d,iaProf,iaNumLay] = readsarta_jac('jactest.rtp_WGTFCN',200);  dd = squeeze(d(1,:,:)); % whos dd d
 figure(2); clf; pcolor(h.vchan,1:nlays,dd(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('WGT ANALYTIC'); colormap jet; caxis([0 1]/10); xlim([640 1640])
 wgtfcn_sarta_fast = dd(:,1:nlays);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacTZ',100);  dd = squeeze(d(1,:,:)); % whos dd d
+[w,d,iaProf,iaNumLay] = readsarta_jac('jactest.rtp_jacTZ',100);  dd = squeeze(d(1,:,:)); % whos dd d
 figure(1); clf; plot(h.vchan,rad2bt(h.vchan,porig.rcalc)-rad2bt(h.vchan,pnew.rcalc),'kx-',h.vchan,jacx.jac(:,7),'b',h.vchan,dd(:,nlays+1),'r'); xlim([640 1640]); 
   hl = legend('BT DIFF orig-new','STEMP JAC finite diff','STEMP JACanalytic','location','best','fontsize',10);
 stempjac_sarta_fast = dd(:,nlays+1);
@@ -142,7 +84,7 @@ figure(16); clf;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacG1',1);  dd = squeeze(d(1,:,:)); % whos dd d
+[w,d,iaProf,iaNumLay] = readsarta_jac('jactest.rtp_jacG1',1);  dd = squeeze(d(1,:,:)); % whos dd d
 g1jac_sarta_fast = dd(:,1:nlays);
 figure(6); clf; pcolor(h.vchan,1:nlays,jacx.wvjac(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('G1 FINITE DIFF'); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
 figure(7); clf; pcolor(h.vchan,1:nlays,dd(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('G1 ANALYTIC'); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
@@ -156,7 +98,7 @@ figure(15); hold on; plot(h.vchan,sum(jacx.wvjac(:,1:nlays)'),'b.-',h.vchan,sum(
 figure(16); hold on; plot(h.vchan,(eps+sum(jacx.wvjac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'b'); hold on; axis([640 1640 0 +2]); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacG3',3);  dd = squeeze(d(1,:,:)); % whos dd d
+[w,d,iaProf,iaNumLay] = readsarta_jac('jactest.rtp_jacG3',3);  dd = squeeze(d(1,:,:)); % whos dd d
 g3jac_sarta_fast = dd(:,1:nlays);
 figure(9); clf; pcolor(h.vchan,1:nlays,jacx.o3jac(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('G3 FINITE DIFF'); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
 figure(10); clf; pcolor(h.vchan,1:nlays,dd(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('G3 ANALYTIC'); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
@@ -179,7 +121,7 @@ figure(19); clf; plot(h.vchan,jacx.jac(:,8),'b.-',h.vchan,sum(ptempjac_sarta_fas
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 if length(iExtraGas) == 1
-  [w,d,iaProf,iaNumLay] = readsarta_jac(['newdayx.rtp_jacG' num2str(iExtraGas)],iExtraGas);  dd = squeeze(d(1,:,:)); % whos dd d
+  [w,d,iaProf,iaNumLay] = readsarta_jac(['jactest.rtp_jacG' num2str(iExtraGas)],iExtraGas);  dd = squeeze(d(1,:,:)); % whos dd d
   str = ['gNjac_sarta_fast = jacx.G' num2str(iExtraGas) 'jac;']; 
   eval(str);
   figure(12); clf; pcolor(h.vchan,1:nlays,gNjac_sarta_fast(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title(['G' num2str(iExtraGas) ' FINITE DIFF']); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
@@ -222,9 +164,9 @@ if length(iExtraGas) == 1
 
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%
-[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacCLD',300);  dd = squeeze(d(1,:,:)); % whos dd d
+[w,d,iaProf,iaNumLay] = readsarta_jac('jactest.rtp_jacCLD',300);  dd = squeeze(d(1,:,:)); % whos dd d
 cldjac_sarta_fast = dd(:,1:12);
-figure(20); 
+figure(21); 
 for icld = 1 : 12
   switch icld
     case 1; cldstr = 'cfrac1';
@@ -287,20 +229,3 @@ hl = legend('SARTA finite diff','SARTA analystic','hand jac','location','best');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%{
-% compare to kcarta
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 01;     %% *** HAVE KCARTA JACS ***, at -50 deg
-kcrads = load('individual_prof_convolved_kcarta_airs_1.mat');
-kcjacs = load('individual_prof_convolved_kcarta_airs_1_jac.mat');
-
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45;     %% *** HAVE KCARTA JACS ***, at 0 deg
-kcrads = load('individual_prof_convolved_kcarta_airs_45.mat');
-kcjacs = load('individual_prof_convolved_kcarta_airs_45_jac.mat');
-
-frtp = 'newdayx_clr.op.rtp'; iProf = 1;  %% satzen = 22  deg  *** HAVE KCARTA JACS ***, at 22 deg
-kcrads = load('individual_prof_convolved_kcarta_airs_CLR_1.mat');
-kcjacs = load('individual_prof_convolved_kcarta_airs_CLR_1_jac.mat');
-
-plot_test_jac_kcartaVSsarta
-%}

@@ -1,3 +1,5 @@
 gmon.out
 *.rtp_jac*
 *.rtp_WGT*
+*.rtp
+*.rtp_*
