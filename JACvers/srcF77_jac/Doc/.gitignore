@@ -1,0 +1,9 @@
+tikzpgfmanual.pdf
+test_diagram*
+sarta_diagramX*
+
+*.log
+*.out
+*.aux
+*.bbl
+*.blg

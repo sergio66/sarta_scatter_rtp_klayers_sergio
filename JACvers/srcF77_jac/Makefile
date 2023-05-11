@@ -36,7 +36,8 @@ m140_icebaumGHM_waterdrop_desertdust:
 	make -f make_sarta_pclsam
 	mv a.out ../bin/jac_sarta_apr08_m140_iceGHMbaum_waterdrop_desertdust_slabcloud_hg3X
 
-# CrisHiRes
+########################################################################
+# CrisHiRes YAYAYAYAYAYAYAYAYA
 crisg4_hires_dec17_icebaumGHM_waterdrop_desertdust:
 	rm -f *.o incFTC.f fnmie.f
 	ln -s incFTC_crisg4_oct16_new.f incFTC.f
@@ -161,6 +162,15 @@ cris_hrg4_p2019_dec18:
 	mv a.out ../bin/jac_cris_hrg4_p2019dec18_set3
 
 ######  -------  IASI  -----------
+# this is what I kinda used in the SingleFootprint retrievals
+# copied from ../../v108_Src_rtpV201_pclsam_slabcloud_hg3/Makefile
+iasi_may09_iceaggr_waterdrop_desertdust_wcon_nte_swch4:
+	rm -f *.o incFTC.f fnmie.f
+	ln -s incFTC_iasi_may09_wcon_nte_swch4.f incFTC.f
+	ln -s fnmie_iasi_iceaggr_waterdrop_desertdust.f fnmie.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_sarta_iasi_may09_iceaggr_waterdrop_desertdust_slabcloud_hg3_wcon_nte_swch4
+
 # Legacy
 iasi_may09:
 	rm -f *.o incFTC.f

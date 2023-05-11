@@ -1,0 +1,126 @@
+%---------------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[expert]{lucidabr}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage[small,bf]{caption}
+\usepackage{pdfpages}
+\usepackage{xcolor}
+\usepackage[sort&compress,authoryear]{natbib}
+
+%%%%%%%%%%% need floatrow.sty
+\usepackage{floatrow}
+\floatsetup[table]{style=plain,capposition=top,justification=centering}%raggedright}
+
+% \usepackage{caption}
+% \captionsetup[table]{justification=raggedright}
+
+% Use to tighten up section spacing
+%\usepackage[compact]{titlesec} 
+%\titlespacing{\author}{0pt}{*0}{*0} 
+%\titlespacing{\affil}{0pt}{*0}{*0} 
+% \titlespacing{\section}{0pt}{*0}{*0} 
+% \titlespacing{\subsection}{0pt}{*0}{*0} 
+% \titlespacing{\subsubsection}{0pt}{*0}{*0}
+
+%\usepackage{textcomp}
+
+%\usepackage{fancyhdr}
+%\usepackage[normalbib,normallists,normalmargins,normalleading,normalindent]{savetrees}
+%\usepackage{paralist}
+% Usage
+%\begin{compactenum}
+%  \item first item
+%  \item second item
+%  \item third item
+%\end{compactenum}
+%---------------------------------------------------------------------------
+% Shortcuts
+%\newcommand{\eg}{\emph{e.\,g.\,}}
+%\newcommand{\eg}{\textit{e}.\textit{g}. }
+\newcommand{\wn}{cm$^{-1}$\xspace}
+\newcommand{\um}{$\mu m$\xspace}
+\newcommand{\cd}{CO$_2$\xspace}
+\newcommand{\co}{CO\xspace}
+\newcommand{\water}{H$_2$O\xspace}
+\newcommand{\methane}{CH$_4$\xspace}
+\newcommand{\nitrogen}{N$_2$\xspace}
+\newcommand{\amm}{NH$_3$\xspace}
+\newcommand{\nitrous}{N$_2$O\xspace}
+\newcommand{\oxygen}{O$_2$\xspace}
+\newcommand{\ozone}{O$_3$\xspace}
+\newcommand{\mydeg}{\mbox{$^\circ$}\xspace}
+\newcommand{\uc}{\textsf{uni\-form\_clear\xspace}}
+\newcommand{\cc}{\textsf{cloud-clear\-ed\xspace}}
+\newcommand{\airs}{\textsf{AIRS}\xspace}
+\newcommand{\cris}{\textsf{CrIS}\xspace}
+\newcommand{\cla}{\textsf{CLARREO}\xspace}
+\newcommand{\iasi}{\textsf{IASI}\xspace}
+\newcommand{\kcarta}{\textsf{kCARTA}\xspace}
+%\newcommand{\ccaption}[1]{\textsf{\textcolor{red}{#1}}}
+\newcommand{\ccaption}[1]{\textsf{\textcolor{blue}{#1}}}
+%
+\def \accepted       {{\sl accepted}}
+\def \etal           {{\it et al.}}
+\def \eg             {{\it e.g.,}}
+\def \ie             {{\it i.e.,}}
+\def \inpress        {{\it in press}}
+\def \privcomm       {{\sl private communication}}
+\def\grl{Geophys.~Res.~Lett.} % Geophysics Research Letters
+
+%\usepackage[colorlinks=true,raiselinks=false,
+%            linkcolor=red!65!black,citecolor=red!65!black,
+%            urlcolor=red!65!black]{hyperref}
+\usepackage[colorlinks=true,raiselinks=false,
+            linkcolor=blue!65!black,citecolor=blue!65!black,
+            urlcolor=blue!65!black]{hyperref}
+
+%---------------------------------------------------------------------------
+%\setlist{itemsep=0em}
+%---------------------------------------------------------------------------
+\makeatletter
+\renewcommand{\section}{\@startsection {section}{1}{\z@}%
+                                   {-3.5ex \@plus -1ex \@minus -.2ex}%
+                                   {2.3ex \@plus.2ex}%
+                                   {\reset@font\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\reset@font\normalsize\bfseries}}
+\makeatother
+%---------------------------------------------------------------------------
+% Indent captions a little
+\setlength{\captionmargin}{10pt}
+\parindent=1.2em
+\parskip=0.5ex
+
+%  For the tables
+\def\tstrut{\vrule height 2.5ex depth 1.2ex width 0pt}
+\def\tstruta{\vrule height 0ex depth 1.2ex width 0pt}
+%---------------------------------------------------------------------------
+% If use fancyhdr
+% \lhead{}
+% \rhead{}
+% \chead{}
+% \lfoot{\small\sf Page \thepage\ of \pageref{LastPage}}
+% \rfoot{\small\sf L. Strow/UMBC}
+% \cfoot{\small\sf AIRS and IASI Intercal}
+%\renewcommand{\headrulewidth}{0pt}  % only with fancyhdr
+\pagestyle{plain}
+\usepackage{geometry}
+\geometry{letterpaper,margin=1.0in,vcentering}
+%---------------------------------------------------------------------------
+%---------------------------------------------------------------------------
+
+
+\newcommand{\twocolmod}[4]
+  {
+  \begin{columns}[T]
+    \begin{column}[c]{#1\textwidth}
+     {#3}
+    \end{column}
+    \begin{column}[c]{#2\textwidth}
+     {#4}
+    \end{column}
+ \end{columns}
+  }

@@ -47,14 +47,15 @@ frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iPr
 frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 113;   %% almost clear
 frtp = 'newdayx_1_100_12150.op.rtp'; iProf = 1;     %% same as profile 1 from cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp *** HAVE KCARTA JACS ***, at -50 deg
 
-frtp = 'newdayx_clr.op.rtp'; iProf = 1;  %% satzen = 22  deg  *** HAVE KCARTA JACS ***, at 22 deg
-
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45; %% satzen =  0  deg   *** HAVE KCARTA JACS ***, at -00 deg
-
 frtp = 'newdayx_nocldfields_unityemiss.op.rtp'; iProf = 1; %% satzen =  23  deg   
+
+frtp = 'newdayx_clr.op.rtp'; iProf = 1;  %% satzen = 22  deg  *** HAVE KCARTA JACS ***, at 22 deg
 frtp = 'newdayx_nocldfields.op.rtp'; iProf = 1; %% satzen =  23  deg   
 
-frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;  %% satzen = -50  deg  *** HAVE KCARTA JACS ***, at -50 deg
+frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;   %% satzen = -50  deg  *** HAVE KCARTA JACS ***, at -50 deg
+frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45;  %% satzen =  0  deg   *** HAVE KCARTA JACS ***, at -00 deg
+frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 287;  %% cfrac2 == 0
+frtp = 'cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1438; %% cfrac2 == 0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
@@ -67,6 +68,9 @@ kcrads = load('individual_prof_convolved_kcarta_airs_45.mat');
 kcjacs = load('individual_prof_convolved_kcarta_airs_45_jac.mat');
 %}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if ~exist('porig')
 
   iExtraGas = [];
@@ -76,6 +80,10 @@ if ~exist('porig')
   if length(iExtraGas) == 0
     iExtraGas = 2;
   end
+
+  disp('MAKE SURE THE quicksartajac FINITE JACS use < dQ = 0.01;  dT = 0.1 > ... if you make them smaller, perversely the accuracy gets worse!!!!')
+  disp('MAKE SURE THE quicksartajac FINITE JACS use < dQ = 0.01;  dT = 0.1 > ... if you make them smaller, perversely the accuracy gets worse!!!!')
+  disp('MAKE SURE THE quicksartajac FINITE JACS use < dQ = 0.01;  dT = 0.1 > ... if you make them smaller, perversely the accuracy gets worse!!!!')
 
   sartaer = ['!date; time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
   eval(sartaer);
@@ -89,11 +97,19 @@ end
 nlays = porig.nlevs-1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% time with and without jacs
-sartaer = ['!ls -lt ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug; date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
+
+sarta_exec = '../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug_save3';
+sarta_exec = '../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug';
+
+fprintf(1,'sarta_exec = %s \n',sarta_exec);
+
+sartaer = ['!ls -lt ' sarta_exec ';  date; time ' sarta_exec ' fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)];
 eval(sartaer);
-sartaer = ['!ls -lt ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug; date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)  ' listj=100'];
-sartaer = ['!ls -lt ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug; date; time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)  ' listj=-1'];
+sartaer = ['!ls -lt ' sarta_exec '; date; time ' sarta_exec ' fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)  ' listj=100'];
+sartaer = ['!ls -lt ' sarta_exec '; date; time ' sarta_exec ' fin=' frtp ' fout=newdayx.rtp listp=' num2str(iProf)  ' listj=-1'];
 t3 = datetime("now");
 eval(sartaer);
 t4 = datetime("now");
@@ -117,7 +133,7 @@ figure(3); clf; pcolor(h.vchan,1:nlays,jacx.tjac(:,1:nlays)'); colorbar; shading
 figure(4); clf; pcolor(h.vchan,1:nlays,dd(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('TZ ANALYTIC'); colormap jet; caxis([0 1]/10); xlim([640 1640])
 figure(5); clf; pcolor(h.vchan,1:nlays,jacx.tjac(:,1:nlays)' ./ (eps + dd(:,1:nlays)')); colorbar; shading interp; set(gca,'ydir','reverse'); title('TZ FINITE/ANALYTIC'); colormap(usa2); caxis([-1 +1]*2); xlim([640 1640])
 ratio = jacx.tjac(:,1:nlays)' ./ (eps + dd(:,1:nlays)'); bad = find(abs(jacx.tjac(:,1:nlays)') < 1e-6); ratio(bad) = nan;
-figure(5); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); title('FINITE/ANALYTIC TZ-1'); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
+figure(5); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); title('FINITE/ANALYTIC TZ - 1'); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
 
 figure(15); clf; 
   figure(15); hold on; plot(h.vchan,10*sum(jacx.tjac(:,1:nlays)'),'r.-',h.vchan,10*sum(dd(:,1:nlays)'),'m'); hold on
@@ -132,7 +148,7 @@ figure(6); clf; pcolor(h.vchan,1:nlays,jacx.wvjac(:,1:nlays)'); colorbar; shadin
 figure(7); clf; pcolor(h.vchan,1:nlays,dd(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('G1 ANALYTIC'); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
 figure(8); clf; pcolor(h.vchan,1:nlays,jacx.wvjac(:,1:nlays)' ./ (eps + dd(:,1:nlays)')); colorbar; shading interp; set(gca,'ydir','reverse'); title('G1 FINITE/ANALYTIC'); colormap(usa2); caxis([-1 +1]*2); xlim([640 1640])
 ratio = jacx.wvjac(:,1:nlays)' ./ (eps + dd(:,1:nlays)'); bad = find(abs(jacx.wvjac(:,1:nlays)') < 1e-6); ratio(bad) = nan;
-figure(8); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); title('FINITE/ANALYTIC G1-1'); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
+figure(8); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); title('FINITE/ANALYTIC G1 - 1'); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
 
 figure(15); hold on; plot(h.vchan,sum(jacx.wvjac(:,1:nlays)'),'b.-',h.vchan,sum(dd(:,1:nlays)'),'c'); hold on; 
   axis([640 1640 -10 +10])
@@ -146,12 +162,13 @@ figure(9); clf; pcolor(h.vchan,1:nlays,jacx.o3jac(:,1:nlays)'); colorbar; shadin
 figure(10); clf; pcolor(h.vchan,1:nlays,dd(:,1:nlays)'); colorbar; shading interp; set(gca,'ydir','reverse'); title('G3 ANALYTIC'); colormap(usa2); caxis([-1 1]/2); xlim([640 1640])
 figure(11); clf; pcolor(h.vchan,1:nlays,jacx.o3jac(:,1:nlays)' ./ (eps + dd(:,1:nlays)')); colorbar; shading interp; set(gca,'ydir','reverse'); title('G3 FINITE/ANALYTIC'); colormap(usa2); caxis([-1 +1]*2); xlim([640 1640])
 ratio = jacx.o3jac(:,1:nlays)' ./ (eps + dd(:,1:nlays)'); bad = find(abs(jacx.o3jac(:,1:nlays)') < 1e-6); ratio(bad) = nan;
-figure(11); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); title('FINITE/ANALYTIC G3-1'); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
+figure(11); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); title('FINITE/ANALYTIC G3 - 1'); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
 
 figure(15); hold on; plot(h.vchan,sum(jacx.o3jac(:,1:nlays)'),'k.-',h.vchan,sum(dd(:,1:nlays)'),'g'); hold off; 
   axis([640 1640 -20 +20])
   hl = legend('10*sum(TZjac),finite diff','10*sum(TZjac),analytic','sum(WVjac),finite diff','sum(WVjac),analytic','sum(O3jac),finite diff','sum(O3jac),analytic','location','best','fontsize',8);
-figure(16); hold on; plot(h.vchan,(eps+sum(jacx.o3jac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'k'); hold on; axis([640 1640 0 +3]); title('ratio FINITE/ANALYTIC'); hl = legend('TZ','WV','O3','location','best','fontsize',10);
+figure(16); hold on; plot(h.vchan,(eps+sum(jacx.o3jac(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'k'); hold on; axis([640 1640 0 +3]); title('ratio FINITE/ANALYTIC'); 
+hl = legend('TZ','WV','O3','location','best','fontsize',10);
 
 figure(17); clf; plot(h.vchan,jacx.jac(:,1),'b.-',h.vchan,sum(g1jac_sarta_fast,2),'r')
    title('Comparing G1 (WV) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([1000 1500])
@@ -171,7 +188,7 @@ if length(iExtraGas) == 1
     colormap(usa2); caxis([-1 +1]*2); xlim([640 1640])
   ratio = gNjac_sarta_fast(:,1:nlays)' ./ (eps + dd(:,1:nlays)'); bad = find(abs(gNjac_sarta_fast(:,1:nlays)') < 1e-6); ratio(bad) = nan;
   figure(14); clf; pcolor(h.vchan,1:nlays,ratio-1); colorbar; shading interp; set(gca,'ydir','reverse'); 
-  title(['FINITE/ANALYTIC G' num2str(iExtraGas) '-1']); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
+  title(['FINITE/ANALYTIC G' num2str(iExtraGas) ' - 1']); colormap(usa2); caxis([-1 +1]); xlim([640 1640])
 
   if iExtraGas == 5
     figure(12); xlim([2000 2700])
@@ -184,8 +201,10 @@ if length(iExtraGas) == 1
     axis([640 1640 -20 +20])
     hl = legend('10*sum(TZjac),finite diff','10*sum(TZjac),analytic','sum(WVjac),finite diff','sum(WVjac),analytic','sum(O3jac),finite diff','sum(O3jac),analytic',...
                 ['sum(G' num2str(iExtraGas) 'jac),finitediff'],['sum(G' num2str(iExtraGas) 'jac),analytic'],'location','best','fontsize',8);  
-  figure(16); hold on; plot(h.vchan,(eps+sum(gNjac_sarta_fast(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'g'); hold on; axis([640 1640 0 +3]); title('ratio FINITE/ANALYTIC \newline fg(cyan=column/sum(lay) WV)'); 
-     hl = legend('TZ','WV','O3',strG,'location','best','fontsize',10);
+  figure(16); hold on; plot(h.vchan,(eps+sum(gNjac_sarta_fast(:,1:nlays)'))./(eps+sum(dd(:,1:nlays)')),'g'); hold on; axis([640 1640 0 +3]); 
+  figure(16); hold on; plot(h.vchan,jacx.jac(:,1)'./nansum(jacx.wvjac(:,1:nlays)'),'c'); 
+     title('ratio FINITE/ANALYTIC \newline (cyan=column/sum(lay) WV)'); 
+     hl = legend('TZ','WV','O3',strG,'finite WV jac column/sumlay','location','best','fontsize',10);
   
   if iExtraGas == 2
     figure(20); clf; plot(h.vchan,jacx.jac(:,2),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
@@ -203,9 +222,38 @@ if length(iExtraGas) == 1
 
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%
+[w,d,iaProf,iaNumLay] = readsarta_jac('newdayx.rtp_jacCLD',300);  dd = squeeze(d(1,:,:)); % whos dd d
+cldjac_sarta_fast = dd(:,1:12);
+figure(20); 
+for icld = 1 : 12
+  switch icld
+    case 1; cldstr = 'cfrac1';
+    case 2; cldstr = 'cngwat1';
+    case 3; cldstr = 'cpsize1';
+    case 4; cldstr = 'cprtop1';
+    case 5; cldstr = 'cprbot1';
+    case 6; cldstr = 'cfrac2';
+    case 7; cldstr = 'cngwat2';
+    case 8; cldstr = 'cpsize2';
+    case 9; cldstr = 'cprtop2';
+    case 10; cldstr = 'cprbot2';
+    case 11; cldstr = 'cfrac12';
+    case 12; cldstr = 'stemp';
+  end  
+  if icld <= 11
+    plot(h.vchan,jacx.cldjac(:,icld),'b.-',h.vchan,cldjac_sarta_fast(:,icld),'r'); title(cldstr);
+  elseif icld == 12
+    plot(h.vchan,jacx.jac(:,7),'b.-',h.vchan,cldjac_sarta_fast(:,icld),'r'); title(cldstr);
+  end
+  xlim([640 1640])
+  pause(0.25);
+  pause
+end
+print_cloud_params(h,porig,1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(15); hold off
-figure(16); hold on; plot(h.vchan,jacx.jac(:,1)'./nansum(jacx.wvjac(:,1:nlays)'),'c'); 
 figure(16); hold off
 
 iAX = input('Change x-axis to [640 2780] ? (-1 default /+1) : ');

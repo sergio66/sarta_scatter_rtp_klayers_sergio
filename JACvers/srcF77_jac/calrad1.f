@@ -278,6 +278,8 @@ C
              DOSUNL(L)=DOSUN
              ODTOTL(L)=KAIR + K1*CFRCL1(L)
 C replaced 03Feb2006          ODSUM=ODSUM + ODTOTL(L)
+c these are used in SW when sun = on (if DOSUN(L)), else not really used in LW
+c so derivatives wrt CFRCL1(L) should not be impacted
              ODSUM=ODSUM + KAIR + NEXTO1(I)*CFRCL1(L)
              XFUDGE(L)=KAIR + NEXTO1(I)*CFRCL1(L)
              WTILDE(L)=CFRCL1(L)*NSCAO1(I) / XFUDGE(L)

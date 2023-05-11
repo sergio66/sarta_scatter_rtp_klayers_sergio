@@ -7,7 +7,7 @@
 OBJS = intersect.o rdsun_set_nfake.o rdcoef_tunmlt.o calc_sva_secang_secsun.o \
        get_lbot_fix_salt_temp.o prepare_clds.o calc_layer_trans_ycaltodx_1_7.o  \
        docloudyTwoSlab_RT.o find_num_prof.o wrtjac.o l2scalc.o \
-       ycalpar_jac_main.o ycalokw.o ycalowp.o\
+       ycalpar_jac_main.o ycalokw.o ycalowp.o write_header_jac_files.o\
        rdprof.o  vaconv.o  calpar.o  qikexp.o  hg3.o  setems_pclsam.o  getbot.o \
        ycalt1_od.o  ycalt2_od.o  ycalt3_od.o  ycalt4_od.o  ycalt5_od.o \
        ycalt6_od.o  ycalt7_od.o  bkprep.o  getcld_slab.o \
@@ -78,8 +78,8 @@ OPT = -O2 -convert big_endian -extend-source 132 -pg -check bounds -g -traceback
 OPTEXEC = -pg
 
 ## speedy, no profiling
-#OPT = -O2 -convert big_endian -extend-source 132
-#OPTEXEC =
+OPT = -O2 -convert big_endian -extend-source 132
+OPTEXEC =
 
 # Portland Group F77:
 # ------------------------------------------------------------------------

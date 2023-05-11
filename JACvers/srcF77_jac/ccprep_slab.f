@@ -293,7 +293,7 @@ c      print *, 'tcbot=', TCBOT
 c      print *, 'cleart=', CLEART
 c      print *, 'clearb=', CLEARB
 ccccccccc
-
+       JACTOP_CFRCL = 0
 C      -----------------------------------------------------------------
 C      Calc mean secant angles thru cloud and fraction of cloud in layer
 C      -----------------------------------------------------------------
@@ -301,6 +301,12 @@ C      -----------------------------------------------------------------
           MASEC=SECANG(LCTOP)
           MSSEC=SECSUN(LCTOP)
           CFRCL(LCTOP)=1.0
+          IF (DOJAC) THEN
+            L = LCTOP
+            JACTOP_CFRCL(L) = 0;
+            JACBOT_CFRCL(L) = 0;
+c            write(*,'(I5,6(F12.5))') L,CFRCL(L),CPRBOT,CPRTOP,PLEV(L),JACTOP_CFRCL(L),JACBOT_CFRCL(L)
+          END IF
        ELSE
 C         top & bottom layers
           MASEC=SECANG(LCTOP)*(1-CLEART) + SECANG(LCBOT)*(1-CLEARB)
@@ -308,6 +314,19 @@ C         top & bottom layers
           X=(1-CLEART) + (1-CLEARB)
           CFRCL(LCTOP)=(PLEV(LCTOP+1)-CPRTOP)/(CPRBOT-CPRTOP)
           CFRCL(LCBOT)=(CPRBOT-PLEV(LCBOT))/(CPRBOT-CPRTOP)
+          IF (DOJAC) THEN
+            L = LCTOP
+            JACTOP_CFRCL(L) = 1/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP) * ( (CPRBOT-CPRTOP)*(-1) - (PLEV(LCTOP+1)-CPRTOP)*(-1) )
+            JACBOT_CFRCL(L) = 1/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP) * ( (CPRBOT-CPRTOP)*(0)  - (PLEV(LCTOP+1)-CPRTOP)*(+1) )
+c            write(*,'(I5,6(F12.5))') L,CFRCL(L),CPRBOT,CPRTOP,PLEV(L),JACTOP_CFRCL(L),JACBOT_CFRCL(L)
+
+            L = LCBOT
+            JACTOP_CFRCL(L) = 1/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP) * ( (CPRBOT-CPRTOP)*(0)  - (CPRBOT-PLEV(LCBOT))*(-1) )
+            JACBOT_CFRCL(L) = 1/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP) * ( (CPRBOT-CPRTOP)*(1)  - (CPRBOT-PLEV(LCBOT))*(+1) )
+c            write(*,'(I5,6(F12.5))') L,CFRCL(L),CPRBOT,CPRTOP,PLEV(L),JACTOP_CFRCL(L),JACBOT_CFRCL(L)
+
+          END IF
+
 C         other layers
           DO L=LCTOP+1,LCBOT-1
              MASEC=MASEC + SECANG(L)
@@ -317,6 +336,8 @@ C         other layers
              IF (DOJAC) THEN
                JACTOP_CFRCL(L) = -(PLEV(L+1)-PLEV(L))/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP)*(-1)
                JACBOT_CFRCL(L) = -(PLEV(L+1)-PLEV(L))/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP)*(+1)
+               ! see test_cld_jacs_rads_cldfracsL.m
+c               write(*,'(I5,6(F12.5))') L,CFRCL(L),CPRBOT,CPRTOP,PLEV(L),JACTOP_CFRCL(L),JACBOT_CFRCL(L)
              END IF
           ENDDO
 C         Divide secant sum by weight sum to get mean secant
@@ -356,7 +377,7 @@ c          print *,'MIN PARTICLE SIZE',CPSIZE,MIEPS(1,INDMIE),ILO,IHI,X
               JACA_G_ASYM(I)=0
 
               JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
-              DO L = LCTOP+1,LCBOT-1
+              DO L = LCTOP,LCBOT
                 JACTOP_CFRCL_v(L,I) = JACA_FINAL(I) * JACTOP_CFRCL(L)
                 JACBOT_CFRCL_v(L,I) = JACA_FINAL(I) * JACBOT_CFRCL(L)
               END DO
@@ -396,7 +417,7 @@ c          print *,'MAX PARTICLE SIZE',CPSIZE,MIEPS(NPS,INDMIE),ILO,IHI,X
               JACA_G_ASYM(I)=0
 
               JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
-              DO L = LCTOP+1,LCBOT-1
+              DO L = LCTOP,LCBOT
                 JACTOP_CFRCL_v(L,I) = JACA_FINAL(I) * JACTOP_CFRCL(L)
                 JACBOT_CFRCL_v(L,I) = JACA_FINAL(I) * JACBOT_CFRCL(L)
               END DO
@@ -461,7 +482,7 @@ c           d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d
 
                !!! this is simple and correct form of derivative, except make sure you use (CNGWAT+1e-16) in denominator
                JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0
-               DO L = LCTOP+1,LCBOT-1
+               DO L = LCTOP,LCBOT
                  JACTOP_CFRCL_v(L,I) = JACA_FINAL(I) * JACTOP_CFRCL(L)
                  JACBOT_CFRCL_v(L,I) = JACA_FINAL(I) * JACBOT_CFRCL(L)
                END DO
