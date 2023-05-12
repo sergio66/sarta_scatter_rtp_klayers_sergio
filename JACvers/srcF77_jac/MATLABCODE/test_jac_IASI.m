@@ -186,7 +186,7 @@ for icld = 1 : 12
   end
   xlim([640 1640])
   pause(0.25);
-  pause
+  %pause
 end
 print_cloud_params(h,porig,1);
 

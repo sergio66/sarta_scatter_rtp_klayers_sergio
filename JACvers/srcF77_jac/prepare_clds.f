@@ -5,9 +5,9 @@
      $    XCEMI2, XCRHO2, CSTMP2, CFRA12, FCLEAR, CFRA1X, CFRA2X,  ! from GETCLD
      $    NCHAN, IPROF, LBOT, PSURF, PLEV, PLAY, TEMP, SECANG, SECSUN,
      $    MIETYP, MIENPS, MIEPS, MIEABS, MIEEXT, MIEASY,
-     $    LCBOT1, LCTOP1, CLRB1, CLRT1, TCBOT1, TCTOP1, MASEC1, MASUN1,
+     $    LCBOT1, LCTOP1, CLRB1, CLRT1, TCBOT1, TCTOP1, MASEC1, MASUN1, ! DEPEND ON CPRTOP1,CPRBOT1
      $    CFRCL1, G_ASY1, NEXTO1, NSCAO1, TEMPC1, 
-     $    LCBOT2, LCTOP2, CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2,
+     $    LCBOT2, LCTOP2, CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2, ! DEPEND ON CPRTOP2,CPRBOT2
      $    CFRCL2, G_ASY2, NEXTO2, NSCAO2, TEMPC2,
      $    DOJAC, 
      $    JACA_G_ASY1, JACA_NEXTO1, JACA_NSCAO1, JACA_FINAL_1, 
@@ -122,6 +122,7 @@ C        Check and prepare (top) cloud1
 C           Determine which lookup table to use
             CALL GETMIE(CTYPE1,MIETYP,INDMI1,IERR1)
 C           Prepare selected lookup table for given cpsize
+C           NOTE CLRB1, CLRT1. TCBOT1, TCTOP1,CFRCL1 : depend on CPRTO1,CPRBO1
             CALL CCPREP( NCHAN, LBOT, INDMI1, MIENPS,
      $          CNGWA1, CPSIZ1, CPRTO1, CPRBO1, PLEV, TEMP, SECANG,
      $          SECSUN, MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT1, LCTOP1,
@@ -144,6 +145,7 @@ C      Check and prepare (bottom) cloud2
 C          Determine which lookup table to use
            CALL GETMIE(CTYPE2,MIETYP,INDMI2,IERR2)
 C          Prepare lookup data for cloud2
+C           NOTE CLRB2, CLRT2. TCBOT2, TCTOP2,CFRCL2 : depend on CPRTO2,CPRBO2
            CALL CCPREP( NCHAN, LBOT, INDMI2, MIENPS,
      $          CNGWA2, CPSIZ2, CPRTO2, CPRBO2, PLEV, TEMP, SECANG,
      $          SECSUN, MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT2, LCTOP2,

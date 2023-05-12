@@ -12,6 +12,7 @@
 # Builds cloudy
 #----------------------------------------------------------------------------------------
 # AIRS for L1C May 2019
+# YAYAYAYAYAYAYAYAYA
 airs_cloudy_may19:
 	rm -f *.o incFTC.f fnmie.f
 	ln -s incFTC_airs_may19_pclsam.f incFTC.f
@@ -164,6 +165,7 @@ cris_hrg4_p2019_dec18:
 ######  -------  IASI  -----------
 # this is what I kinda used in the SingleFootprint retrievals
 # copied from ../../v108_Src_rtpV201_pclsam_slabcloud_hg3/Makefile
+# YAYAYAYAYAYAYAYAYA
 iasi_may09_iceaggr_waterdrop_desertdust_wcon_nte_swch4:
 	rm -f *.o incFTC.f fnmie.f
 	ln -s incFTC_iasi_may09_wcon_nte_swch4.f incFTC.f

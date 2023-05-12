@@ -53,9 +53,9 @@ frtp = 'TEST_RTP/newdayx_clr.op.rtp'; iProf = 1;  %% satzen = 22  deg  *** HAVE 
 frtp = 'TEST_RTP/newdayx_nocldfields.op.rtp'; iProf = 1; %% satzen =  23  deg   
 
 frtp = 'TEST_RTP/cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1;   %% satzen = -50  deg  *** HAVE KCARTA JACS ***, at -50 deg
-frtp = 'TEST_RTP/cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45;  %% satzen =  0  deg   *** HAVE KCARTA JACS ***, at -00 deg
 frtp = 'TEST_RTP/cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 287;  %% cfrac2 == 0
 frtp = 'TEST_RTP/cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 1438; %% cfrac2 == 0
+frtp = 'TEST_RTP/cloudy_airs_l1c_ecm_sarta_baum_ice.2018.06.29.086_cumsum_-1.op.rtp'; iProf = 45;  %% satzen =  0  deg   *** HAVE KCARTA JACS ***, at -00 deg
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
@@ -248,7 +248,7 @@ for icld = 1 : 12
   end
   xlim([640 1640])
   pause(0.25);
-  pause
+  %pause
 end
 print_cloud_params(h,porig,1);
 

@@ -214,6 +214,15 @@ C                    EXECUTABLE CODE
 C***********************************************************************
 C***********************************************************************
 C
+C which output variable depends on cprtop/cprbot?
+C   LCTOP/LCBOT           -- used by docloudyTwoSlab_RT.f for black/TwoSlab clouds
+C   CFRCL(MAXLAY)         -- used by docloudyTwoSlab_RT.f for TwoSLab clouds
+C   CLEART/CLEARB         -- used by docloudyTwoSlab_RT.f for black clouds 
+C   TCTOP only on CPRTOP  -- used by docloudyTwoSlab_RT.f for black clouds 
+C
+C***********************************************************************
+C***********************************************************************
+
 C      --------------------------------
 C      Find top and bottom cloud layers
 C      --------------------------------
@@ -324,7 +333,6 @@ c            write(*,'(I5,6(F12.5))') L,CFRCL(L),CPRBOT,CPRTOP,PLEV(L),JACTOP_CF
             JACTOP_CFRCL(L) = 1/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP) * ( (CPRBOT-CPRTOP)*(0)  - (CPRBOT-PLEV(LCBOT))*(-1) )
             JACBOT_CFRCL(L) = 1/(CPRBOT-CPRTOP)/(CPRBOT-CPRTOP) * ( (CPRBOT-CPRTOP)*(1)  - (CPRBOT-PLEV(LCBOT))*(+1) )
 c            write(*,'(I5,6(F12.5))') L,CFRCL(L),CPRBOT,CPRTOP,PLEV(L),JACTOP_CFRCL(L),JACBOT_CFRCL(L)
-
           END IF
 
 C         other layers
@@ -478,7 +486,7 @@ c           d(K1) = d(NEXTO1(I)) - 0.5*(d(NSCAO1(I))*(1+G_ASY1(I)) + NSCAO1(I)*d
      $            X*(MIEABS(I,IHI,INDMIE) - MIEABS(I,ILO,INDMIE)) )
                JACA_NSCAOD(I)=JACA_NEXTOD(I) - JACABSOD
                JACA_G_ASYM(I)=0
-               JACA_FINAL(I) = JACA_NEXTOD(I) - 0.5*JACA_NSCAOD(I)*(1+G_ASYM(I))    !!!!!  - 0.5*NSCAOD*JACA_G_ASYM(I) == 0
+c               JACA_FINAL(I) = JACA_NEXTOD(I) - 0.5*JACA_NSCAOD(I)*(1+G_ASYM(I))    !!!!!  - 0.5*NSCAOD*JACA_G_ASYM(I) == 0
 
                !!! this is simple and correct form of derivative, except make sure you use (CNGWAT+1e-16) in denominator
                JACA_FINAL(I) = NEXTOD(I) - NSCAOD(I)*(1.0+G_ASYM(I))/2.0

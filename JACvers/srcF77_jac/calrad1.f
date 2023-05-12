@@ -331,6 +331,7 @@ C scattering term is increased.
           ELSE
              RSUNSC=0.0
           ENDIF
+c          print *,'calrad1',L,RADUP,TAULX(L),RPLNCK(L),RADUP*TAULX(L) + RPLNCK(L)*(1.0 - TAULX(L)) + RSUNSC
           RADUP=RADUP*TAULX(L) + RPLNCK(L)*(1.0 - TAULX(L)) + RSUNSC
           IF (DOJAC) RADLAY(L) = RADUP
 

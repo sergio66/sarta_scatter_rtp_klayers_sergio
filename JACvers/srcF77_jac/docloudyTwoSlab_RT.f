@@ -1,8 +1,8 @@
       SUBROUTINE docloudyTwoSlab_RT(I, FREQ, LBOT, NWANTC, INDCHN, 
      $  TEMP,TSURF,TAU,TAUZ, TAUZSN, 
      $  BLMULT, EMIS, FCLEAR, COSDAZ, SECANG, SECSUN, DOSUN, SUNFAC, HSUN, RHOSUN, 
-     $  RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,
-     $  TCBOT1, TCTOP1, TCBOT2, TCTOP2, CFRAC1, CFRAC2, CLRB1, CLRT1, CLRB2, CLRT2,
+     $  RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,       ! DEPEND ON CPRTOP1,CPRBOT1
+     $  TCBOT1, TCTOP1, TCBOT2, TCTOP2, CFRAC1, CFRAC2, CLRB1, CLRT1, CLRB2, CLRT2,  ! DEPEND ON CPRTOP2,CPRBOT2
      $  CFRA12, CFRA1X, CFRA2X, 
      $  CEMIS1, CRHOS1, CRHOT1, CEMIS2, CRHOS2, CRHOT2, TEMPC1, TEMPC2,
      $  MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
@@ -55,15 +55,15 @@ c input
        LOGICAL LBLAC1  ! black cloud1? {Mie cloud if false}
        LOGICAL LBLAC2  ! black cloud2? {Mie cloud if false}
        REAL TCBOT1            ! temperature at cloud bottom
-       REAL TCTOP1            ! temperature at cloud top
+       REAL TCTOP1            ! temperature at cloud top, DEPENDS ON CPRTOP but only for black cloud
        REAL TCBOT2            ! temperature at cloud bottom
-       REAL TCTOP2            ! temperature at cloud top
+       REAL TCTOP2            ! temperature at cloud top, DEPENDS ON CPRTOP but only for black cloud
        REAL CFRAC1            ! cloud1(total) fraction of FOV
        REAL CFRAC2            ! cloud2(total) fraction of FOV
        REAL  CLRB1            ! frac of layer at bottom of cloud clear
-       REAL  CLRT1            ! frac of layer at top of cloud clear
+       REAL  CLRT1            ! frac of layer at top of cloud clear, DEPENDS ON CPRTOP but only for black cloud
        REAL  CLRB2            ! frac of layer at bottom of cloud clear
-       REAL  CLRT2            ! frac of layer at top of cloud clear
+       REAL  CLRT2            ! frac of layer at top of cloud clear, DEPENDS ON CPRTOP but only for black cloud
        REAL TEMPC1            ! cloud1 frac layer (above cloud) mean temp
        REAL TEMPC2            ! cloud2 frac layer (above cloud) mean temp
 
@@ -330,14 +330,11 @@ c      END DO
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12
 
-c rdinfo.f : these are noice chans to look at
+c rdinfo.f : these are 8 nice chans to look at
 c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3 listc=445,449,1092,1291,1614,2070,2333,2353 listj=-1
 c          would give you radiances at                           790,791,1042,1231,1419,2350,2616,2637 cm-1
 c                                                                 CO2Q    O3   WIN  WV  NLTE  WIN  HDO
       IF (  ((NWANTC .GT. 0) .AND. DEBUG) .OR. ((NWANTC .GT. 0) .AND. (NWANTC .LE. 8)) ) THEN
-c        write(*,'(A,I5,7(F12.4),6(ES12.4))') 'clr/cld Freq,Emis,Tsuf,4CldFrac,rads',I,FREQ(I),EMIS(I),TSURF,
-c     $           FCLEAR,CFRA1X,CFRA2X,CFRA12,
-c     $           RSURFE,RAD0,RADC1,RADC2,RADC12,RAD(I)
         write(*,'(A,I5,3(F10.4),A,4(F10.4),A,4(ES10.3),A,ES10.3,F12.4)') ' [Index,Freq,Emis,Tsuf ]',I,FREQ(I),EMIS(I),TSURF,
      $           ' [ Cldfrac fc,c1x,c2x,c12 ]',FCLEAR,CFRA1X,CFRA2X,CFRA12,
      $           ' [ CldRad  rc,r1x,r2x,r12 ]',RAD0,RADC1,RADC2,RADC12,' [ final rad/BT ]',RAD(I),rad2bt(FREQ(I),RAD(I))

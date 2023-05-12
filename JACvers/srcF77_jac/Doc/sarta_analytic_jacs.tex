@@ -400,7 +400,11 @@ Looks complicated but we know everything (also see \eg Equation 8 in \citep{liu:
 
 \subsection{Derivatives for one layer at TOA}
 
-But you need to propagate it up! Remember the radiative transfer is done iteratively, or if you like recursively; since the radiation from surface goes through layer 1, then to layer 2 and so on till layer N at TOA. Which means
+But you need to propagate it up! Remember the radiative transfer is
+done iteratively, or if you like recursively; since the radiation from
+surface goes through layer 1, then to layer 2 and so on till layer N
+at TOA. Which means
+
 \begin{equation}
 r_N(\nu) = r_{N-1}(\nu) e^{-\frac{\tau_{0}(N,\nu)}{\mu}} + B(\nu,T_N) (1 - e^{-\frac{\tau_{0}(N,\nu)}{\mu}})
 %\label{eqn:eqnN}
@@ -441,31 +445,6 @@ attenuation from every layer above that ie from the top of the layer $J$ to the 
 
 where we know $\frac{\partial r_{J}}{\partial X_{J}}$ from the one layer derivatives in Equations \ref{eqn:eqn1T},\ref{eqn:eqn1Q} above! Again, also See Equation 8 in \citep{liu:06}!!!
 
-\section{Two slab clouds : weighted sum over four radiance streams}
-
-We use the PCLSAM parameterizations for clouds and aerosols in \sa and
-\kc (see \citep{mac:17*2,mac:19}). Here the cloud scattering effects
-are reparametrized into an effective optical depth. It's not as
-accurate as \eg DISORT \citep{stam:88} but its fast and simple, and the
-accuracy can be improved \citep{tang:18}. All this means our final
-radiation is
-\begin{itemize}
-\item a weighted sum over clear, cloud1 fraction, cloud 2 fraction, cloud 1+2 overlap
-\item more importantly, clouds 1 and 2 go into our atmosphere
-  effectively as two additional non-scattering ``gases''; so their
-  effects can be added in as an additional ``fixed'' gas.
-\end{itemize}
-
-All the above equations remain fundamentally unchanged, except we \eg
-increase the total OD of layer(s) $i1$ by that of cloud 1, and the
-total OD of layer(s) $i2$ by that of cloud 2, while doing the cloud1
-only, cloud 2 only, and cloud 1+2 portions of the radiative transfer.
-
-Then jacobians in our TwoSlab atmosphere, are simply done as above,
-but for each of the four streams; and then just as final radiance is
-the weighted sum of the four radiance streams, the final jacobian is
-the weighted sum of the four jacobians.
-
 \section{Various : surface and background thermal and solar contribution and NLTE}
 
 \subsection{Surface}
@@ -481,7 +460,7 @@ which means the derivative at the TOA is given by
 \subsection{Background thermal}
 This is technically complicated, but lets assume we have calculated
 the term propagating downwards and have it as $r_{background}(\nu)$
-just as it is incident downwards at the surface. It is then refelected
+just as it is incident downwards at the surface. It is then reflected
 and propagates to the TOA, attenuated at each layer as it goes up. So
 the term at the TOA is 
 \[
@@ -515,7 +494,7 @@ would be almost mirror like.
 There is a correction term to the 4.3 um radiance due to NLTE
 in the upper atmosphere. It currently depends only on the temperature
 of the top 5 layers, the satzen and solzen angles, and \cd gas amount
-(or more accurately, deviation from 385 ppm). This is modelled as
+(or more accurately, deviation from 385 ppm). This is modeled as
 \[
 \delta r_{NLTE}(\nu) = (\sum_j^6 N_j(\nu) NLTE\_PRED(j)) (N_7 (co2ppm-385)+1)
 \]
@@ -527,7 +506,31 @@ The temperature dependence is only in predictor 5 $via$ NLTE\_PRED5 = 1/5(T1+T2+
 
 and can be trivially added on; similarly the \cd gas amount jacobian can be done but it is tiny (at least over about 50 ppmv changes).
 
-\subsection{Clouds}
+\section{Two slab clouds : weighted sum over four radiance streams}
+
+We use the PCLSAM parametrization for clouds and aerosols in \sa and
+\kc (see \citep{mac:17*2,mac:19}). Here the cloud scattering effects
+are re-parametrized into an effective optical depth. It's not as
+accurate as \eg DISORT \citep{stam:88} but its fast and simple, and the
+accuracy can be improved \citep{tang:18}. All this means our final
+radiation is
+\begin{itemize}
+\item a weighted sum over clear, cloud1 fraction, cloud 2 fraction, cloud 1+2 overlap
+\item more importantly, clouds 1 and 2 go into our atmosphere
+  effectively as two additional non-scattering ``gases''; so their
+  effects can be added in as an additional ``fixed'' gas.
+\end{itemize}
+
+All the above equations remain fundamentally unchanged, except we \eg
+increase the total OD of layer(s) $i1$ by that of cloud 1, and the
+total OD of layer(s) $i2$ by that of cloud 2, while doing the cloud1
+only, cloud 2 only, and cloud 1+2 portions of the radiative transfer.
+
+Then jacobians in our TwoSlab atmosphere, are simply done as above,
+but for each of the four streams; and then just as final radiance is
+the weighted sum of the four radiance streams, the final jacobian is
+the weighted sum of the four jacobians.
+
 The rtp file allows us to have the following variables :
 (ctype1,cfrac1,cngwat1,csze1,cprtop1,
 cprbot1),(ctype2,cfrac2,cngwat2,csze2,cprtop2,
@@ -550,8 +553,13 @@ The PCLSAM effective nadir cloud optical depth \citep{cho:99} is given by
                               & = & cng \times \tau^{1g/m2}(\nu,sze,\theta = 0) \\
                               & = & cng \times f(\nu,sze) \\
 \end{eqnarray*}
-where $cng$ is the cloud loading in g/m2, $sze$ is effective particle diameter in um, $g(\nu)$ is the asymmetry and $\omega = \tau_{sca}(\nu)/\tau_{ext}(\nu) = (\tau_{ext}(\nu)-\tau_{abs}(\nu))/\tau_{ext}(\nu)$.
-The superscript $1g/m2$ means everything has been saved/normalized to this cloud loading. 
+
+where $cng$ is the cloud loading in g/m2, $sze$ is effective particle
+diameter in um, $g(\nu)$ is the asymmetry and $\omega =
+\tau_{sca}(\nu)/\tau_{ext}(\nu) =
+(\tau_{ext}(\nu)-\tau_{abs}(\nu))/\tau_{ext}(\nu)$.  The superscript
+$1g/m2$ means everything has been saved/normalized to this cloud
+loading.
 
 This means for example 
 \begin{itemize}
@@ -577,7 +585,8 @@ This means for example
 
 \item furthermore suppose the cloud is defined between $cprtop$ mb and
   $cprbot$ mb. Then it typically straddles more than one layer. The
-  (cloud loading $cng$) fraction in each layer $L$ that the cloud straddles is given by
+  (cloud loading $cng$) fraction in each layer $L$ that the cloud
+  straddles is given by (exept at top most/bottom most cloud layer)
 \[
   frc_{cng}(L) = \frac{plev(L+1)-plev(L)}{cprtop-cprbot}, LCLDTOP \le L \le LCLDBOT
 \]
@@ -591,7 +600,21 @@ trivially (which of course means its not so trivial and the jacs are awful)
 \frac{\partial frc_{cng}(L)}{\partial cprtop} = (-1) \frac{plev(L+1)-plev(L)}{(cprtop-cprbot)^2} \times (+1);
 \frac{\partial frc_{cng}(L)}{\partial cprbot} = (-1) \frac{plev(L+1)-plev(L)}{(cprtop-cprbot)^2} \times (-1);
 \]
-(\textcolor{red}{though compared to \sa finite differences, the $cprtop$ derivatives are off by -1 ... and can be off in magnitude for eg water clouds ... hmm})
+
+(\textcolor{red}{though compared to \sa finite differences, the
+  $cprtop,cprbot$ derivatives are sometimes off by -1 ... but this is
+  probably due to finite difference perturbation in pressure ensuring
+  cloud top/bottom layer is slightly different}.
+
+\item Note that for we partition the total cloud OD into the
+  individual AIRS pressure layers according to $frc_{cng}(L)$. This
+  means for any one of the four streams (clear, cloud1, cloud2,
+  cloud1+2), to get the \textit(cpsize,cngwat) column jacobian, we
+  have to sum over each of the cloud layers (from LCTOP to LCBOT) with
+  the layer contribution weighted by $frc_{cng}(L)$.  However for the
+  \textit(cpsize,cngwat) we just want to see how the $frc_{cng}(L)$
+  change each layer, and so when summing over the cloud layers to get
+  the column sum, \textit{we weight each layer by 1}
 
 \end{itemize}
 
@@ -617,42 +640,48 @@ cldOD(\nu) & = & cng \;\;\; f(\nu,sze) \\
 \frac{\partial r(\nu)}{\partial sze1} & = & \frac{\partial r1(\nu)}{\partial sze1} + \frac{\partial r12(\nu)}{\partial sze1} \\
                                       & = & \frac{\partial r1(\nu,sze)}{\partial cldOD1} \frac{\partial cldOD1}{\partial sze1} + \frac{\partial r12(\nu)} {\partial cldOD1} \frac{\partial cldOD1}{\partial sze1} \\
                                       & = & cng1 \left(\frac{\partial r1(\nu,sze)}{\partial cldOD1} \frac{\partial f1(\nu,sze1)}{\partial sze1} + \frac{\partial r12(\nu)} {\partial cldOD1} \frac{\partial f1(\nu,sze1)}{\partial sze1} \right) \\
-\frac{\partial r(\nu)}{\partial sze2} & = & \frac{\partial r2(\nu)}{\partial sze2} + \frac{\partial r22(\nu)}{\partial sze2} \\
-                                      & = & \frac{\partial r2(\nu,sze)}{\partial cldOD2} \frac{\partial cldOD2}{\partial sze2} + \frac{\partial r22(\nu)} {\partial cldOD2} \frac{\partial cldOD2}{\partial sze2} \\
-                                      & = & cng2 \left(\frac{\partial r2(\nu,sze)}{\partial cldOD2} \frac{\partial f2(\nu,sze2)}{\partial sze2} + \frac{\partial r22(\nu)} {\partial cldOD2} \frac{\partial f2(\nu,sze2)}{\partial sze2} \right) \\
+\frac{\partial r(\nu)}{\partial sze2} & = & \frac{\partial r2(\nu)}{\partial sze2} + \frac{\partial r12(\nu)}{\partial sze2} \\
+                                      & = & \frac{\partial r2(\nu,sze)}{\partial cldOD2} \frac{\partial cldOD2}{\partial sze2} + \frac{\partial r12(\nu)} {\partial cldOD2} \frac{\partial cldOD2}{\partial sze2} \\
+                                      & = & cng2 \left(\frac{\partial r2(\nu,sze)}{\partial cldOD2} \frac{\partial f2(\nu,sze2)}{\partial sze2} + \frac{\partial r12(\nu)} {\partial cldOD2} \frac{\partial f2(\nu,sze2)}{\partial sze2} \right) \\
 \hline
 \frac{\partial cldOD}{\partial cng} & = & f(\nu,sze) \\
 \frac{\partial r(\nu)}{\partial cng1} & = & \frac{\partial r1(\nu)}{\partial cng1} + \frac{\partial r12(\nu)}{\partial cng1} \\
                                       & = & \frac{\partial r1(\nu,cng)}{\partial cldOD1} \frac{\partial cldOD1}{\partial cng1} + \frac{\partial r12(\nu)} {\partial cldOD1} \frac{\partial cldOD1}{\partial cng1} \\
                                       & = & \frac{\partial r1(\nu,cng)}{\partial cldOD1} f1(\nu,cng1) + \frac{\partial r12(\nu)} {\partial cldOD1} f1(\nu,sze1) \\
-\frac{\partial r(\nu)}{\partial cng2} & = & \frac{\partial r2(\nu)}{\partial cng2} + \frac{\partial r22(\nu)}{\partial cng2} \\
-                                      & = & \frac{\partial r2(\nu,cng)}{\partial cldOD2} \frac{\partial cldOD2}{\partial cng2} + \frac{\partial r22(\nu)} {\partial cldOD2} \frac{\partial cldOD2}{\partial cng2} \\
-                                      & = & \frac{\partial r2(\nu,cng)}{\partial cldOD2} f2(\nu,cng2) + \frac{\partial r22(\nu)} {\partial cldOD2} f2(\nu,sze2) \\
+\frac{\partial r(\nu)}{\partial cng2} & = & \frac{\partial r2(\nu)}{\partial cng2} + \frac{\partial r12(\nu)}{\partial cng2} \\
+                                      & = & \frac{\partial r2(\nu,cng)}{\partial cldOD2} \frac{\partial cldOD2}{\partial cng2} + \frac{\partial r12(\nu)} {\partial cldOD2} \frac{\partial cldOD2}{\partial cng2} \\
+                                      & = & \frac{\partial r2(\nu,cng)}{\partial cldOD2} f2(\nu,cng2) + \frac{\partial r12(\nu)} {\partial cldOD2} f2(\nu,sze2) \\
 \end{array}
 \]
 
 \subsubsection{Cloud Top and Cloud Bottom jacs}
 
-Too bloody hard!!!! Scott has a cool way of implementing the cloud
+Scott has a cool way of implementing the cloud
 boundaries across pressure level boundaries and so can occupy a
 fraction of an AIRS layer; \kc ``fills'' in AIRS pressure levels so
 the cloud occupies one or more \textit{full} pressure layers; all the
 cloud jacobian stuff I do for single footprint retrievals, ensure that
 (a) cld1 bottom and cld2 top do not merge/overlap (b) cld1 top or cld2 top
 does not become less than 0 mb (c) cld1 bottom or cld2 bottom does not
-become more than surf pres. But I did make a stab at it!!!
+become more than surf pres. But I did make a stab at it!!! Recall for any layer $L$ the total optical depth is given by 
+
+\begin{eqnarray*}
+\tau_{total}(T,q_1,q_2,q_3,....,q_{fixed},cld_1,cld_2) & = & \tau_1(T,q_1) + \tau_2(T,q_2) + .... \tau_{12}(T,q_{12}) + \\
+                                                       &   & \tau_{cld1}(cng1,sze1,cprtop1,cprbot1,species1) + \\
+                                                       &   & \tau_{cld2}(cng2,sze2,cprtop2,cprbot2,species2) \\
+\end{eqnarray*}
+which means (assuming variable we are interested in $X_i$ is not the temperature $T$)
+\[ 
+\frac{\partial \tau_{total}}{\partial X_i} = \frac{\partial \tau_{i}}{\partial X_i}, i=q_1,q_2,....q_{12},cld1 params, cld2 params
+\]
 
 From above, we have cloud loading fractions $frc_{cng}(L)$ and their derivatives, so in layer $L$
-\[
-\frac{\partial r(\nu,L)}{\partial cprtop/bot} = \frac{\partial r(\nu,L)}{\partial \tau_{cld}(\nu)} \frac{\partial \tau_{cld}(\nu)}{\partial cprtop/bot} 
-\]
-\[
-\frac{\partial r(\nu,L)}{\partial cprtop/bot} = 
-\left( \mu \frac{\partial r(\nu,L)}{\partial \tau_{cld}(\nu)} \right) \left( \frac{1}{\mu} \frac{\partial \tau_{cld}(\nu)}{\partial cprtop/bot} \right)
-\]
-\[
-\frac{\partial r(\nu,L)}{\partial cprtop/bot} = \left( -r_L + B_L \right) \left( \frac{1}{\mu} \frac{\partial \tau_{cld}(\nu)}{\partial cprtop/bot} \right)
-\]
+\begin{eqnarray*}
+\frac{\partial r(\nu,L)}{\partial cprtop/bot}  & = &  \frac{\partial r(\nu,L)}{\partial \tau_{total}(\nu)} \frac{\partial \tau_{total}(\nu)}{\partial cprtop/bot} \\
+\frac{\partial r(\nu,L)}{\partial cprtop/bot}  & = &  \frac{\partial r(\nu,L)}{\partial \tau_{total}(\nu)} \frac{\partial \tau_{cld}(\nu)}{\partial cprtop/bot} \\
+\frac{\partial r(\nu,L)}{\partial cprtop/bot}  & = &  \left( \mu \frac{\partial r(\nu,L)}{\partial \tau_{total}(\nu)} \right) \left( \frac{1}{\mu} \frac{\partial \tau_{cld}(\nu)}{\partial cprtop/bot} \right) \\
+\frac{\partial r(\nu,L)}{\partial cprtop/bot}  & = &  \left( -r_L + B_L \right) \left( \frac{1}{\mu} \frac{\partial \tau_{cld}(\nu)}{\partial cprtop/bot} \right) \\
+\end{eqnarray*}
 
 We know 
 \[
@@ -668,10 +697,7 @@ which means
 \end{eqnarray*}
 
 and then we can use the same formulation as for $T(z),G1(z),...$ etc
-derivatives!! \textcolor{red}{Problem is comparisons to \sa finite difference
-jacobians show these $cprtop,cprbot$ derivatives are sometimes about the same in
-magnitude, but $cprtop$ is off by a sign, and spectrally are quite different
-as well. Hmmm ....}
+derivatives!! 
 
 \section{Running SARTA Analytic Jacobian}
 
@@ -756,15 +782,13 @@ to be at pressure level boundaries, full cloud layers while \sa allows
 the top and bottom pressures to be ``anywhere''. 
 
 The \sa analytic jacobians have been compared to \sa finite difference
-jacobians, and kCARTA analytic jacobians. The agreement is very good :
-\textcolor{red}{the only problem I have (as of 5/10/2023) is the cloud top and cloud
-bottom comparisons with \sa finite difference; the overall magnitudes
-are sorta similar but the spectral shapes are quite different; sometime the
-(cprtop jac) sign can be off as well}.
+jacobians, and kCARTA analytic jacobians. The agreement is very good,
+except sometimes the \textit{cprtop or cprbot} derivatives can be
+flipped by a sign since the finite difference jacobian straddles (or
+loses) an additional cloud layer.
 
-Figure \ref{fig:fig3}
-shows a typical comparison of \sa analytic versus \sa finite
-difference column jacobians.
+Figure \ref{fig:fig3} shows a typical comparison of \sa analytic
+versus \sa finite difference column jacobians.
 
 \begin{figure}[ht] \centering
    \includegraphics[width=.75\textwidth]{compare_finite_diff.png}
