@@ -18,7 +18,8 @@ airs_cloudy_may19:
 	ln -s incFTC_airs_may19_pclsam.f incFTC.f
 	ln -s fnmie_iceGHMbaum_waterdrop_desertdust.f fnmie.f
 	make -f make_sarta_pclsam
-	mv a.out ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug
+#	mv a.out ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug
+	mv a.out ../bin/jac_airs_l1c_2834_cloudy_may19_prod
 
 # AIRS for L1C May 2019 w/tuning
 airs_cloudy_may19_tun:

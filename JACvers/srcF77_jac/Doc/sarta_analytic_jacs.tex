@@ -562,7 +562,7 @@ $1g/m2$ means everything has been saved/normalized to this cloud
 loading.
 
 This means for example 
-\begin{itemize}
+\begin{enumerate}
 \item the nadir cloud optical depth is related to cloud optical depth at angle $\theta$ by
 \begin{eqnarray*}
  \tau_{cld}(\nu,sze,cng,\theta) & = & \frac{1}{cos(\theta)} \tau_{cld}(\nu,sze,\theta = 0) \\
@@ -606,19 +606,24 @@ trivially (which of course means its not so trivial and the jacs are awful)
   probably due to finite difference perturbation in pressure ensuring
   cloud top/bottom layer is slightly different}.
 
-\item Note that for we partition the total cloud OD into the
-  individual AIRS pressure layers according to $frc_{cng}(L)$. This
-  means for any one of the four streams (clear, cloud1, cloud2,
-  cloud1+2), to get the \textit(cpsize,cngwat) column jacobian, we
-  have to sum over each of the cloud layers (from LCTOP to LCBOT) with
-  the layer contribution weighted by $frc_{cng}(L)$.  However for the
-  \textit(cpsize,cngwat) we just want to see how the $frc_{cng}(L)$
-  change each layer, and so when summing over the cloud layers to get
-  the column sum, \textit{we weight each layer by 1}
+\item This partitioning of the total cloud OD into the individual AIRS
+  pressure layers according to $frc_{cng}(L)$ has couple of
+  implications for the jacobians : for any one of the four streams
+  (clear, cloud1, cloud2, cloud1+2), 
+  \begin{itemize}
 
-\end{itemize}
+  \item to get the \textit{cpsize,cngwat} column jacobian, we sum over
+    each of the cloud layers (from LCTOP to LCBOT) with the layer
+    contribution weighted by $frc_{cng}(L)$.
 
-\subsubsection{Cloud Fraction jacs}
+  \item to get the \textit{cprtop,cprbot} parameters we need the the
+    $frc_{cng}(L)$ changes at each layer, and so to get the column
+    sum, \textit{we weight each layer by 1}
+
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Cloud Fraction jacs}
 From above, the jacobians wrt cloud fraction (ie a unity change!! pretty large!!!) are immediately
 \[
 \begin{array}{ccc}
@@ -628,7 +633,7 @@ From above, the jacobians wrt cloud fraction (ie a unity change!! pretty large!!
 \end{array}
 \]
 
-\subsubsection{Cloud Amount and Cloud Particle Size jacs}
+\subsection{Cloud Amount and Cloud Particle Size jacs}
 
 As mentioned above our look-up tables are in terms of $\tau_{cld}(\nu) = cldOD(\nu) = cng \;\;\; f(\nu,sze)$ from which (and use the formulation above)
 \[
@@ -654,7 +659,7 @@ cldOD(\nu) & = & cng \;\;\; f(\nu,sze) \\
 \end{array}
 \]
 
-\subsubsection{Cloud Top and Cloud Bottom jacs}
+\subsection{Cloud Top and Cloud Bottom jacs}
 
 Scott has a cool way of implementing the cloud
 boundaries across pressure level boundaries and so can occupy a
@@ -807,6 +812,16 @@ predictors.  You can compare to finite diff jacs, done for only your
 chosen profile, using /home/sergio/MATLABCODE\_Git/quicksartajac.m
 (make sure the finite diff jacobians use eg dQ=0.01 or dT = 0.1, else
 the numerical noise will creep in and ratios of jacs will look awful).
+The testing code wrappers which call both the finite difference
+jacobian code, and the analytic jacobian code, are in the MATLABCODE
+subdirectory, and have the names 
+\begin{verbatim} test_jac_AIRS.m, test_jac_CRIS.m,test_jac_IASI.m 
+\end{verbatim}
+The results are of comparing eg
+$\sum(TZ_{finite}(i=1:100))/\sum(TZ_{analytic}(i=1:100))$ and
+$\sum(G1_{finite}(i=1:100))/\sum(G1_{analytic}(i=1:100))$ etc should all
+be very close to one and should lie on top of each other; similarly
+the cloud jacobians shoul all lie close to each other.
 
 Run times for 12150 profiles/2645 AIRS channels is 4 minutes, while
 adding in all jacobians and weighting functions (T jacs,

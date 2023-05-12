@@ -104,6 +104,7 @@ nlays = porig.nlevs-1;
 
 sarta_exec = '../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug_save3';
 sarta_exec = '../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug';
+sarta_exec = '../bin/jac_airs_l1c_2834_cloudy_may19_prod';
 
 fprintf(1,'sarta_exec = %s \n',sarta_exec);
 
@@ -173,10 +174,13 @@ hl = legend('TZ','WV','O3','location','best','fontsize',10);
 
 figure(17); clf; plot(h.vchan,jacx.jac(:,1),'b.-',h.vchan,sum(g1jac_sarta_fast,2),'r')
    title('Comparing G1 (WV) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([1000 1500])
+   xlabel('Wavenumber cm-1'); ylabel('sum( dBT/dX X)')
 figure(18); clf; plot(h.vchan,jacx.jac(:,3),'b.-',h.vchan,sum(g3jac_sarta_fast,2),'r')
    title('Comparing G3 (O3) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([900 1200])
+   xlabel('Wavenumber cm-1'); ylabel('sum( dBT/dX X)')
 figure(19); clf; plot(h.vchan,jacx.jac(:,8),'b.-',h.vchan,sum(ptempjac_sarta_fast,2),'r')
    title('Comparing TZ jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([650 1000])
+   xlabel('Wavenumber cm-1'); ylabel('sum( dBT/dX X)')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 if length(iExtraGas) == 1
@@ -210,15 +214,19 @@ if length(iExtraGas) == 1
   if iExtraGas == 2
     figure(20); clf; plot(h.vchan,jacx.jac(:,2),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
      title('Comparing G2 (CO2) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([640 1000])
+     xlabel('Wavenumber cm-1'); ylabel('sum( dBT/dX X)')
   elseif iExtraGas == 4
     figure(20); clf; plot(h.vchan,jacx.jac(:,4),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
      title('Comparing G4 (N2O) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([1000 1500])
+     xlabel('Wavenumber cm-1'); ylabel('sum( dBT/dX X)')
   elseif iExtraGas == 5
     figure(20); clf; plot(h.vchan,jacx.jac(:,5),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
      title('Comparing G5 (CO) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([2150 2250])
+     xlabel('Wavenumber cm-1'); ylabel('sum( dBT/dX X)')
   elseif iExtraGas == 6
     figure(20); clf; plot(h.vchan,jacx.jac(:,6),'b.-',h.vchan,sum(gNjac_sarta_fast,2),'r')
      title('Comparing G6 (CH4) jacs'); hl = legend('SARTA Finite','SARTA analytic','location','best','fontsize',10); xlim([1000 1500])
+     xlabel('Wavenumber cm-1'); ylabel('sum( dBT/dX X)')
   end
 
 end
@@ -247,7 +255,7 @@ for icld = 1 : 12
     plot(h.vchan,jacx.jac(:,7),'b.-',h.vchan,cldjac_sarta_fast(:,icld),'r'); title(cldstr);
   end
   xlim([640 1640])
-  pause(0.25);
+  pause(1.00);
   %pause
 end
 print_cloud_params(h,porig,1);
