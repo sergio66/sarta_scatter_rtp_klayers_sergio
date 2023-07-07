@@ -1,0 +1,61 @@
+Recommended HITRAN gas and cross-section gas ID numbers.
+Updated: 27 August 2010, S.Hannon
+
+Comments:
+   Gas IDs 1-42 correspond to the HITRAN 2008 database.  Gas IDs
+   40-42 are new for HITRAN2008.
+
+   Gas IDs 51-63 are the numbers we (UMBC) use with some of the
+   cross-section gases included in the XSEC supplement to the
+   HITRAN 2000 database.  We extended the XSEC IDs to 64-81
+   in July 2010.
+
+   Gas IDs 101 and 102 are the numbers used by the kCARTA program
+   to specify the self- and foreign-broadened components of the
+   water continuum. 103 refers to the HDO isotope of water.  The
+   HDO mixing ratio in the troposphere often differs from H2O by
+   ~15% due to HDO's reduced evaporation and enhanced precipation.
+
+   Gas IDs 201 and above are the IDs we (UMBC) use to specify clouds
+   profiles (amounts).  These cloud IDs are merely a numeric label
+   to identify a particular cloud profile, and they do imply any
+   particular set of cloud properties other than the profile.
+   That is, "201" means "this profile is for cloud1" regardless
+   of composition of the cloud, particle size, etc.  In general
+   the cloud profile should will need to be supplemented by a
+   separate set of RTP fields to specify all additional relevant
+   cloud properties (cloud type code number, particle size, cloud
+   fraction, et cetera).
+
+ ID  name     common name
+---- -------- -----------------
+   1 H2O      water
+   2 CO2      carbon dioxide
+   3 N2       nitrogen
+   4 O2       oxygen
+   5 CO       carbon monoxide
+   6 NO       nitric oxide
+  7-50 not in use
+%%%
+%%% 
+  51-100 not in use
+%%%
+ 101 kCARTA H2O self-broadened continuum
+ 102 kCARTA H2O foreign-broadened continuum
+ 103 kCARTA HDO lines
+%%%
+ 104-200 not in use
+%%%
+ 201 cloud1 ice/water/whatever amount
+ 202 cloud2 ice/water/whatever amount
+ 203 cloud3 ice/water/whatever amount
+%%%
+ 204-300 not in use
+%%%
+ 301 cloud1 particle size
+ 302 cloud2 particle size
+ 303 cloud3 particle size
+%%%
+No numbers past 303 are in use
+
+---end of file---

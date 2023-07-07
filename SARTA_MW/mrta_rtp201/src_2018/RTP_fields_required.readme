@@ -1,0 +1,23 @@
+header fields:
+  head.ptype
+  head.pfields
+  head.nchan
+  head.gunit  %should be 1, 10, or 20
+  
+profile fields:
+  prof.plat
+  prof.plon
+  prof.nlevs
+  prof.plevs
+  prof.gamnt(:,1) %i.e., water
+  prof.ptemp
+  prof.stemp
+  prof.spres
+  prof.mwnstb
+  prof.mwstb
+  prof.wspeed
+  prof.landfrac
+  prof.mwaszen
+  prof.mwasang
+  prof.mwbszen
+  prof.mwbsang

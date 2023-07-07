@@ -743,7 +743,13 @@ change any or all of num of chans/jacs/profiles
 
 \section{Output readers}
 
-The main reader (in the MATLABCODE directory) is $readsarta\_jac.m$. 
+The main reader (in the MATLABCODE directory) is $readsarta\_jac.m$
+and $readsarta\_jacV2.m$.  The difference between the two is that the
+former outputs the jacobians as (numprof,numchan,X) while the latter
+outputs the jacobians as (X,numchan,numprof) where $X$ = 12,100,101
+for clouds, gases and temperature/surface temperature. In addition the
+readers ensure they output reals (4 bytes) and not doubles (8 bytes).
+
 Right now the default is to change $\frac{\partial
   r(\nu,TOA)}{\partial T_J}$, $\frac{\partial r(\nu,TOA)}{\partial
   Q_J}$, $\frac{\partial r(\nu,TOA)}{\partial CLD_J}$ to

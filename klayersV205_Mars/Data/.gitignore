@@ -1,0 +1,11 @@
+## directories
+##------------
+Safe
+Earth
+
+## kcarta output
+##--------------
+earth_kcarta_122.dat
+earth_kcarta_121.dat
+mars_kcarta.dat
+warning*.msg

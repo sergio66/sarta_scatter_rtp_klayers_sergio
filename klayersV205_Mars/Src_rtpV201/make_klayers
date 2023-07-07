@@ -1,0 +1,84 @@
+OBJS=klayers_rtp.o \
+   rdinfo_klayers.o  opnrtp_klayers.o  rdrtp_klayers.o  wrtrtp_klayers.o \
+   rdafgl.o  merge.o  intlev.o  integ.o  grav.o  wexsvp.o  setxop.o \
+   spline.o  splint.o  spllev.o  wrtspl.o  cbplev.o  adafgl.o \
+   cbgids.o  util_klayers.o  chkgas.o  chkguc.o  cbgucs.o  toppmv.o  zbot.o
+
+# --------
+# HDF info
+# --------
+HDF_INSTALL1 = /usr/cluster/contrib/hdf4/4.2.11
+HDFLIB1   = -L$(HDF_INSTALL1)/lib -ldf -ljpeg -lz       ## -lmfhdf
+
+# more libs
+HDF_INSTALL2 = /usr/cluster/contrib/szip2/szip2.1
+HDF_INSTALL2 = /usr/ebuild/software/Szip/2.1.1-GCCcore-6.4.0
+HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
+
+HDFLIB = $(HDFLIB1) $(HDFLIB2)
+
+# -----------
+# RTP info
+# -----------
+### rtpV201 on compiled with ifort
+#RTPHOME = /home/sergio/maya_home/git/rtp/rtpV201
+RTPHOME = /home/sergio/OTHERSTUFF/git/rtp/rtpV201
+RTPLIB = -L$(RTPHOME)/lib -lrtp90
+RTPINC = -I/home/sergio/git/rtp/rtpV201/include
+RTPDEFS_FILE = /home/sergio/git/rtp/rtpV201/include/rtpdefs.f90
+
+# -------------
+# FORTRAN flags
+# -------------
+# OPT  : compiler options
+# FLIB : fortran libraries (most compilers will not need any)
+# F77  : fortran compiler
+
+# -------
+# ifort
+#
+OPT = -O
+#OPT = -check bounds -traceback -debug
+FLIB =
+F77 = ifort
+
+# ------------
+# Linux Absoft
+#    -N109 fold all names to upper case
+#    -C    check array bounds
+#    -O    some optimizations
+#    -N3   add record info to unformatted files
+#    -s    static allocation
+# OPT = -N109 -C -O -N3 -s
+# OPT = -O
+#OPT = -s -O -N3 -N26
+# Linux Absoft needs -lU77
+#FLIB = -lU77
+#F77 = /asl/opt/absoft/absoft10.0/bin/af77
+
+# -----
+# SunOS options
+#
+# OPT= -e -fast -w
+# FLIB =
+# F77 = f77
+
+# ---
+# SGI
+# include -cpp option if not default 
+# OPT= -O0 -static -g -check_bounds -64
+#OPT= -O -64
+#FLIB = -64
+#F77 = f77
+
+# -----
+# Build
+# -----
+
+# Link object files and libs to build executable
+klayers: $(OBJS)
+	$(F77) $(OBJS)  $(RTPLIB) $(HDFLIB) $(FLIB)
+
+# compile source to object files
+.f.o: incLAY.f cbplev.f
+	$(F77) $(RTPINC) -c $(OPT) $*.f

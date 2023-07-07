@@ -1,0 +1,34 @@
+klayersV205_Mars is a modification of Scott Hannon's klayersV205, to
+work for a Martian atmosphere.
+
+All the ideas are the same, with the expected differences, such as
+planet radius and gravity.
+
+Key changes include
+a) the standard profile (found in Data/glmars.dat)
+b) the pressure levels grid (found in Grid/cbplev_mars.f)
+c) the GasIDs : initial commit has 6 gases
+ (1) WV (2) CO2 (3) N2 (4) O3 (5) CO (6) NO
+d) so that means there are no xsec gases
+
+The driver for all of these three is is 
+  Matlab/make_airs_std_p_T.m
+and
+  Matlab/test_ip_rtp.m makes an rtp file with an arbitrary (close) profile, which
+  could be close to the Mars Standard Profile
+and
+  Matlab/mars_standard_profile_sergioMay2021_rtp.m makes the Data/glmars.dat      Mars Standard Profile
+                                                   makes the Data/RefgasMars/refgas*  standard profiles
+                                                     used by kCARTA
+
+The Test directory allows you to test the code, and compare Earth spectra vs Martian spectra
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+klayers code was developed by
+  Scott Hannon            
+and modified for Mars by
+  Sergio DeSouza-Machado  
+PI : L. Larrabee Strow
+
+Atmospheric Spectroscopic Laboratory, UMBC

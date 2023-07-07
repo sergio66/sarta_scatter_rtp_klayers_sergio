@@ -1,0 +1,61 @@
+%%% grep -in Bfunny4um /home/chepplew/*/*/*/*.m >& chepplew_sarta_predictors.txt
+%% stuff goes into radNONLTE
+
+%% look at /home/chepplew/gitLib/ftc_dev/fit_nonLTE/ and /home/chepplew/gitLib/ftc_dev/fit_nonLTE/src
+
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/mergeRnonLTE_apr2008.m:135:radLTE(:,ind) = lte_airs_Bfunny4um;
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/mergeRnonLTE_apr2008.m:155:   radLTE(:,ind) = lte_airs_Bfunny4um;
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_CrIS_hrg4.m:140:radLTE(:,ind)    = xx.lte_cris_Bfunny4um(idchan,:);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_CrIS_hrg4.m:162:   radLTE(:,ind)    = xx.lte_cris_Bfunny4um(idchan,:);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:322:    radLTE(:,ind)    = xx.lte_airs_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:325:    radLTE(:,ind)    = xx.lo_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:328:    radLTE(:,ind)    = xx.hi_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:330:    %radLTE(:,ind)    = xx.hi_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:333:    radLTE(:,ind)    = xx.lte_iasi_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:336:    radLTE(:,ind)    = xx.ng_lte_iasi_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:339:    radLTE(:,ind)    = xx.med_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:363:      radLTE(:,ind)    = xx.lte_airs_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:366:      radLTE(:,ind)    = xx.lo_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:369:      radLTE(:,ind)    = xx.hi_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:371:      %radLTE(:,ind)    = xx.hi_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:374:      radLTE(:,ind)    = xx.lte_iasi_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:377:      radLTE(:,ind)    = xx.ng_lte_iasi_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic.m:380:      radLTE(:,ind)    = xx.med_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:367:    radLTE(:,ind)    = xx.lte_airs_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:370:    radLTE(:,ind)    = xx.lo_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:373:    radLTE(:,ind)    = xx.hi_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:375:    %radLTE(:,ind)    = xx.hi_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:378:    radLTE(:,ind)    = xx.lte_iasi_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:381:    radLTE(:,ind)    = xx.ng_lte_iasi_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:384:    radLTE(:,ind)    = xx.med_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:409:      radLTE(:,ind)    = xx.lte_airs_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:412:      radLTE(:,ind)    = xx.lo_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:415:      radLTE(:,ind)    = xx.hi_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:417:      %radLTE(:,ind)    = xx.hi_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:420:      radLTE(:,ind)    = xx.lte_iasi_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:423:      radLTE(:,ind)    = xx.ng_lte_iasi_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/merge_RnonLTE_generic_x.m:426:      radLTE(:,ind)    = xx.med_lte_cris_Bfunny4um(idchan,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/mergeRnonLTE_iasi_sep08.m:116:radLTE(:,ind) = lte_iasi_Bfunny4um;
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/mergeRnonLTE_iasi_sep08.m:136:   radLTE(:,ind) = lte_iasi_Bfunny4um;
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:139:       r400.lteBfunny4um = x1.lte_iasi_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:141:       r385.lteBfunny4um = x2.lte_iasi_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:149:       r400.lteBfunny4um = x1.lo_lte_cris_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:151:       r385.lteBfunny4um = x2.lo_lte_cris_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:157:       r400.lteBfunny4um = x1.hi_lte_cris_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:159:       r385.lteBfunny4um = x2.hi_lte_cris_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:165:       r400.lteBfunny4um = x1.lte_airs_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:167:       r385.lteBfunny4um = x2.lte_airs_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:173:       r400.lteBfunny4um = x1.med_lte_cris_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:175:       r385.lteBfunny4um = x2.med_lte_cris_Bfunny4um(:,iwsz);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:183:   numer = r400.nlte - r400.lteBfunny4um;
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:184:   denom = r385.nlte - r385.lteBfunny4um;
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:192:%   junk = (r400.nlte - r400.lteBfunny4um)./ ...
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:193:%          (r385.nlte - r385.lteBfunny4um);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_generic.m:202:   plot(freq, r400.nlte - r400.lteBfunny4um, cval)
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_IASI.m:28:   r385_lteBfunny4um = lte_iasi_Bfunny4um;
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_IASI.m:34:   plot(fout,nlte_iasiB - lte_iasi_Bfunny4um,cval)
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/nonlte_change_with_co2_IASI.m:40:junk=(r385_nlte_iasiB - r385_lteBfunny4um)./(nlte_iasiB - lte_iasi_Bfunny4um);
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/preparatory.m:14:XX =lte_airs_Bfunny4um: [328x36 double]
+/home/chepplew/gitLib/ftc_dev/fit_nonLTE/preparatory.m:15:    lte_cris_Bfunny4um: [2235x36 double]
+grep: /home/chepplew/myLib/matlib/oaders/load_oracles_data.m: Permission denied
+grep: /home/chepplew/myLib/matlib/oaders/read_bco_sondes.m: Permission denied

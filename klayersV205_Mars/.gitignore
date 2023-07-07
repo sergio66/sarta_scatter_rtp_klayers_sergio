@@ -1,0 +1,18 @@
+## backups and mat and pdf files
+##------------
+*~
+*.mat
+*.pdf
+
+## directories
+##------------
+WORKS_*
+Src_rtpV201_100layercloudamountsize
+
+## misc
+##-----
+ugh
+*.rtp
+*.jac
+
+

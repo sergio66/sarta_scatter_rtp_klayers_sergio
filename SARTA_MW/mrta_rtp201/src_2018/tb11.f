@@ -1,0 +1,72 @@
+C  MASSACHUSETTS INSTITUTE OF TECHNOLOGY
+C
+C  AIRS
+C
+C  MICROWAVE BRIGHTNESS
+C
+!ROUTINE NAME: TB11
+!CALL INTERFACE:
+      SUBROUTINE TB11 (TD,TR,E,ER,M,T,TRAN,TRANR)
+C
+!F77   LANGUAGE- FORTRAN 77
+C                                                                       
+!ABSTRACT: COMPUTES THE ATMOSPHERIC COMPONENTS OF BRIGHTNESS
+C   TEMPERATURE
+C
+!ROUTINE HISTORY:
+C    5/17/01   P. Rosenkranz
+C
+!ARGUMENTS:
+C  SPECIFICATIONS-
+      IMPLICIT NONE
+      INTEGER M
+      REAL TD,TR,E,ER,T(M),TRAN(M),TRANR(M)
+C  NAME     TYPE    I/O    DESCRIPTION
+C
+C  TD       R*4      O     UPWARD PROPAGATING ATMOSPHERIC EMISSION SEEN FROM
+C                           LEVEL(1) ALONG DIRECT PATH, IN DEG K
+C  TR       R*4      O     DOWNWARD PROPAGATING ATMOSPHERIC EMISSION SEEN FROM
+C                           LEVEL(M) ALONG REFLECTED PATH, IN DEG K; 
+C                           (NOT INCLUDING COSMIC BACKGROUND).
+C  E        R*4      O     ONE WAY TRANSMITTANCE OF THE ATMOSPHERE, ALONG
+C                           THE DIRECT PATH.
+C  ER       R*4      O     ONE WAY TRANSMITTANCE OF THE ATMOSPHERE, ALONG
+C                           THE REFLECTED PATH.
+C  M        I*4      I     NUMBER OF ELEMENTS IN T,TRAN
+C  T        R*4      I     LAYER MEAN TEMPERATURES (DEG K).
+C  TRAN     R*4      I     LAYER TRANSMITTANCE BETWEEN LEVEL I-1 AND I ALONG
+C                           THE DIRECT PATH
+C  TRANR    R*4      I     LAYER TRANSMITTANCE BETWEEN LEVEL I-1 AND I ALONG
+C                           THE REFLECTED PATH
+C
+!ROUTINES CALLED: none
+!PARENT: 
+!RETURN VALUES:
+!FILES ACCESSED: none
+!DESCRIPTION:
+!KNOWN BUGS AND LIMITATIONS: 
+!END HEADER*************************************************************
+C  LOCAL VARIABLES:
+      REAL EM,ERM
+      INTEGER I
+C
+      E = 1.
+      TD = 0.
+      DO I=1,M
+        IF(E.LT.1.E-10) GOTO 50
+        EM = E
+        E = E*TRAN(I)
+        TD = TD + T(I)*(EM-E)
+      END DO
+50    CONTINUE
+      ER = 1.
+      TR = 0.
+      DO I=M,1,-1
+        IF(ER.LT.1.E-10) GOTO 60
+        ERM = ER
+        ER = ER*TRANR(I)
+        TR = TR + T(I)*(ERM-ER)
+      END DO
+60    CONTINUE
+      RETURN
+      END

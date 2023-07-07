@@ -1,0 +1,31 @@
+/bin/cp -a ../../*.dat ../../*.f ../../*.for .
+/bin/cp -a ../src_2002/makefile .
+/bin/cp -a ../src_2002/*.h .
+/bin/cp -a ../src_2002/amsurta.com .
+/bin/cp -a ../src_2002/paramet.com .
+/bin/cp -a ../src_2002/mwtran.inc .
+/bin/cp -a ../src_2002/dcli.f .
+/bin/cp -a ../src_2002/dilec.f .
+/bin/cp -a ../src_2002/dilec4.f .
+/bin/cp -a ../src_2002/fastem_mod.f .
+/bin/cp -a ../src_2002/foam.f .
+/bin/cp -a ../src_2002/fresnel.f .
+/bin/cp -a ../src_2002/largesc.f .
+/bin/cp -a ../src_2002/amsutau.f .
+/bin/cp -a ../src_2002/opac.f .
+/bin/cp -a ../src_2002/smallsc.f .
+/bin/cp -a ../src_2002/mw_bt.f .
+/bin/cp -a ../src_2002/lsurface.f .
+/bin/cp -a ../src_2002/m_rta.f .
+
+keep as in mwtran.f getcoef.f opac2.f
+change names of these
+[sergio@strowinteract src_2018]$ mv tb11.for tb11.f
+[sergio@strowinteract src_2018]$ mv tb10.for tb10.f
+[sergio@strowinteract src_2018]$ mv shval3.for shval3.f
+[sergio@strowinteract src_2018]$ mv bfield.for bfield.f
+[sergio@strowinteract src_2018]$ mv vlint.for vlint.f
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+make -f Makefile mwrta_amsu

@@ -1,0 +1,96 @@
+OBJS=klayers_rtp.o \
+   rdinfo_klayers.o  opnrtp_klayers.o  rdrtp_klayers.o  wrtrtp_klayers.o \
+   rdafgl.o  merge.o  intlev.o  integ.o  grav.o  wexsvp.o  setxop.o \
+   spline.o  splint.o  spllev.o  wrtspl.o  cbplev.o  adafgl.o \
+   cbgids.o  util_klayers.o  chkgas.o  chkguc.o  cbgucs.o  toppmv.o  zbot.o
+
+# --------
+# HDF info
+# --------
+# set HDFHOME to point to the local HDF installation
+# HDFHOME = /asl/opt
+# HDF libraries
+# HDFLIB   = -L$(HDFHOME)/lib -lmfhdf -ldf -ljpeg -lz
+
+# Paul has split things post Aug 2015
+HDF_INSTALL1 = /asl/opt/hdf/4.2r4
+HDFLIB1   = -L$(HDF_INSTALL1)/lib -lmfhdf -ldf -ljpeg -lz
+
+# more libs
+HDF_INSTALL2 = /asl/opt/szip/2.1
+HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
+
+HDFLIB = $(HDFLIB1) $(HDFLIB2)
+
+# -----------
+# RTP info
+# -----------
+# set RTPHOME to point to the local RTP installation
+#RTPHOME = ../../rtpV201
+#RTPHOME = /asl/packages/rtpV201
+RTPHOME = /home/sergio/rtpV201
+RTPHOME = /home/sergio/OTHERSTUFF/rtpV201
+
+# RTP library
+RTPLIB = -L$(RTPHOME)/lib -lrtp
+
+# RTP include files
+RTPINC = -I$(RTPHOME)/include
+
+
+# -------------
+# FORTRAN flags
+# -------------
+# OPT  : compiler options
+# FLIB : fortran libraries (most compilers will not need any)
+# F77  : fortran compiler
+
+# -------
+# Generic
+#
+#OPT = -O
+OPT = -check bounds -traceback -debug
+FLIB =
+F77 = ifort
+
+# ------------
+# Linux Absoft
+#    -N109 fold all names to upper case
+#    -C    check array bounds
+#    -O    some optimizations
+#    -N3   add record info to unformatted files
+#    -s    static allocation
+# OPT = -N109 -C -O -N3 -s
+# OPT = -O
+#OPT = -s -O -N3 -N26
+# Linux Absoft needs -lU77
+#FLIB = -lU77
+#F77 = /asl/opt/absoft/absoft10.0/bin/af77
+
+# -----
+# SunOS options
+#
+# OPT= -e -fast -w
+# FLIB =
+# F77 = f77
+
+# ---
+# SGI
+# include -cpp option if not default 
+# OPT= -O0 -static -g -check_bounds -64
+#OPT= -O -64
+#FLIB = -64
+#F77 = f77
+
+
+# -----
+# Build
+# -----
+
+# Link object files and libs to build executable
+klayers: $(OBJS)
+	$(F77) $(OBJS)  $(RTPLIB) $(HDFLIB) $(FLIB)
+
+# compile source to object files
+.f.o: incLAY.f cbplev.f
+	$(F77) $(RTPINC) -c $(OPT) $*.f
