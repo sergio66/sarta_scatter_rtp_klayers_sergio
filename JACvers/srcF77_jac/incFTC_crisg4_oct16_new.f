@@ -207,6 +207,9 @@ C      ------------------------
        REAL RADSUN ! radius of the sun (6.956E+8 m)
        REAL     C1 ! radiation constant c1 (1.1911E-8  W/(m2.st.(cm-1)4)
        REAL     C2 ! radiation constant c2 (1.4387863 K/cm-1)
+       REAL rXTang ! do we include Tang correction????
+
+       PARAMETER(rXTang = 0.0000000)
        PARAMETER(    PI = 3.1415926)
        PARAMETER(RADSUN = 6.956E+8)
 C

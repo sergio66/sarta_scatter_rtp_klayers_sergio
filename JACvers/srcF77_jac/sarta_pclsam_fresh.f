@@ -753,15 +753,15 @@ ccc
        if (nwantp .gt. 0) then
          print *,'nwantp = ',nwantp,'followed by list ....'
          print *,listp(1:nwantp)
-       else
-         print *,'nwantp = -1 (all profs)'
+       !else
+         !print *,'nwantp = -1 (all profs)'
        end if
 
        if (nwantc .gt. 0) then
          print *,'nwantc = ',nwantc,'followed by list ....'
          print *,listc(1:nwantc)
-       else
-         print *,'nwantc = -1 (all chans)'
+       !else
+       !  print *,'nwantc = -1 (all chans)'
        end if
 
        DOJAC = .FALSE.
@@ -862,7 +862,8 @@ C      --------------------------------------------------------------
      $      caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD)
       END IF
 
-       IF (NCHAN .EQ. 2645) THEN
+c       IF (NCHAN .EQ. 2645) THEN
+       IF (NCHAN .EQ. 2645462) THEN
          write(*,'(A)') '----------------------------------------------------------'
          write(*,'(A)') 'SET(X) NCNHN(X)  IMIN(X) IMAX(X)  FMIN(X)  FMAX(X) COMMENT'
          write(*,'(A)') '----------------------------------------------------------'
@@ -1149,7 +1150,7 @@ C        compute OD : indirectly uses T(z),WV(z),O3(z) through the PREDS, to get
      $     TAU, TAUZ, TAUZSN)
 
 C        Calculate cloudy radiance; also no NLTE if needed
-         CALL docloudyTwoSlab_RT(I, FREQ, LBOT, NWANTC, INDCHN, 
+         CALL docloudyTwoSlab_RT(I, IPROF, FREQ, LBOT, NWANTC, INDCHN, 
      $      TEMP,TSURF,TAU,TAUZ, TAUZSN, 
      $      BLMULT, EMIS, FCLEAR, COSDAZ, SECANG, SECSUN, DOSUN, SUNFAC, HSUN, RHOSUN, 
      $      RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,      

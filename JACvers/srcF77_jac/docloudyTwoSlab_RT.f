@@ -1,4 +1,4 @@
-      SUBROUTINE docloudyTwoSlab_RT(I, FREQ, LBOT, NWANTC, INDCHN, 
+      SUBROUTINE docloudyTwoSlab_RT(I, IPROF, FREQ, LBOT, NWANTC, INDCHN, 
      $  TEMP,TSURF,TAU,TAUZ, TAUZSN, 
      $  BLMULT, EMIS, FCLEAR, COSDAZ, SECANG, SECSUN, DOSUN, SUNFAC, HSUN, RHOSUN, 
      $  RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,       ! DEPEND ON CPRTOP1,CPRBOT1
@@ -16,14 +16,14 @@
       include "incFTC.f"
 
 c input
-       REAL CO2TOP                ! top layers CO2 mixing ratio
-       INTEGER I
+       REAL CO2TOP             ! top layers CO2 mixing ratio
+       INTEGER I,IPROF         ! channel list and profile number
        INTEGER INDCHN(MXCHAN)  ! array indices for all channels
-       INTEGER NWANTC         ! number of wanted channels (-1=all)
-       REAL   FREQ(MXCHAN) ! chan center frequency
-       INTEGER   LBOT      ! bottom layer index number
-       REAL   TEMP(MAXLAY) ! prof layer average temperature
-       REAL  TSURF         ! surface temperature
+       INTEGER NWANTC          ! number of wanted channels (-1=all)
+       REAL   FREQ(MXCHAN)     ! chan center frequency
+       INTEGER   LBOT          ! bottom layer index number
+       REAL   TEMP(MAXLAY)     ! prof layer average temperature
+       REAL  TSURF             ! surface temperature
        REAL BLMULT                ! bottom layer fractional multiplier
        REAL    TAU(MAXLAY,MXCHAN) ! chan layer effective optical depth
        REAL   TAUZ(MAXLAY,MXCHAN) ! chan surface-to-space trans
@@ -349,6 +349,9 @@ C     $      IPROF,RAD0,FCLEAR,CFRA1X,CFRA2X,CFRA12
 c         PRINT *,'CLOUD1 emis,temp = ',CEMIS1(I),TCTOP1
 c         PRINT *,'CLOUD2 emis,temp = ',CEMIS2(I),TCTOP2
 c       endif
+       IF (I .EQ. 1291) THEN
+         write(*,'(I8,I8,11(F12.4))') I,IPROF,FCLEAR,CFRA1X,CFRA2X,CFRA12,TCTOP1,TCTOP2,RAD0,RADC1,RADC2,RADC12,RAD(I)
+       endif
 ccc
 
 C         -----------------

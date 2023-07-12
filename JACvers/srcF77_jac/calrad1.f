@@ -236,6 +236,9 @@ C      for function QIKEXP
 C      for function HG3
        REAL HG3
 
+c      for Tang correction to Chou calcs, rXTang is in incFTC.f
+       REAL raTangCorrect(MAXLAY)
+       REAL raTauL2S(MAXLAY),Bscatter
 
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
@@ -259,6 +262,12 @@ C
 C      Optical depth of cloud1 including scattering adjustment
        K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
        CLDEFFOD = K1
+
+c      prep for Tang correction
+       raTangCorrect = 0.0 
+       RDOWN = 0.0
+       TDOWNN=1.0
+
 C      -----------------------------------------------------------------
 C      Loop downward over the layers
 C      -----------------------------------------------------------------
@@ -288,6 +297,17 @@ c so derivatives wrt CFRCL1(L) should not be impacted
              ODTOTL(L)=KAIR
              ODSUM=ODSUM + KAIR
           ENDIF
+
+          raTauL2S(L) = ODSUM
+          IF (CFRCL1(L) .GT. 0.0) THEN
+            TDOWNF=TDOWNN*exp(-ODSUM)
+            RDOWN = RDOWN + ( RPLNCK(L)*(TDOWNN - TDOWNF) )
+            TDOWNN=TDOWNF
+
+            Bscatter    = 1-GL(L)
+            raTangCorrect(L) = (RDOWN-RPLNCK(L))*(1-ODSUM*ODSUM)*TDOWNN
+            raTangCorrect(L) = 0.5*WTILDE(L)*Bscatter/(1-WTILDE(L)*(1-Bscatter))*raTangCorrect(L)
+         END IF
 
          IF (DOJAC) CLDTAU(L) = ODTOTL(L)*SECANG(L)
 C
@@ -376,7 +396,12 @@ C
 C      --------------
 C      Total radiance
 C      --------------
-       RAD1=RADUP + RSUN + RTHERM
+
+       DO L = 1,LBOT
+       END DO
+         
+c       RAD1=RADUP + RSUN + RTHERM
+       RAD1=RADUP + RSUN + RTHERM + sum(raTangCorrect)*rXTang
 
        IF ((DOJAC) .AND. (DOSUN)) RTHERM = RSUN + RTHERM
 C
