@@ -264,9 +264,11 @@ C      Optical depth of cloud1 including scattering adjustment
        CLDEFFOD = K1
 
 c      prep for Tang correction
-       raTangCorrect = 0.0 
-       RDOWN = 0.0
-       TDOWNN=1.0
+       IF (rXTang .GT. 0.0) THEN
+         raTangCorrect = 0.0 
+         RDOWN = 0.0
+         TDOWNN=1.0
+       END IF
 
 C      -----------------------------------------------------------------
 C      Loop downward over the layers
@@ -298,15 +300,17 @@ c so derivatives wrt CFRCL1(L) should not be impacted
              ODSUM=ODSUM + KAIR
           ENDIF
 
-          raTauL2S(L) = ODSUM
-          IF (CFRCL1(L) .GT. 0.0) THEN
+c Tang
+          IF ((rXTang .GT. 0.0) .AND. (CFRCL1(L) .GT. 0.0)) THEN
+            raTauL2S(L) = ODSUM
             TDOWNF=TDOWNN*exp(-ODSUM)
             RDOWN = RDOWN + ( RPLNCK(L)*(TDOWNN - TDOWNF) )
             TDOWNN=TDOWNF
-
+ 
+c           Tang uses factor of 0.5; see /home/sergio/KCARTA/SRCv1.22_f90/Revisions_cloud.txt where I say 0.10 for water clouds, 0.30 for ice clouds
             Bscatter    = 1-GL(L)
             raTangCorrect(L) = (RDOWN-RPLNCK(L))*(1-ODSUM*ODSUM)*TDOWNN
-            raTangCorrect(L) = 0.5*WTILDE(L)*Bscatter/(1-WTILDE(L)*(1-Bscatter))*raTangCorrect(L)
+            raTangCorrect(L) = 0.20*WTILDE(L)*Bscatter/(1-WTILDE(L)*(1-Bscatter))*raTangCorrect(L)
          END IF
 
          IF (DOJAC) CLDTAU(L) = ODTOTL(L)*SECANG(L)
@@ -397,13 +401,13 @@ C      --------------
 C      Total radiance
 C      --------------
 
-       DO L = 1,LBOT
-       END DO
-         
-c       RAD1=RADUP + RSUN + RTHERM
-       RAD1=RADUP + RSUN + RTHERM + sum(raTangCorrect)*rXTang
+c      raTauL2S(L) = ODSUM
+       RAD1=RADUP + RSUN + RTHERM
+       IF (rXTang .GT. 0.0) THEN
+         RAD1 = RAD1 + sum(raTangCorrect)*rXTang
+       ENDIF
 
        IF ((DOJAC) .AND. (DOSUN)) RTHERM = RSUN + RTHERM
-C
+
        RETURN
        END

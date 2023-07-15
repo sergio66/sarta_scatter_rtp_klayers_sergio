@@ -349,9 +349,13 @@ C     $      IPROF,RAD0,FCLEAR,CFRA1X,CFRA2X,CFRA12
 c         PRINT *,'CLOUD1 emis,temp = ',CEMIS1(I),TCTOP1
 c         PRINT *,'CLOUD2 emis,temp = ',CEMIS2(I),TCTOP2
 c       endif
+
+c Tang
        IF (I .EQ. 1291) THEN
-         write(*,'(I8,I8,11(F12.4))') I,IPROF,FCLEAR,CFRA1X,CFRA2X,CFRA12,TCTOP1,TCTOP2,RAD0,RADC1,RADC2,RADC12,RAD(I)
+         write(*,'(I8,I8,13(F12.4))') 
+     c    I,IPROF,FCLEAR,CFRA1X,CFRA2X,CFRA12,TCTOP1,TCTOP2,CLDEFFOD1,CLDEFFOD2,RAD0,RADC1,RADC2,RADC12,RAD(I)
        endif
+
 ccc
 
 C         -----------------
