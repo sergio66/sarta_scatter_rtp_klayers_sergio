@@ -232,7 +232,12 @@ C         Truncate F at limits as needed
           F = MAX( MIN(F,2.09), 0.696 )
        ENDIF
        RTHERM=RHOTHR(I)*PI*RDOWN*F*TAUZ(I)
-C
+
+c nick nalli 2023 IEEE paper
+c see setems.f               RHOTHR(I)=(1.0 - EMIS(I))/PI
+c    so (1.0 - EMIS(I)) = RHOTHR(I)*PI
+c   and F = 1.0   !! for nick nalli
+c       RTHERM=RHOTHR(I)*PI *RDOWN*F*TAUZ(I)  !!! for nick nalli
 
 C      --------------
 C      Total radiance

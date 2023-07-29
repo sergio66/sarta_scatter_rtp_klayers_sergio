@@ -622,6 +622,16 @@ C      for CCPREP cloud2
        REAL G_ASY2(MXCHAN)    ! "g" asymmetry
        REAL NEXTO2(MXCHAN)    ! nadir extinction optical depth
        REAL NSCAO2(MXCHAN)    ! nadir scattering optical depth
+
+C backscatter coeffs, see Maestr/Martinazzo Journal of Quantitative Spectroscopy & Radiative Transfer 271 (2021) 107739
+c Assessment of the accuracy of scaling methods for radiance simulations at far and mid infrared wavelengths
+c Michele Martinazzo, Davide Magurno, William Cossich, Carmine Serio, Guido Masiello, Tiziano Maestri
+c       ISCALING = 1     !!! similarity, been using this for years
+c       ISCALING = 2     !!! chou
+c       ISCALING = 3     !!! Maestri/Martinazzo
+       INTEGER ISCALING1,ISCALING2  !!! ISCALING = ABS(FLOOR(rXTang)) in ccprep_slab.f 
+                         !!! so if 0 < rXTang < 1, do Tang with similarity scaling; if rXtang = -1,-2,-3 do similarity/Chou/Maestri
+       REAL POLYNOM_BACKSCAT1(4),POLYNOM_BACKSCAT2(4)  ! backscattering coeff : similarity, chou, Maestri/Martinazzo
 C
 C      used locally only
        INTEGER  I,II,III   ! loop counter
@@ -1097,6 +1107,7 @@ C      --------------------------------------
      $    CFRCL1, G_ASY1, NEXTO1, NSCAO1, TEMPC1, 
      $    LCBOT2, LCTOP2, CLRB2, CLRT2, TCBOT2, TCTOP2, MASEC2, MASUN2, ! DEPEND ON CPRTOP2,CPRBOT2
      $    CFRCL2, G_ASY2, NEXTO2, NSCAO2, TEMPC2,
+     $    POLYNOM_BACKSCAT1,POLYNOM_BACKSCAT2,ISCALING1,ISCALING2,
      $    DOJAC, 
      $    JACA_G_ASY1, JACA_NEXTO1, JACA_NSCAO1, JACA_FINAL_1, 
      $    JACS_G_ASY1, JACS_NEXTO1, JACS_NSCAO1, JACS_FINAL_1,
@@ -1159,6 +1170,7 @@ C        Calculate cloudy radiance; also no NLTE if needed
      $      CEMIS1, CRHOS1, CRHOT1, CEMIS2, CRHOS2, CRHOT2, TEMPC1, TEMPC2,
      $      MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $      MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
+     $      POLYNOM_BACKSCAT1, POLYNOM_BACKSCAT2,ISCALING1,ISCALING2,
      $      QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
      $      RAD, DOJAC, TAU4, PLANCK_RAD4, PURE_RAD4, RTHERM4_SOLAR4, DBTDT, 
      $               NLTEJACPRED5T,NLTEJACPRED7Q,
@@ -1209,5 +1221,7 @@ C      -------------------
          IF (INTERSECT(300,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNCLD)
        END IF
 C
+       print *,'closed all rtp and bin files, stopping jac_sarta'
+
        STOP
        END

@@ -7,6 +7,7 @@
      $  CEMIS1, CRHOS1, CRHOT1, CEMIS2, CRHOS2, CRHOT2, TEMPC1, TEMPC2,
      $  MASEC1, MASUN1, CFRCL1, G_ASY1, NEXTO1, NSCAO1, 
      $  MASEC2, MASUN2, CFRCL2, G_ASY2, NEXTO2, NSCAO2,
+     $  POLYNOM_BACKSCAT1, POLYNOM_BACKSCAT2,ISCALING1,ISCALING2,
      $  QUICKINDNTE, NCHNTE, CLISTN, COEFN, SUNCOS, SCOS1, CO2TOP,
      $  RAD, DOJAC, TAU4, PLANCK_RAD4, PURE_RAD4, RTHERM4_SOLAR4, DBTDT,
      $               NLTEJACPRED5T,NLTEJACPRED7Q,
@@ -87,6 +88,9 @@ c input
        REAL G_ASY2(MXCHAN)    ! "g" asymmetry
        REAL NEXTO2(MXCHAN)    ! nadir extinction optical depth
        REAL NSCAO2(MXCHAN)    ! nadir scattering optical depth
+
+       REAL POLYNOM_BACKSCAT1(4), POLYNOM_BACKSCAT2(4) !!! backscatter coeffs
+       INTEGER ISCALING1,ISCALING2                     !!! backscatter scaling
 
        INTEGER QUICKINDNTE(MXCHAN)       ! list of non-LTE channels
        INTEGER NCHNTE                    ! number of non-LTE channels
@@ -223,7 +227,9 @@ C    Calculate bottom cloud2 radiance
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL2, MASEC2, MASUN2, COSDAZ,
-     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RADC2, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD2 )
+     $          NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, 
+     $          POLYNOM_BACKSCAT2, ISCALING2, 
+     $          RADC2, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD2 )
          ENDIF
       ELSE
          RADC2=0.0
@@ -246,13 +252,16 @@ C      Calculate combined cloud1+cloud2 radiance
             CALL CALRAD1( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC12, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD1 )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, 
+     $          POLYNOM_BACKSCAT1, ISCALING1, 
+     $          RADC12, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD1 )
          ELSE
             CALL CALRAD2( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, COSDAZ,
      $          CFRCL1, MASEC1, MASUN1, NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, 
      $          CFRCL2, MASEC2, MASUN2, NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, 
+     $          POLYNOM_BACKSCAT1, POLYNOM_BACKSCAT2, ISCALING1, ISCALING2,
      $          RADC12, DOJAC, CLDTAU, RADLAY, RTHERM )
          ENDIF
       ELSE
@@ -301,7 +310,9 @@ C     Calculate top cloud1 radiance
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $          RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RADC1, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD1 )
+     $          NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, 
+     $          POLYNOM_BACKSCAT1, ISCALING1, 
+     $          RADC1, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD1 )
          ENDIF
       ELSE
          RADC1=0.0
@@ -351,10 +362,10 @@ c         PRINT *,'CLOUD2 emis,temp = ',CEMIS2(I),TCTOP2
 c       endif
 
 c Tang
-       IF (I .EQ. 1291) THEN
-         write(*,'(I8,I8,13(F12.4))') 
-     c    I,IPROF,FCLEAR,CFRA1X,CFRA2X,CFRA12,TCTOP1,TCTOP2,CLDEFFOD1,CLDEFFOD2,RAD0,RADC1,RADC2,RADC12,RAD(I)
-       endif
+c       IF (I .EQ. 1291) THEN
+c         write(*,'(I8,I8,13(F12.4))') 
+c     c    I,IPROF,FCLEAR,CFRA1X,CFRA2X,CFRA12,TCTOP1,TCTOP2,CLDEFFOD1,CLDEFFOD2,RAD0,RADC1,RADC2,RADC12,RAD(I)
+c       endif
 
 ccc
 

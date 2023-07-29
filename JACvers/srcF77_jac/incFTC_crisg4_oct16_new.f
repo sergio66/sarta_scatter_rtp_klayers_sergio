@@ -207,9 +207,14 @@ C      ------------------------
        REAL RADSUN ! radius of the sun (6.956E+8 m)
        REAL     C1 ! radiation constant c1 (1.1911E-8  W/(m2.st.(cm-1)4)
        REAL     C2 ! radiation constant c2 (1.4387863 K/cm-1)
-       REAL rXTang ! do we include Tang correction????
 
+
+c this is for Chou scaling
+       REAL rXTang ! do we include Tang correction???? the paper says 0.5, but I found use 0.3 for ice, 0.1 for water clouds
+                   ! use -1 for similarity, -2 for chou, -3 for Maestri/Martinazzo
+                   ! ccprep_slab.f used as ISCALING = ABS(FLOOR(rXTang)), then calrad1,calrad2 uses this as well
        PARAMETER(rXTang = 0.0000000)
+
        PARAMETER(    PI = 3.1415926)
        PARAMETER(RADSUN = 6.956E+8)
 C

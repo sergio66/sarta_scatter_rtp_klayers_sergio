@@ -26,7 +26,8 @@ C    CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
 C       ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
 C       RHOTHR, LABOVE, COEFF,
 C       CFRCL1, MASEC1, MASUN1, COSDAZ,
-C       NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RAD1, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD )
+C       NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1, RAD1, POLYNOM_BACKSCAT1, ISCALING1,
+C       DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD )
 
 
 !INPUT PARAMETERS:
@@ -138,8 +139,9 @@ C      =================================================================
        SUBROUTINE CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $    ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
      $    RHOTHR, LABOVE, COEFF, CFRCL1, MASEC1, MASUN1, COSDAZ,
-     $    NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1, RAD1, 
-     $    DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD )
+     $    NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1, 
+     $    POLYNOM_BACKSCAT1, ISCALING1,
+     $    RAD1, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -185,6 +187,8 @@ C      Cloud1 info
        REAL MASEC1         ! mean view secant in cloud
        REAL MASUN1         ! mean sun-only secant in cloud
        REAL COSDAZ         ! cosine of delta azimuth angles
+       REAL POLYNOM_BACKSCAT1(4) ! polynom backscat coeffs
+       INTEGER ISCALING1         !type of scho.similarity,maestri scaling
        REAL NEXTO1(MXCHAN) ! cloud nadir extinction optical depth
        REAL NSCAO1(MXCHAN) ! cloud nadir scattering optical depth
        REAL G_ASY1(MXCHAN) ! cloud asymmetry
@@ -260,7 +264,17 @@ C***********************************************************************
        PI4INV = 1.0/(4.0*PI)
 C
 C      Optical depth of cloud1 including scattering adjustment
-       K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
+C      this is similarity scaling, see eg Chou 1999 or Martinazzo/Maestri JQSRT 2021
+C      abs(floor([0 0.2 0.5 0.7 -1 -2 -3])) = 0     0     0     0     1     2     3
+       IF (ISCALING1 .LE. 1) THEN
+         K1 = NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
+       ELSE
+c        this is using eqn 7 in Martinazzo/Maestri JQSRT 2021
+         K1 = 1 - (POLYNOM_BACKSCAT1(1) + POLYNOM_BACKSCAT1(2)*G_ASY1(I) + 
+     $             POLYNOM_BACKSCAT1(3)*G_ASY1(I)**2 + POLYNOM_BACKSCAT1(4)*G_ASY1(I)**3)
+         K1 = NEXTO1(I)-NSCAO1(I) + K1*NSCAO1(I)
+       END IF
+
        CLDEFFOD = K1
 
 c      prep for Tang correction

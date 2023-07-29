@@ -27,7 +27,9 @@ C       ODL, TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
 C       RHOTHR, LABOVE, COEFF,
 C       CFRCL1, MASEC1, MASUN1, NEXTO1, NSCAO1, G_ASY1, LCTOP1, LCBOT1,
 C       CFRCL2, MASEC2, MASUN2, COSDAZ,
-C       NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, RAD2, DOJAC, CLDTAU, RADLAY, RTHERM )
+C       NEXTO2, NSCAO2, G_ASY2, LCTOP2, LCBOT2, 
+C       POLYNOM_BACKSCAT1, POLYNOM_BACKSCAT2, ISCALING1, ISCALING2,
+C       RAD2, DOJAC, CLDTAU, RADLAY, RTHERM )
 
 
 !INPUT PARAMETERS:
@@ -148,6 +150,7 @@ C      =================================================================
      $    RHOTHR, LABOVE, COEFF, COSDAZ, 
      $    CFRCL1, MASEC1, MASUN1, NEXTO1, NSCAO1, G_ASY1, LCTOP1,LCBOT1,
      $    CFRCL2, MASEC2, MASUN2, NEXTO2, NSCAO2, G_ASY2, LCTOP2,LCBOT2, 
+     $    POLYNOM_BACKSCAT1, POLYNOM_BACKSCAT2, ISCALING1, ISCALING2, 
      $    RAD2, DOJAC, CLDTAU, RADLAY, RTHERM )
 C      =================================================================
 
@@ -208,6 +211,8 @@ C      Cloud2 info
        REAL G_ASY2(MXCHAN) ! cloud2 asymmetry
        INTEGER LCTOP2      ! cloud2 top layer index
        INTEGER LCBOT2      ! cloud2 bottom layer index
+       REAL POLYNOM_BACKSCAT1(4),POLYNOM_BACKSCAT2(4)  !! polynomial backscat
+       INTEGER ISCALING1, ISCALING2                    !! type of backscatter scaling
        LOGICAL DOJAC
 C
 C      Output
@@ -223,6 +228,7 @@ C-----------------------------------------------------------------------
        LOGICAL LCLOUD      ! layer contains cloud true/false
        INTEGER      L      ! layer index
        INTEGER LTHERM      ! layer for RTHERM calc
+       INTEGER   IP        ! junk
        REAL      F         ! reflected therm "F" (fudge) factor
        REAL     GL(MAXLAY) ! layer scattering asymmetry
        REAL     K1         ! cloud1 optical depth
@@ -282,8 +288,26 @@ C***********************************************************************
        PI4INV = 1.0/(4.0*PI)
 C
 C      Cloud optical depths adjusted for scattering
-       K1=NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
-       K2=NEXTO2(I) - NSCAO2(I)*(1.0+G_ASY2(I))/2.0
+C      this is similarity scaling, see eg Chou 1999 or Martinazzo/Maestri JQSRT 2021
+C      abs(floor([0 0.2 0.5 0.7 -1 -2 -3])) = 0     0     0     0     1     2     3
+
+C         print *,'CALRAD2 -- ISCALING1,2',ISCALING1,ISCALING2
+
+       IF (ISCALING1 .LE. 1) THEN
+         K1 = NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
+       ELSE
+c        this is using eqn 7 in Martinazzo/Maestri JQSRT 2021
+         K1 = 1 - (POLYNOM_BACKSCAT1(1) + POLYNOM_BACKSCAT1(2)*G_ASY1(I) + 
+     $        POLYNOM_BACKSCAT1(3)*G_ASY1(I)**2 + POLYNOM_BACKSCAT1(4)*G_ASY1(I)**3)
+         K1 = NEXTO1(I)-NSCAO1(I) + K1*NSCAO1(I)
+       END IF
+       IF (ISCALING2 .LE. 1) THEN
+         K2 = NEXTO2(I) - NSCAO2(I)*(1.0+G_ASY2(I))/2.0
+       ELSE
+         K2 = 1 - (POLYNOM_BACKSCAT2(1) + POLYNOM_BACKSCAT2(2)*G_ASY2(I) + 
+     $        POLYNOM_BACKSCAT2(3)*G_ASY2(I)**2 + POLYNOM_BACKSCAT2(4)*G_ASY2(I)**3)
+         K2 = NEXTO2(I)-NSCAO2(I) + K2*NSCAO2(I)
+       END IF
 
        IF (rXTang .GT. 0.0) THEN
 c        prep for Tang correction

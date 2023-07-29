@@ -22,7 +22,8 @@ C    Prepapre lookup table etc for a complex cloud calculation.
 C    CCPREP( NCHAN, LBOT, INDMIE, MIENPS,
 C       CNGWAT, CPSIZE, CPRTOP, CPRBOT, PLEV, TEMP, SECANG, SECSUN,
 C       MIEPS, MIEABS, MIEEXT, MIEASY, LCBOT, LCTOP, CLEARB, CLEART,
-C       TCBOT, TCTOP, MASEC, MSSEC, CFRCL, G_ASYM, NEXTOD, NSCAOD )
+C       TCBOT, TCTOP, MASEC, MSSEC, CFRCL, G_ASYM, NEXTOD, NSCAOD, 
+C       POLYNOM_BACKSCAT(4), ISCALING, CTYPE,
 C       DOJAC, JACA_G_ASY, JACA_NEXTO, JACA_NSCAO, JACA_FINAL, 
 C              JACS_G_ASY, JACS_NEXTO, JACS_NSCAO, JACS_FINAL,
 C              JACTOP_CFRCL,JACBOT_CFRCL,JACTOP_CFRCL_v,JACBOT_CFRCL_v)
@@ -46,6 +47,7 @@ C    REAL arr  MIEPS   Mie table particle sizes    um
 C    REAL arr  MIEABS  Mie table absorption data   m^2/g
 C    REAL arr  MIEEXT  Mie table extinction data   ?
 C    REAL arr  MIEASY  Mie table asymmetry data    ?
+C    INTEGER    CTYPE  cloud type
 
 
 !OUTPUT PARAMETERS:
@@ -63,7 +65,7 @@ C    REAL arr CFRCL    fraction of cloud in layer
 C    REAL arr G_ASYM   "g" asymmetry
 C    REAL arr NEXTOD   nadir extinction optical depth
 C    REAL arr NSCAOD   nadir scattering optical depth
-
+C    REAL arr POLYNOM_BACKSCAT back scatter coeffs
 
 !INPUT/OUTPUT PARAMETERS:
 C    none
@@ -120,7 +122,7 @@ C      =================================================================
      $    CNGWAT, CPSIZE, CPRTOP, CPRBOT, PLEV, TEMP, SECANG, SECSUN,
      $    MIEPS, MIEABS, MIEEXT, MIEASY,
      $    LCBOT, LCTOP, CLEARB, CLEART, TCBOT, TCTOP, MASEC, MSSEC,
-     $    CFRCL, G_ASYM, NEXTOD, NSCAOD, 
+     $    CFRCL, G_ASYM, NEXTOD, NSCAOD, POLYNOM_BACKSCAT, ISCALING, CTYPE,
      $    DOJAC, JACA_G_ASYM, JACA_NEXTOD, JACA_NSCAOD, JACA_FINAL, 
      $           JACS_G_ASYM, JACS_NEXTOD, JACS_NSCAOD, JACS_FINAL,
      $           JACTOP_CFRCL,JACBOT_CFRCL,JACTOP_CFRCL_v,JACBOT_CFRCL_v)
@@ -153,6 +155,7 @@ C      Input
        INTEGER   LBOT              ! bottom layer
        INTEGER INDMIE              ! index of CTYPE in MIE arrays
        INTEGER MIENPS(NMIETY)      ! # of particle sizes
+       INTEGER CTYPE               ! 101-199 = W, 201-299 = I, 301-399 = A
        REAL CNGWAT                 ! cloud non-gas water
        REAL CPSIZE                 ! cloud particle size
        REAL CPRTOP                 ! cloud top pressure
@@ -168,18 +171,20 @@ C      Input
        LOGICAL DOJAC
 
 C      Output
-       INTEGER  LCBOT         ! layer containing cloud bottom
-       INTEGER  LCTOP         ! layer containing cloud top
-       REAL CLEARB            ! frac of layer at bottom of cloud clear
-       REAL CLEART            ! frac of layer at top of cloud clear
-       REAL  TCBOT            ! temperature at cloud bottom
-       REAL  TCTOP            ! temperature at cloud top
-       REAL  MASEC            ! mean cloud view angle secant
-       REAL  MSSEC            ! mean cloud sun-only angle secant
-       REAL  CFRCL(MAXLAY)    ! fraction of cloud in layer
-       REAL G_ASYM(MXCHAN)    ! "g" asymmetry
-       REAL NEXTOD(MXCHAN)    ! nadir extinction optical depth
-       REAL NSCAOD(MXCHAN)    ! nadir scattering optical depth
+       INTEGER  LCBOT            ! layer containing cloud bottom
+       INTEGER  LCTOP            ! layer containing cloud top
+       REAL CLEARB               ! frac of layer at bottom of cloud clear
+       REAL CLEART               ! frac of layer at top of cloud clear
+       REAL  TCBOT               ! temperature at cloud bottom
+       REAL  TCTOP               ! temperature at cloud top
+       REAL  MASEC               ! mean cloud view angle secant
+       REAL  MSSEC               ! mean cloud sun-only angle secant
+       REAL  CFRCL(MAXLAY)       ! fraction of cloud in layer
+       REAL G_ASYM(MXCHAN)       ! "g" asymmetry
+       REAL NEXTOD(MXCHAN)       ! nadir extinction optical depth
+       REAL NSCAOD(MXCHAN)       ! nadir scattering optical depth
+       REAL POLYNOM_BACKSCAT(4)  ! backscattering coefs : similarity 1999, Chou 1999 or Maestri/Martinazzi JSQRT 2021
+       INTEGER ISCALING          ! -1 for similarity, -2 for chou, -3 for Maestri/Martinazzo
        REAL JACA_G_ASYM(MXCHAN),JACA_NEXTOD(MXCHAN),JACA_NSCAOD(MXCHAN),JACA_FINAL(MXCHAN)  !! amount jacs
        REAL JACS_G_ASYM(MXCHAN),JACS_NEXTOD(MXCHAN),JACS_NSCAOD(MXCHAN),JACS_FINAL(MXCHAN)  !! sze jacs
        REAL JACTOP_CFRCL(MAXLAY),JACBOT_CFRCL(MAXLAY)    ! derivatives of fraction of cloud in layer
@@ -355,11 +360,36 @@ C         Divide secant sum by weight sum to get mean secant
        MSSEC=MSSEC - MASEC ! convert total secant to sun-only secant
 C
 
+C backscatter coeffs, see Maestr/Martinazzo Journal of Quantitative Spectroscopy & Radiative Transfer 271 (2021) 107739
+c Assessment of the accuracy of scaling methods for radiance simulations at far and mid infrared wavelengths
+c Michele Martinazzoa, Davide Magurnoa, William Cossicha, Carmine Seriob, Guido Masiellob, Tiziano Maestri
+c       ISCALING = 1     !!! similarity, been using this for years
+c       ISCALING = 2     !!! chou
+c       ISCALING = 3     !!! Maestri/Martinazzo
+       ISCALING = ABS(FLOOR(rXTang))
+c       write(*,'(A,F8.3,A,I3)') 'rXtang in incFTC = ',rXTang,' so ISCALING = ',ISCALING
+       IF (ISCALING .EQ. 2) THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.3738, 0.0076, 0.1186/)        !!!! chou scaling, Table 3
+c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f CHOU scaling since rXtang,ISCALING = ',rXtang,ISCALING
+       ELSEIF ((ISCALING .EQ. 3) .AND. ((CTYPE .GE. 101) .AND. (CTYPE .LE. 199))) THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.2884, 0.5545,-0.3429/)        !!!! uniboWAT scaling, Table 3
+c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f Meaestri/Martinazzo ice scaling since rXtang,ISCALING = ',rXtang,ISCALING
+       ELSEIF ((ISCALING .EQ. 3) .AND. ((CTYPE .GE. 201) .AND. (CTYPE .LE. 299))) THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.4452,-0.3189, 0.3737/)        !!!! uniboICE scaling, Table 3
+c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f Meaestri/Martinazzo water scaling since rXtang,ISCALING = ',rXtang,ISCALING
+       ELSEIF (ISCALING .EQ. 1) THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.5000, 0.0000, 0.0000/)        !!!! similarity scaling , eqn 10
+c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f SIMILARITY scaling since rXtang,ISCALING = ',rXtang,ISCALING
+       ELSE
+         POLYNOM_BACKSCAT = (/0.5000, 0.5000, 0.0000, 0.0000/)        !!!! similarity scaling , eqn 10
+c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f Tang Correction scaling since rXtang,ISCALING = ',rXtang,ISCALING
+       END IF
+      
 C      --------------------------------------------------
 C      Interpolate tables for particle size and scale for
 C      nadir total cloud water
 C      -----------------------
-C      Note: extinction = scattering + absorption, so sca=ext - abs
+C      Note: extinction = scattering + absorption, so sca = ext - abs
 C
 C      Number of particle sizes for current CTYPE
        NPS=MIENPS(INDMIE)
