@@ -20,7 +20,7 @@ C    Calculate channel radiance for a clear atmosphere above a surface.
 
 
 !CALL PROTOCOL:
-C    CALRAD0(DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
+C    CALRAD0(DOSUN, I, LBOT, RPLNCK, TSURF, RSURFE, SECANG,
 C       TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
 C       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM )
 
@@ -32,6 +32,7 @@ C    LOGICAL   DOSUN   do sun radiance calcs?      true/false
 C    INTEGER   I       channel index               none
 C    INTEGER   LBOT    bottom layer                none
 C    REAL arr  RPLNCK  Planck function             mW/(m^2 cm^-1 sterad)
+C    REAL      TSURF   surface temperature         K, to help debug N. Nalli emiss
 C    REAL      RSURFE  surface emission            mW/(m^2 cm^-1 sterad)
 C    REAL arr  SECANG  path secant angles          none
 C    REAL arr  TAUL    layer transmittance         none
@@ -105,7 +106,8 @@ C    29 Mar 2006 Scott Hannon   Updated RTHERM for sartaV107
 C      =================================================================
        SUBROUTINE CALRAD0( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $    TAUL, TAUZ, SUNFAC, HSUN, TAUZSN, RHOSUN,
-     $    RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM )
+     $    RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM,
+     $    EMIS, TSURF, IPROF, FREQ )
 C      =================================================================
 
 C-----------------------------------------------------------------------
@@ -145,6 +147,13 @@ C      Downwelling thermal info
        INTEGER LABOVE(MXCHAN) ! representative layer above surface
        REAL  COEFF(NFCOEF,MXCHAN) ! "F" factor coefficients
        LOGICAL DOJAC
+
+c for Nick Nalli
+       REAL EMIS(MXCHAN)   ! surface emissivity
+       REAL TSURF          ! surface temperature
+       INTEGER IPROF
+       REAL FREQ(MXCHAN)   ! channel center
+
 C
 C      Output
        REAL   RAD0                ! upwelling radiance at satellite
@@ -160,6 +169,7 @@ C-----------------------------------------------------------------------
        REAL      F         ! reflected therm "F" (fudge) factor
        REAL RADUP          ! upward radiance
        REAL RSUN           ! reflected solar radiance
+       INTEGER iNalli      ! usual or nalli refl thermal
 
 C      Downwelling atmospheric thermal emission terms
        REAL TDOWNN ! "near-side" layer-to-surface trans
@@ -220,24 +230,37 @@ C
 C      --------------------------------------
 C      Reflected downwelling thermal radiance
 C      --------------------------------------
-       F=1.0
-       IF (TAUZ(I) .GT. 0.0005) THEN
-          F=   COEFF(1,I) +
-     $       ( COEFF(2,I)/SECANG(LBOT) ) +
-     $       ( COEFF(3,I)*TAUZ(I) ) +
-     $       ( COEFF(4,I)*TAUZ(I)*TAUZ(I) ) +
-     $       ( COEFF(5,I)*TAUZ(I)/SECANG(LBOT) ) +
-     $       ( COEFF(6,I)*TAUZ(I)/RDOWN )
-C         Truncate F at limits as needed
-          F = MAX( MIN(F,2.09), 0.696 )
-       ENDIF
-       RTHERM=RHOTHR(I)*PI*RDOWN*F*TAUZ(I)
 
-c nick nalli 2023 IEEE paper
-c see setems.f               RHOTHR(I)=(1.0 - EMIS(I))/PI
-c    so (1.0 - EMIS(I)) = RHOTHR(I)*PI
-c   and F = 1.0   !! for nick nalli
-c       RTHERM=RHOTHR(I)*PI *RDOWN*F*TAUZ(I)  !!! for nick nalli
+       iNalli = +1
+       iNalli = -1   !! default Scott
+
+       IF (iNalli .LT. 0) THEN      
+         !!! this is default, Scott's version
+         F=1.0
+         IF (TAUZ(I) .GT. 0.0005) THEN
+            F =   COEFF(1,I) +
+     $         ( COEFF(2,I)/SECANG(LBOT) ) +
+     $         ( COEFF(3,I)*TAUZ(I) ) +
+     $         ( COEFF(4,I)*TAUZ(I)*TAUZ(I) ) +
+     $         ( COEFF(5,I)*TAUZ(I)/SECANG(LBOT) ) +
+     $         ( COEFF(6,I)*TAUZ(I)/RDOWN )
+            !  Truncate F at limits as needed
+            F = MAX( MIN(F,2.09), 0.696 )
+         ENDIF
+         RTHERM = RHOTHR(I)*PI*RDOWN*F*TAUZ(I)
+       ELSE
+         !  ccc uncomment these next few lines for nick nalli 2023 IEEE paper
+         !  ccc see setems.f               RHOTHR(I)=(1.0 - EMIS(I))/PI
+         !  ccc    so (1.0 - EMIS(I)) = RHOTHR(I)*PI
+         !        ccc   and F = 1.0     !! for nick nalli
+         !  ccc uncomment these next few lines for nick nalli 2023 IEEE paper
+         F = 1.0
+         RTHERM = RHOTHR(I)*PI*RDOWN*TAUZ(I)  !!! uncomment this for nick nalli
+         IF (I .EQ. 1520) THEN
+           ! Basically I would want the variables used in the RTE (Ts, satzen, Rdown, Tauz, F, Emis, etc.). 
+           write(*,'(2(I8),11(F12.5,1X))') IPROF,I,FREQ(I),TSURF,EMIS(I),SECANG(LBOT),RHOTHR(I),RDOWN,F,TAUZ(I),RTHERM,RADUP,RSUN
+         END IF
+       END IF
 
 C      --------------
 C      Total radiance

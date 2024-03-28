@@ -291,19 +291,24 @@ C      Cloud optical depths adjusted for scattering
 C      this is similarity scaling, see eg Chou 1999 or Martinazzo/Maestri JQSRT 2021
 C      abs(floor([0 0.2 0.5 0.7 -1 -2 -3])) = 0     0     0     0     1     2     3
 
-C         print *,'CALRAD2 -- ISCALING1,2',ISCALING1,ISCALING2
+c      print *,'CALRAD2 -- ISCALING1,2',ISCALING1,ISCALING2
+c      print *,'CALRAD2 -- POLYNOM_BACKSCAT1 = ',POLYNOM_BACKSCAT1
+c      print *,'CALRAD2 -- POLYNOM_BACKSCAT2 = ',POLYNOM_BACKSCAT2
 
        IF (ISCALING1 .LE. 1) THEN
+         !! similarity scaling
          K1 = NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
        ELSE
-c        this is using eqn 7 in Martinazzo/Maestri JQSRT 2021
+         !! this is Chou scaling using eqn 7 in Martinazzo/Maestri JQSRT 2021
          K1 = 1 - (POLYNOM_BACKSCAT1(1) + POLYNOM_BACKSCAT1(2)*G_ASY1(I) + 
      $        POLYNOM_BACKSCAT1(3)*G_ASY1(I)**2 + POLYNOM_BACKSCAT1(4)*G_ASY1(I)**3)
          K1 = NEXTO1(I)-NSCAO1(I) + K1*NSCAO1(I)
        END IF
        IF (ISCALING2 .LE. 1) THEN
+         !! similarity scaling
          K2 = NEXTO2(I) - NSCAO2(I)*(1.0+G_ASY2(I))/2.0
        ELSE
+         !! this is Chou scaling using eqn 7 in Martinazzo/Maestri JQSRT 2021
          K2 = 1 - (POLYNOM_BACKSCAT2(1) + POLYNOM_BACKSCAT2(2)*G_ASY2(I) + 
      $        POLYNOM_BACKSCAT2(3)*G_ASY2(I)**2 + POLYNOM_BACKSCAT2(4)*G_ASY2(I)**3)
          K2 = NEXTO2(I)-NSCAO2(I) + K2*NSCAO2(I)

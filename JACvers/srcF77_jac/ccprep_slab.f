@@ -202,6 +202,8 @@ C-----------------------------------------------------------------------
        REAL   PAVG            ! layer average pressure
        REAL  PAVG2            ! adjacent layer average pressure
        REAL      X            ! generic junk real variable
+       CHARACTER*50 caStr     ! junk
+
 c to help with jacs
        REAL  ASYM             ! interpolated asymmetry
        REAL  JACABSOD,DX      ! temporary variables for jacobians
@@ -367,23 +369,38 @@ c       ISCALING = 1     !!! similarity, been using this for years
 c       ISCALING = 2     !!! chou
 c       ISCALING = 3     !!! Maestri/Martinazzo
        ISCALING = ABS(FLOOR(rXTang))
-c       write(*,'(A,F8.3,A,I3)') 'rXtang in incFTC = ',rXTang,' so ISCALING = ',ISCALING
-       IF (ISCALING .EQ. 2) THEN
+cc       write(*,'(A,F8.3,A,I3)') 'rXtang in incFTC = ',rXTang,' so ISCALING = ',ISCALING
+       IF ((ISCALING .EQ. 0) .AND. (rXTang .LE. 0.0)) THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.5000, 0.0000, 0.0000/)        !!!! similarity scaling , eqn 10
+         caStr = ' : SIMILARITY scaling'
+       ELSEIF ((ISCALING .EQ. 0) .AND. (rXTang .GT. 0.0)) THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.5000, 0.0000, 0.0000/)        !!!! similarity scaling , eqn 10
+         caStr = ' : SIMILARITY scaling w/ Tang Correction'
+       ELSEIF ((ISCALING .EQ. 1) .AND. (rXTang .LE. 0.0)) THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.5000, 0.0000, 0.0000/)        !!!! similarity scaling , eqn 10, default till July 2023
+         caStr = ' : SIMILARITY scaling'
+       ELSEIF ((ISCALING .EQ. 1) .AND. (rXTang .GT. 0.0)) THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.5000, 0.0000, 0.0000/)        !!!! similarity scaling , eqn 10, default till July 2023
+         caStr = ' : SIMILARITY scaling w/ Tang Correction'
+       ELSEIF ((ISCALING .EQ. 2).AND. (rXTang .LE. 0.0))  THEN
          POLYNOM_BACKSCAT = (/0.5000, 0.3738, 0.0076, 0.1186/)        !!!! chou scaling, Table 3
-c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f CHOU scaling since rXtang,ISCALING = ',rXtang,ISCALING
+         caStr = '  : CHOU scaling'
+       ELSEIF ((ISCALING .EQ. 2).AND. (rXTang .GT. 0.0))  THEN
+         POLYNOM_BACKSCAT = (/0.5000, 0.3738, 0.0076, 0.1186/)        !!!! chou scaling, Table 3
+         caStr = '  : CHOU scaling w/ Tang Correction'
        ELSEIF ((ISCALING .EQ. 3) .AND. ((CTYPE .GE. 101) .AND. (CTYPE .LE. 199))) THEN
          POLYNOM_BACKSCAT = (/0.5000, 0.2884, 0.5545,-0.3429/)        !!!! uniboWAT scaling, Table 3
-c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f Meaestri/Martinazzo ice scaling since rXtang,ISCALING = ',rXtang,ISCALING
+         caStr = ' : Meaestri/Martinazzo water scaling, NO TANG'
        ELSEIF ((ISCALING .EQ. 3) .AND. ((CTYPE .GE. 201) .AND. (CTYPE .LE. 299))) THEN
          POLYNOM_BACKSCAT = (/0.5000, 0.4452,-0.3189, 0.3737/)        !!!! uniboICE scaling, Table 3
-c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f Meaestri/Martinazzo water scaling since rXtang,ISCALING = ',rXtang,ISCALING
-       ELSEIF (ISCALING .EQ. 1) THEN
-         POLYNOM_BACKSCAT = (/0.5000, 0.5000, 0.0000, 0.0000/)        !!!! similarity scaling , eqn 10
-c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f SIMILARITY scaling since rXtang,ISCALING = ',rXtang,ISCALING
+         caStr = ' : Meaestri/Martinazzo ice scaling, NO TANG'
        ELSE
-         POLYNOM_BACKSCAT = (/0.5000, 0.5000, 0.0000, 0.0000/)        !!!! similarity scaling , eqn 10
-c         WRITE(*,'(A,F8.3,I3)') 'ccprep_slab.f Tang Correction scaling since rXtang,ISCALING = ',rXtang,ISCALING
+         print *,'unknown rXtang!!!! ',rXTang
+         STOP
        END IF
+
+c       WRITE(*,'(A,F8.3,I3,A)') 'ccprep_slab.f : rXtang,ISCALING = ',rXtang,ISCALING,caStr
+c       WRITE(*,'(A,4(F8.3))')   '  backscatter polynomial = ',POLYNOM_BACKSCAT
       
 C      --------------------------------------------------
 C      Interpolate tables for particle size and scale for

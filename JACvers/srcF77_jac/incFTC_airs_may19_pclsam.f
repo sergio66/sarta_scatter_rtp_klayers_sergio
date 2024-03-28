@@ -206,10 +206,11 @@ C      ------------------------
 
 c this is for Chou scaling
        REAL rXTang ! do we include Tang correction???? the paper says 0.5, but I found use 0.3 for ice, 0.1 for water clouds
-                   ! use -1 for similarity, -2 for chou, -3 for Maestri/Martinazzo
+                   ! use -1 for similarity (default before July 2023), -2 for chou, -3 for Maestri/Martinazzo
                    ! ccprep_slab.f used as ISCALING = ABS(FLOOR(rXTang)), then calrad1,calrad2 uses this as well
-C       PARAMETER(rXTang = 0.2000000)
-       PARAMETER(rXTang = -1.0000000)
+       PARAMETER(rXTang = 0.2000000)
+c       PARAMETER(rXTang = 0.8000000)
+c       PARAMETER(rXTang = -1.0000000)
 
        PARAMETER(    PI = 3.1415926)
        PARAMETER(RADSUN = 6.956E+8)

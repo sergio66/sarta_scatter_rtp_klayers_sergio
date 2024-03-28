@@ -267,13 +267,17 @@ C      Optical depth of cloud1 including scattering adjustment
 C      this is similarity scaling, see eg Chou 1999 or Martinazzo/Maestri JQSRT 2021
 C      abs(floor([0 0.2 0.5 0.7 -1 -2 -3])) = 0     0     0     0     1     2     3
        IF (ISCALING1 .LE. 1) THEN
-         K1 = NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0
+         !! similarity scaling
+         K1 = NEXTO1(I) - NSCAO1(I)*(1.0+G_ASY1(I))/2.0   
        ELSE
-c        this is using eqn 7 in Martinazzo/Maestri JQSRT 2021
+         !! this is Chou scaling using eqn 7 in Martinazzo/Maestri JQSRT 2021
          K1 = 1 - (POLYNOM_BACKSCAT1(1) + POLYNOM_BACKSCAT1(2)*G_ASY1(I) + 
      $             POLYNOM_BACKSCAT1(3)*G_ASY1(I)**2 + POLYNOM_BACKSCAT1(4)*G_ASY1(I)**3)
          K1 = NEXTO1(I)-NSCAO1(I) + K1*NSCAO1(I)
        END IF
+
+c      print *,'CALRAD1 -- ISCALING1',ISCALING1
+c      print *,'CALRAD1 -- POLYNOM_BACKSCAT1 = ',POLYNOM_BACKSCAT1
 
        CLDEFFOD = K1
 

@@ -1,4 +1,4 @@
-      SUBROUTINE docloudyTwoSlab_RT(I, IPROF, FREQ, LBOT, NWANTC, INDCHN, 
+      SUBROUTINE docloudyTwoSlab_RT(I, IPROF, FREQ, LBOT, NLAY, NWANTC, INDCHN, 
      $  TEMP,TSURF,TAU,TAUZ, TAUZSN, 
      $  BLMULT, EMIS, FCLEAR, COSDAZ, SECANG, SECSUN, DOSUN, SUNFAC, HSUN, RHOSUN, 
      $  RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,       ! DEPEND ON CPRTOP1,CPRBOT1
@@ -22,7 +22,8 @@ c input
        INTEGER INDCHN(MXCHAN)  ! array indices for all channels
        INTEGER NWANTC          ! number of wanted channels (-1=all)
        REAL   FREQ(MXCHAN)     ! chan center frequency
-       INTEGER   LBOT          ! bottom layer index number
+       INTEGER  LBOT           ! bottom layer index number  : note LBOT <= NLAY
+       INTEGER  NLAY           ! NLEVS - 1                  : note LBOT <= NLAY
        REAL   TEMP(MAXLAY)     ! prof layer average temperature
        REAL  TSURF             ! surface temperature
        REAL BLMULT                ! bottom layer fractional multiplier
@@ -158,12 +159,13 @@ C     Note: TEMP(LBOT) already adjusted for bottom fractional layer
       RPLNCK(LBOT)=C1V3/( EXP( C2V/TEMP(LBOT) ) - 1.0 )
 
       IF (DOJAC) THEN
-C       calculate planck derivatives        
-        DO L=1,LBOT
+C       calculate planck derivatives : originally did L=1,LBOT but now do L=1,NLAY
+        DO L=1,NLAY
            DBTDT(L,I)=C1C2V4 * EXP( C2V/TEMP(L) ) / ((TEMP(L)*( EXP( C2V/TEMP(L) ) - 1.0 ))**2)
         END DO
-        L = LBOT+1
+        L = NLAY+1
         DBTDT(L,I)=C1C2V4 * EXP( C2V/TSURF ) / ((TSURF*( EXP( C2V/TSURF ) - 1.0 ))**2)
+        if (I .EQ. 109) print *,'XYZDBG DBTDT',LBOT,L,I,TSURF,DBTDT(L,I)
       END IF
 
 C     Calculate clear airs trans for bottom fractional layer
@@ -181,7 +183,8 @@ C     Calculate clear radiance
       IF (FCLEAR .GT. 0.0) THEN
          CALL CALRAD0( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $       TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM )
+     $       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM,
+     $       EMIS,TSURF,IPROF,FREQ )
       ELSE
         RAD0=0.0
       ENDIF

@@ -558,8 +558,8 @@ C      for satellite viewing angle
        REAL    SVA         ! satellite viewing angle (degrees)
 C
 C      for RDRTP
-       INTEGER  IPROF      ! profile loop counter
-       LOGICAL  LWANT      ! do you want this profile?
+       INTEGER  IPROF       ! profile loop counter
+       LOGICAL  LWANT       ! do you want this profile?
 C
 C      Basic cloud info
        REAL XCEMI1(MXEMIS)    ! cloud1 emissivity
@@ -961,7 +961,7 @@ C************************************************************************
 C      ---------------------------
 C      Start of loop over profiles
 C      ---------------------------
-       IPROF=1  ! initialize profile counter
+       IPROF = 1  ! initialize profile counter
 C      Do you want this profile?
  10    LWANT=.TRUE.
        IF (NWANTP .GT. 0) THEN
@@ -1161,7 +1161,7 @@ C        compute OD : indirectly uses T(z),WV(z),O3(z) through the PREDS, to get
      $     TAU, TAUZ, TAUZSN)
 
 C        Calculate cloudy radiance; also no NLTE if needed
-         CALL docloudyTwoSlab_RT(I, IPROF, FREQ, LBOT, NWANTC, INDCHN, 
+         CALL docloudyTwoSlab_RT(I, IPROF, FREQ, LBOT, NLAY, NWANTC, INDCHN, 
      $      TEMP,TSURF,TAU,TAUZ, TAUZSN, 
      $      BLMULT, EMIS, FCLEAR, COSDAZ, SECANG, SECSUN, DOSUN, SUNFAC, HSUN, RHOSUN, 
      $      RHOTHR, LABOVE, COEFF, LCTOP1, LCBOT1, LBLAC1, LCTOP2, LCBOT2, LBLAC2,      
@@ -1221,7 +1221,7 @@ C      -------------------
          IF (INTERSECT(300,LISTJ(1:NWANTJ),NWANTJ) .GT. 0) CLOSE(IOUNCLD)
        END IF
 C
-       print *,'closed all rtp and bin files, stopping jac_sarta'
+       print *,'closed all rtp and bin files, stopping jac_sarta, IPROF = ',IPROF-1
 
        STOP
        END
