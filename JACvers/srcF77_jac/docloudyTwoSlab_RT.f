@@ -165,7 +165,7 @@ C       calculate planck derivatives : originally did L=1,LBOT but now do L=1,NL
         END DO
         L = NLAY+1
         DBTDT(L,I)=C1C2V4 * EXP( C2V/TSURF ) / ((TSURF*( EXP( C2V/TSURF ) - 1.0 ))**2)
-        if (I .EQ. 109) print *,'XYZDBG DBTDT',LBOT,L,I,TSURF,DBTDT(L,I)
+c        if (I .EQ. 109) print *,'XYZDBG DBTDT',LBOT,L,I,TSURF,DBTDT(L,I)
       END IF
 
 C     Calculate clear airs trans for bottom fractional layer

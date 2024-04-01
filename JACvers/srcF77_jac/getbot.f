@@ -167,7 +167,7 @@ C
        ELSE
           LBOT = LBOTX
        ENDIF
-       print *,'XYZDBG : getbot.f : LBOT,NLAY = ',LBOT,NLAY
+c       print *,'XYZDBG : getbot.f : LBOT,NLAY = ',LBOT,NLAY
        if (DEBUG) write(6,'(a,X,I6,X,F9.3,X,F9.3)') 'getbot: LBOT, PLEV(LBOT), 
      $     PSURF ', LBOT,PLEV(LBOT),PSURF
 C
