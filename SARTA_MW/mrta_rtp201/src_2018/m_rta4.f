@@ -22,7 +22,7 @@ c
        implicit none
 c####
 c RTP declarations
-       include '/home/sergio/git/rtp/rtpV201/include/rtpdefs.f'
+       include '/home/sergio/git/rtp/rtpV221/include/rtpdefs.f'
        integer rtpopen, rtpread, rtpwrite, rtpclose
        record /RTPHEAD/ head
        record /RTPPROF/ prof
@@ -41,10 +41,10 @@ c namelist inputs
        character*80 val
        character*80 var
 
-       character*55 tramsua ! transmittance coeff for AMSU-A
-       character*55 tramsub ! transmittance coeff for AMSU-B       
-       character*55 trhsb   ! transmittance coeff for AMSU-B/HSB
-       character*55 tratms  ! transmittance coeff for ATMS
+       character*90 tramsua ! transmittance coeff for AMSU-A
+       character*90 tramsub ! transmittance coeff for AMSU-B       
+       character*90 trhsb   ! transmittance coeff for AMSU-B/HSB
+       character*90 tratms  ! transmittance coeff for ATMS
 
 c123456789012345678901234567890123456789012345678901234567890
 c0        1         2         3         4         5
@@ -63,10 +63,10 @@ c       parameter (iInstr=3)  ! ATMS
        parameter (iInstr=4)  ! MHS
 cc       parameter (tramsua='/asl/packages/mrta_rtp105/src/tr_100a.eos')
 cc       parameter (trhsb='/asl/packages/mrta_rtp105/src/tr_100b.eos')
-       parameter (tramsua='/home/sergio/SARTA_MW/mrta_rtp201/src_2018/tr_amsua.dat')
-       parameter (tramsub='/home/sergio/SARTA_MW/mrta_rtp201/src_2018/tr_amsub.dat')
-       parameter (tratms='/home/sergio/SARTA_MW/mrta_rtp201/src_2018/tr_atms.dat')
-       parameter (trhsb='/home/sergio/SARTA_MW/mrta_rtp201/src_2018/tr_mhs.dat')                     
+       parameter (tramsua='/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/SARTA_MW/mrta_rtp201/src_2018/tr_amsua.dat')
+       parameter (tramsub='/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/SARTA_MW/mrta_rtp201/src_2018/tr_amsub.dat')
+       parameter (tratms='/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/SARTA_MW/mrta_rtp201/src_2018/tr_atms.dat')
+       parameter (trhsb='/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/SARTA_MW/mrta_rtp201/src_2018/tr_mhs.dat')                     
 
 c####
 c declarations for the MW calculation

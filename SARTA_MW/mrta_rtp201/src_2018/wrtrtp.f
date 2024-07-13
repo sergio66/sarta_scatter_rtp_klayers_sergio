@@ -139,6 +139,7 @@ C      Loop over the channels
 C         Convert from Watts/m^2/cm^-1 to milliWatts/m^2/cm^-1
 C          PROF.rcalc(I)=RAD(I)*1000.0
            PROF.rcalc(I) = RAD(I)     !!! THIS IS BT (K)!!!!
+C           if (IP .EQ. 2000) print *,'wrtrtp 2000 ',I,PROF.rcalc(I),MAXCHAN
        ENDDO
 C
 C      -------------------------

@@ -22,7 +22,7 @@ c
        implicit none
 c####
 c RTP declarations
-       include '/home/sergio/git/rtp/rtpV201/include/rtpdefs.f'
+       include '/home/sergio/git/rtp/rtpV221/include/rtpdefs.f'
        integer rtpopen, rtpread, rtpwrite, rtpclose
        record /RTPHEAD/ head
        record /RTPPROF/ prof
@@ -41,10 +41,10 @@ c namelist inputs
        character*80 val
        character*80 var
 
-       character*55 tramsua ! transmittance coeff for AMSU-A
-       character*55 tramsub ! transmittance coeff for AMSU-B       
-       character*55 trhsb   ! transmittance coeff for AMSU-B/HSB
-       character*55 tratms  ! transmittance coeff for ATMS
+       character*90 tramsua ! transmittance coeff for AMSU-A
+       character*90 tramsub ! transmittance coeff for AMSU-B       
+       character*90 trhsb   ! transmittance coeff for AMSU-B/HSB
+       character*90 tratms  ! transmittance coeff for ATMS
 
 c123456789012345678901234567890123456789012345678901234567890
 c0        1         2         3         4         5
@@ -63,10 +63,10 @@ c       parameter (iInstr=3)  ! ATMS
 c       parameter (iInstr=4)  ! MHS
 cc       parameter (tramsua='/asl/packages/mrta_rtp105/src/tr_100a.eos')
 cc       parameter (trhsb='/asl/packages/mrta_rtp105/src/tr_100b.eos')
-       parameter (tramsua='/home/sergio/SARTA_MW/mrta_rtp201/src_2018/tr_amsua.dat')
-       parameter (tramsub='/home/sergio/SARTA_MW/mrta_rtp201/src_2018/tr_amsub.dat')
-       parameter (tratms='/home/sergio/SARTA_MW/mrta_rtp201/src_2018/tr_atms.dat')
-       parameter (trhsb='/home/sergio/SARTA_MW/mrta_rtp201/src_2018/tr_mhs.dat')                     
+       parameter (tramsua='/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/SARTA_MW/mrta_rtp201/src_2018/tr_amsua.dat')
+       parameter (tramsub='/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/SARTA_MW/mrta_rtp201/src_2018/tr_amsub.dat')
+       parameter (tratms='/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/SARTA_MW/mrta_rtp201/src_2018/tr_atms.dat')
+       parameter (trhsb='/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/SARTA_MW/mrta_rtp201/src_2018/tr_mhs.dat')                     
 
 c####
 c declarations for the MW calculation
@@ -251,12 +251,10 @@ c update the header data
 c
        head.pfields = ior(head.pfields, IRCALCBIT)
 C Assign channel frequencies; added by Scott H.
-       print *,'iInstr,iNumChan = ',iInstr,iNumChan
        do i = 1,iNumCHAN
          head.vchan(i)=freq(i)
-	 print *,i,freq(i)
-       enddo
-       
+         if (iprt .eq. 0) print *,'iInstr,iNumChan = ',iInstr,iNumChan,i,freq(i)
+       enddo       
 c
 c create the output file
 c
@@ -282,7 +280,7 @@ c
        endif
 c check to make sure angles are not equal to -9999; ditto for landfrac
        if((prof.satzen.eq.-9999).or.(prof.scanang.eq.-9999) ) then
-	 print *,'invalid AMSU angles'
+	 print *,'invalid AMSU angles',prof.satzen,prof.scanang
 	 goto 22
        endif
 c       if((prof.mwbszen.eq.-9999).or.(prof.mwbsang.eq.-9999) ) then
@@ -411,7 +409,7 @@ c use observed surface brightness
            emismw(j) = amin1(prof.robs1(j)/tsurf, 1.)
          end do
        elseif(tsurf.gt.273.15) then !compute ocean-surface emissivities from model
-         print *, i,' computing OCEAN emissivities',tsurf,wind
+         if (iprt .gt. 0) print *, i,' computing OCEAN emiss tsurf,wind=',tsurf,wind
          zenang = abs(prof.satzen)
          fv = cos(prof.scanang/degtorad)**2 ! polarization rotation
          do j=1,NMWEM
@@ -422,13 +420,15 @@ c use observed surface brightness
            call fastem(freqs(j),zenang,tsurf,wind,.035,epsv,epsh,1,1,1)
            emisocean = fv*epsv + (1.-fv)*epsh
            emismw(j) = (1.-fracland)*emisocean + fracland
+           if (i .EQ. 2000 .and. iprt .gt. 0) write(*,'(A,I3,8(F8.4,1X))') 'emiss cal',j,prof.satzen,
+     $          prof.scanang,fv,epsv,epsh,emisocean,fracland,emismw(j)
          end do
 c
       else !use default values
         do j=1,NMWEM
             emismw(j) = 1.
         end do
-        print *, i,' WARNING: using unity for MW emissivities'
+        if (iprt .gt. 0) print *, i,' WARNING: using unity for MW emissivities'
       endif
 c
 c store emissivities
@@ -444,6 +444,8 @@ c
 
         secant = 1./cos(prof.satzen/degtorad)
 c
+        if (i .eq. 2000 .and. iprt .gt. 0) print *,'prof 2000',secant,numlev
+
         do n = 1, iNumChan
 c use the AMSU-B/HSB angles for 16-20
           if(n.eq.16) secant = 1./cos(prof.satzen/degtorad)
@@ -461,7 +463,10 @@ c
 c
           rcalc(n) = td + e*( eps*tsurf + (1.-eps)*(tr+er*tcb(emch(n))) )
 	  prof.rcalc(n) = rcalc(n)
-	  
+          if (i .eq. 2000 .and. iprt .gt. 0) then 
+            write(*,'(A,I3,1X,8(F8.4,1X))') 'prof 2000 : ',n,tsurf,eps,
+     $            td,e,tr,er,tcb(emch(n)),rcalc(n)	  
+         end if
         end do
 c
 c write out the updated profile
