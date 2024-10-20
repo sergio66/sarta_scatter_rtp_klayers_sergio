@@ -1,0 +1,21 @@
+ 1000  30/05/20 09:25:45 cd SARTA_CLOUDY/
+ 1001  30/05/20 09:25:59 mkdir RTP_140levs
+ 1002  30/05/20 09:26:04 cd RTP_140levs
+ 1003  30/05/20 09:26:57 mkdir RTP
+ 1004  30/05/20 09:27:01 cd RTP
+ 1005  30/05/20 09:27:10 cp -aR /asl/packages/rtpV201/* .
+ 1006  30/05/20 09:27:14 lsd
+ 1007  30/05/20 09:27:27 grep -in 120 *
+ 1008  30/05/20 09:27:36 grep -in 120 include/*
+
+[sergio@strow-interact RTP]$ grep -in 120 include/*
+include/rtpdefs.f:64:        parameter ( MAXLEV    =  120 )
+include/rtpdefs_g80.f:64:        parameter ( MAXLEV    =  120 )
+include/rtpdefs_standard.f:64:        parameter ( MAXLEV    =  120 )
+include/rtp_g80.h:62:#define MAXLEV    120    /* max number of levels or layers    */
+include/rtp.h:62:#define MAXLEV    120    /* max number of levels or layers    */
+include/rtp_standard.h:62:#define MAXLEV    120    /* max number of levels or layers    */
+
+then had to edit the Makefile and /*/Makefile to
+a) point to new HDF libs
+b) point to ifort
