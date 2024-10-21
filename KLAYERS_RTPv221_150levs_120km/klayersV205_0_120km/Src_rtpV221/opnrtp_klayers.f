@@ -347,6 +347,7 @@ C      Update ngas & glist & gunit
        ENDDO
 C
 C      Update mlevs
+       print *,'opnrtp_klayers.f : mlevs NBPLEV = ',HEAD.mlevs,NBPLEV
        HEAD.mlevs=NBPLEV
 C
 C      Update ptype for output

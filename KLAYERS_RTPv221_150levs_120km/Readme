@@ -2,6 +2,8 @@ cp -aR /asl/packages/rtpV221 .
 
 xnw rtpV221/include/rtpdefs.f
        parameter ( MAXLEV    =  150 )
+xnw rtpV221/include/rtp.h
+      #define MAXLEV    150	/* max number of levels or layers	*/
 
 at rtpV221 (ie the main dir level)
   make clean

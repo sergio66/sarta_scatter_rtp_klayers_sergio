@@ -212,8 +212,8 @@ C      Note: returned profile data must be sorted bottom-up
        ZJUNK=-9999.0
        P1=PROF.plevs(1)
        PNIN=PROF.plevs(NIN)
-       print *,'rdrtp_klayers.f : nin,maxlev,ngasf = ',nin,maxlev,ngasf,
-     $   PNIN,P1
+c       print *,'rdrtp_klayers.f : nin,maxlev,ngasf,pTOA,pGND = ',nin,
+c     $   maxlev,ngasf,PNIN,P1
 
 C
        IF (PNIN .GT. P1) THEN
@@ -243,8 +243,8 @@ C            Loop over the wanted gases
              DO IG=1,NGASF
                 MRIN(IL,IG)=PROF.gamnt(IL,INDEXF(IG))
              ENDDO
-             write(*,'(A,I3,6(F10.3,1X))') 'direct read',IL,PIN(IL),TIN(IL),ZIN(IL),
-     $         MRIN(IL,1),MRIN(IL,2),MRIN(IL,3)
+c             write(*,'(A,I3,6(F10.3,1X))') 'direct read',IL,PIN(IL),
+c     $         TIN(IL),ZIN(IL),MRIN(IL,1),MRIN(IL,2),MRIN(IL,3)
           ENDDO
        ENDIF
 C
@@ -258,12 +258,13 @@ C      Check altitude
 C
 
 ccc for testing ccc
-       print *, 'LZ=',LZ
-       DO IL=1,NIN
-          WRITE(6,1234) IL, PIN(IL), LNPIN(IL), TIN(IL), ZIN(IL),
-     $       (MRIN(IL,IG),IG=1,NGASF)
- 1234     FORMAT(I4,2(1PE12.5),0PF8.3,6(1PE12.5))
-       ENDDO
+c       print *, 'LZ=',LZ
+c       DO IL=1,NIN
+c          WRITE(6,1234) IL, PIN(IL), LNPIN(IL), TIN(IL), ZIN(IL),
+c     $       (MRIN(IL,IG),IG=1,NGASF)
+c 1234     FORMAT(I4,2(1PE12.5),0PF8.3,6(1PE12.5))
+c       ENDDO
+CCCC       STOP
 ccccccccc
 
 C

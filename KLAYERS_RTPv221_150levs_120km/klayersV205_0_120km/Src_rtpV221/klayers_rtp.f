@@ -476,12 +476,12 @@ C      --------------------------------------
 C      If necessary, convert gas amount units
 C      --------------------------------------
        CALL TOPPMV(NGASF, GLISTF, GUNITF, NIN, MASSF, PIN, TIN, MRIN)
-       IF (IP .EQ. 1) THEN
-         DO I=1,NIN    
-           write(*,'(A,I3,6(F12.5,1X))') 'TOPPMV',I,PIN(I),TIN(I),
-     $          MRIN(I,1),MRIN(I,2),MRIN(I,3),MRIN(I,4)
-         END DO
-       END IF
+c       IF (IP .EQ. 1) THEN
+c         DO I=1,NIN    
+c           write(*,'(A,I3,6(F12.5,1X))') 'TOPPMV',I,PIN(I),TIN(I),
+c     $          MRIN(I,1),MRIN(I,2),MRIN(I,3),MRIN(I,4)
+c         END DO
+c       END IF
 
 C
 
@@ -577,12 +577,13 @@ C      Now do all the other gases
           ENDDO
        ENDIF
 
-       IF (IP .EQ. 1) THEN
-         DO I=1,NINX    
-           write(*,'(A,I3,I2,4(F12.5,1X))') 'MixRatio',I,IWAT,ZSURF,
-     $                                   PSURF,MRIN(I,1),MRIN(I,2)
-         END DO
-       END IF
+c       IF (IP .EQ. 1) THEN
+c         DO I=1,NINX    
+c           write(*,'(A,I3,I2,4(F12.5,1X))') 'MixRatio',I,IWAT,ZSURF,
+c     $                                   PSURF,MRIN(I,1),MRIN(I,2)
+c         END DO
+c       END IF
+
 C
 C      --------------------------------------------------
 C      Interpolate the input profile onto fine sub-levels

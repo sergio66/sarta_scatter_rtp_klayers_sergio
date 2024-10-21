@@ -67,8 +67,10 @@ HDFLIB = -L$(HDFHOME)/lib -ldf
 #
 ### rtpV201 on taro.umbc.edu, 16 gases
 #RTPHOME = /asl/packages/rtpV201
+#RTPHOME = /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_120km/rtpV201/
+#RTPHOME = /home/sergio/git/rtp/rtpV221/
+RTPHOME = /home/sergio/git/rtp/rtpV221_150levs/
 RTPHOME = /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_120km/rtpV221/
-RTPHOME = /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_120km/rtpV201/
 RTPLIB = -L$(RTPHOME)/lib -lrtp
 RTPINC = -I$(RTPHOME)/include
 RTPDEFS_FILE = $(RTPHOME)/include/rtpdefs.f
@@ -120,9 +122,10 @@ F77 = /asl/opt/absoft/absoft10.0/bin/af77
 
 #----
 F77 = ifort
-OPT = -O 
+#FLIB = -L/usr/ebuild/software/HDF/4.2.14-GCCcore-8.3.0/lib -ldf -L/home/sergio/git/rtp/rtpV221/lib -lrtp
 FLIB = 
 OPT =  -check noarg_temp_created -implicitnone -msse2 -extend-source 132 -O1 -names lowercase -check bounds -assume nounderscore -heap-arrays -g -traceback -debug inline-debug-info -check all -fp-stack-check -diag-disable 8291 -mcmodel=medium
+OPT = -O 
 
 # -----
 # Build

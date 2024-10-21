@@ -57,7 +57,7 @@
 #define MAXEMIS   100	/* max number of emis/rho points 	*/
 #define MAXGAS     16	/* max number of gases  		*/
 #define MAXGASID  303	/* max valid HITRAN gas ID 		*/
-#define MAXLEV    150	/* max number of levels or layers	*/
+#define MAXLEV    120	/* max number of levels or layers	*/
 #define MAXCHAN  4300	/* max number of chanels		*/
 #define MAXPNOTE   80   /* max profile comment string		*/ 
 #define MAXUDEF    20   /* max profile  udef values	        */
