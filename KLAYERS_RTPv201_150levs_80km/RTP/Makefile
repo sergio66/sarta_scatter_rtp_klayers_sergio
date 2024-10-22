@@ -15,14 +15,17 @@
 
 # set HDFHOME to point to the local HDF installation
 # HDFHOME = /asl/opt
-HDF_INSTALL1 = /usr/cluster/contrib/hdf4/4.2.11
-HDFLIB1   = -L$(HDF_INSTALL1)/lib -ldf -ljpeg -lz       ## -lmfhdf
+#HDF_INSTALL1 = /usr/cluster/contrib/hdf4/4.2.11
+#HDFLIB1   = -L$(HDF_INSTALL1)/lib -ldf -ljpeg -lz       ## -lmfhdf
 
 # more libs
-HDF_INSTALL2 = /usr/cluster/contrib/szip2/szip2.1
-HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
+#HDF_INSTALL2 = /usr/cluster/contrib/szip2/szip2.1
+#HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
+#HDFHOME = $(HDFLIB1) $(HDFLIB2)
 
-HDFHOME = $(HDFLIB1) $(HDFLIB2)
+HDFHOME = /usr/ebuild/software/HDF/4.2.14-GCCcore-8.3.0
+HDFINC = -I$(HDFHOME)/include/hdf
+HDFLIB = -L$(HDFHOME)/lib -ldf
 
 # --------------
 # RTP parameters
@@ -38,8 +41,8 @@ RTPHOME = ..
 # -64 for 64-bit IRIX
 # CFLAGS = -g -64
 # CFLAGS = -g
-CFLAGS = -O
-CC = cc
+CFLAGS = -O2
+CC = icc
 
 # ------------------------
 # Fortran compiler options
@@ -75,6 +78,7 @@ CC = cc
 #------
 FFLAGS = -O
 F77 = ifort
+FFLAGS = -extend-source 132 -check bounds -O2
 
 # pass the variables set above to the subdirectory makefiles
 #
