@@ -88,6 +88,7 @@ pjunk.cngwat(2) = pjunk.cngwat(2)*(1 + dQ);
 pjunk.cpsize(3) = pjunk.cpsize(3)*(1 + dQ);
 pjunk.cprtop(4) = pjunk.cprtop(4)*(1 + dQ);
 pjunk.cprbot(5) = pjunk.cprbot(5)*(1 + dQ);
+pjunk = fix_clouds_as_needed(pjunk);
 rtpwrite(frtp,h,ha,pjunk,pa);
 sartaer = ['!ls -lt ' sarta_exec ';  date; time ' sarta_exec ' fin=' frtp ' fout=jactest.rtp >& ugh'];
 eval(sartaer);

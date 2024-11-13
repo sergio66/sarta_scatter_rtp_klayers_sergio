@@ -20,28 +20,38 @@ OBJS = intersect.o rdsun_set_nfake.o rdcoef_tunmlt.o calc_sva_secang_secsun.o \
 # ------------------------------------------------------------------------
 # HDF LIBS
 # ------------------------------------------------------------------------
-#HDFLIB = -L/asl/packages/external/hdf/hdf4/lib -ldf \
-#	 -L/asl/packages/external/jpeg -ljpeg       \
-#	 -L/asl/packages/external/zlib -lz         
+# #HDFLIB = -L/asl/packages/external/hdf/hdf4/lib -ldf \
+# #	 -L/asl/packages/external/jpeg -ljpeg       \
+# #	 -L/asl/packages/external/zlib -lz         
+# 
+# HDF_INSTALL1 = /usr/cluster/contrib/hdf4/4.2.11
+# HDFLIB1   = -L$(HDF_INSTALL1)/lib -ldf -ljpeg -lz       ## -lmfhdf
+# 
+# # more libs
+# HDF_INSTALL2 = /usr/cluster/contrib/szip2/szip2.1
+# HDF_INSTALL2 = /usr/ebuild/software/Szip/2.1.1-GCCcore-6.4.0
+# HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
+# 
+# HDFLIB = $(HDFLIB1) $(HDFLIB2)
 
-HDF_INSTALL1 = /usr/cluster/contrib/hdf4/4.2.11
-HDFLIB1   = -L$(HDF_INSTALL1)/lib -ldf -ljpeg -lz       ## -lmfhdf
-
-# more libs
-HDF_INSTALL2 = /usr/cluster/contrib/szip2/szip2.1
-HDF_INSTALL2 = /usr/ebuild/software/Szip/2.1.1-GCCcore-6.4.0
-HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
-
-HDFLIB = $(HDFLIB1) $(HDFLIB2)
+HDFHOME = /usr/ebuild/software/HDF/4.2.14-GCCcore-8.3.0
+HDFINC = -I$(HDFHOME)/include/hdf
+HDFLIB = -L$(HDFHOME)/lib -ldf
 
 # ------------------------------------------------------------------------
 # RTP LIB and INCLUDE
 # ------------------------------------------------------------------------
-RTPLIB = -L/asl/packages/rtp/lib -lrtp
-RTPINC = -I/asl/packages/rtp/include
+# RTPLIB = -L/asl/packages/rtp/lib -lrtp
+# RTPINC = -I/asl/packages/rtp/include
+# 
+# RTPLIB = -L/home/sergio/RTPV201/rtpV201_140levs/lib -lrtp
+# RTPINC = -I/home/sergio/RTPV201/rtpV201_140levs/include
 
-RTPLIB = -L/home/sergio/RTPV201/rtpV201_140levs/lib -lrtp
-RTPINC = -I/home/sergio/RTPV201/rtpV201_140levs/include
+RTPHOME = /home/sergio/git/rtp/rtpV221_150levs/
+RTPHOME = /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_120km/rtpV221/
+RTPLIB = -L$(RTPHOME)/lib -lrtp
+RTPINC = -I$(RTPHOME)/include
+RTPDEFS_FILE = $(RTPHOME)/include/rtpdefs.f
 
 # ------------------------------------------------------------------------
 # Compilers

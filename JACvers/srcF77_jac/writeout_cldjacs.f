@@ -28,7 +28,9 @@ c        END IF
 
         CLDJACFAKEAMT(12) = 1      !! this is stemp so don't worry
 
-c        print *,'CLDJACFAKEAMT = ',CLDJACFAKEAMT
+c        CLDJACFAKEAMT = max(CLDJACFAKEAMT,0.0)
+
+c        print *,'bah bah CLDJACFAKEAMT = ',CLDJACFAKEAMT
 c        IEFFCLD_TOP1 = LCTOP1
 c        IEFFCLD_TOP2 = LCTOP2
 c        IEFFCLD_BOT1 = LCBOT1
@@ -40,7 +42,8 @@ c cld1 : cfrac1, cngwat1, cpsize1,cprtop1,cprbot1
         IF ((CFRAC1 .GT. 0) .AND. (CNGWA1 .GT. 0) .AND.
      $      (LCBOT1 .GT. 0)    .AND. (LCTOP1 .GT. 0) .AND. 
      $      (LCBOT1 .LE. LBOT) .AND. (LCTOP1 .LE. LBOT)) THEN
-
+          
+c          print *,'bah bah cloud 1',ICLDJAC
           ICLDJAC = ICLDJAC + 1 !!!! 1
           JAC_CLD_OUT(ICLDJAC,1:NCHAN) = -PURE_RAD4(1,1,1:NCHAN) + PURE_RAD4(2,1,1:NCHAN)  !!! dr/d cfrac1 = -rclr + r1
 
@@ -56,11 +59,21 @@ c cld1 : cfrac1, cngwat1, cpsize1,cprtop1,cprbot1
              RAMU(IJUNK,1:NCHAN) = JACA_FINAL_1(1:NCHAN)
           END DO          
 
+c          print *,'A C  : ',PLANCK_RAD4(1,LCTOP1,1),RAMU(LCTOP1,1),FCLEAR
+c          print *,'A 1  : ',PLANCK_RAD4(2,LCTOP1,1),RAMU(LCTOP1,1),CFRA1X
+c          print *,'A 2  : ',PLANCK_RAD4(3,LCTOP1,1),RAMU(LCTOP1,1),CFRA2X
+c          print *,'A 12 : ',PLANCK_RAD4(4,LCTOP1,1),RAMU(LCTOP1,1),CFRA12
+  
           JAC_CLD_C(LCTOP1:LCBOT1,1:NCHAN)  = PLANCK_RAD4(1,LCTOP1:LCBOT1,1:NCHAN) * RAMU(LCTOP1:LCBOT1,1:NCHAN) * 0
           JAC_CLD_1(LCTOP1:LCBOT1,1:NCHAN)  = PLANCK_RAD4(2,LCTOP1:LCBOT1,1:NCHAN) * RAMU(LCTOP1:LCBOT1,1:NCHAN) * 1
           JAC_CLD_2(LCTOP1:LCBOT1,1:NCHAN)  = PLANCK_RAD4(3,LCTOP1:LCBOT1,1:NCHAN) * RAMU(LCTOP1:LCBOT1,1:NCHAN) * 0
           JAC_CLD_12(LCTOP1:LCBOT1,1:NCHAN) = PLANCK_RAD4(4,LCTOP1:LCBOT1,1:NCHAN) * RAMU(LCTOP1:LCBOT1,1:NCHAN) * 1
-  
+
+c          print *,'B C  : ',RTHERM4_SOLAR4(1,LCTOP1,1),RAMU(LCTOP1,1),FCLEAR
+c          print *,'B 1  : ',RTHERM4_SOLAR4(2,LCTOP1,1),RAMU(LCTOP1,1),CFRA1X
+c          print *,'B 2  : ',RTHERM4_SOLAR4(3,LCTOP1,1),RAMU(LCTOP1,1),CFRA2X
+c          print *,'B 12 : ',RTHERM4_SOLAR4(4,LCTOP1,1),RAMU(LCTOP1,1),CFRA12
+
           JAC_CLD_C(LCTOP1:LCBOT1,1:NCHAN)  = JAC_CLD_C(LCTOP1:LCBOT1,1:NCHAN)  - 
      $                                        RTHERM4_SOLAR4(1,LCTOP1:LCBOT1,1:NCHAN) * RAMU(LCTOP1:LCBOT1,1:NCHAN) * 0
           JAC_CLD_1(LCTOP1:LCBOT1,1:NCHAN)  = JAC_CLD_1(LCTOP1:LCBOT1,1:NCHAN) -
@@ -69,11 +82,18 @@ c cld1 : cfrac1, cngwat1, cpsize1,cprtop1,cprbot1
      $                                        RTHERM4_SOLAR4(3,LCTOP1:LCBOT1,1:NCHAN) * RAMU(LCTOP1:LCBOT1,1:NCHAN) * 0
           JAC_CLD_12(LCTOP1:LCBOT1,1:NCHAN) = JAC_CLD_12(LCTOP1:LCBOT1,1:NCHAN) - 
      $                                        RTHERM4_SOLAR4(4,LCTOP1:LCBOT1,1:NCHAN) * RAMU(LCTOP1:LCBOT1,1:NCHAN) * 1
+
+c          print *,'C C  : ',JAC_CLD_C(LCTOP1,1),L2S4above(1,LCTOP1,1),FCLEAR
+c          print *,'C 1  : ',JAC_CLD_1(LCTOP1,1),L2S4above(2,LCTOP1,1),CFRA1X
+c          print *,'C 2  : ',JAC_CLD_2(LCTOP1,1),L2S4above(3,LCTOP1,1),CFRA2X
+c          print *,'C 12 : ',JAC_CLD_12(LCTOP1,1),L2S4above(4,LCTOP1,1),CFRA12
   
           JAC_CLD_C(LCTOP1:LCBOT1,1:NCHAN)  = FCLEAR*JAC_CLD_C(LCTOP1:LCBOT1,1:NCHAN)  * L2S4above(1,LCTOP1:LCBOT1,1:NCHAN) * 0
           JAC_CLD_1(LCTOP1:LCBOT1,1:NCHAN)  = CFRA1X*JAC_CLD_1(LCTOP1:LCBOT1,1:NCHAN)  * L2S4above(2,LCTOP1:LCBOT1,1:NCHAN) * 1
           JAC_CLD_2(LCTOP1:LCBOT1,1:NCHAN)  = CFRA2X*JAC_CLD_2(LCTOP1:LCBOT1,1:NCHAN)  * L2S4above(3,LCTOP1:LCBOT1,1:NCHAN) * 0
           JAC_CLD_12(LCTOP1:LCBOT1,1:NCHAN) = CFRA12*JAC_CLD_12(LCTOP1:LCBOT1,1:NCHAN) * L2S4above(4,LCTOP1:LCBOT1,1:NCHAN) * 1
+
+c          print *,'C,1,2,,12 : ', JAC_CLD_C(LCTOP1,1),JAC_CLD_1(LCTOP1,1),JAC_CLD_2(LCTOP1,1),JAC_CLD_12(LCTOP1,1)
 
           JAC_CLD_C(LCTOP1:LCBOT1,1:NCHAN) = JAC_CLD_C(LCTOP1:LCBOT1,1:NCHAN) + 
      $                                       JAC_CLD_1(LCTOP1:LCBOT1,1:NCHAN) + 
@@ -83,6 +103,7 @@ c cld1 : cfrac1, cngwat1, cpsize1,cprtop1,cprbot1
           ICLDJAC = ICLDJAC + 1 !!!! 2
           JAC_CLD_OUT(ICLDJAC,1:NCHAN) = 0
           DO IJUNK = LCTOP1,LCBOT1
+c            write(*,'(I3,I3,6(F12.5,1X))') ICLDJAC,IJUNK,CFRCL1(IJUNK),JAC_CLD_C(IJUNK,10),FCLEAR,CFRA1X,CFRA2X,CFRA12
             JAC_CLD_OUT(ICLDJAC,1:NCHAN) = JAC_CLD_OUT(ICLDJAC,1:NCHAN) + JAC_CLD_C(IJUNK,1:NCHAN) * CFRCL1(IJUNK)
           END DO
 
@@ -214,13 +235,16 @@ c cld1 : cfrac1, cngwat1, cpsize1,cprtop1,cprbot1
         ELSE
           ICLDJAC = ICLDJAC + 5    !!! skipped 5 cld1 jacs
         END IF 
-  
+
+c          print *,'bah bah end cloud 1',ICLDJAC  
 c %%%%%%%%%%%%%%%%%%%%%%%%%        
 c cld1 : cfrac1, cngwat1, cpsize1,cprtop1,cprbot1
         IF ((CFRAC2 .GT. 0) .AND. (CNGWA2 .GT. 0) .AND.
      $      (LCBOT2 .GT. 0)    .AND. (LCTOP2 .GT. 0) .AND. 
      $      (LCBOT2 .LE. LBOT) .AND. (LCTOP2 .LE. LBOT)) THEN
 
+c          print *,'bah bah cloud 2'
+        
           ICLDJAC = ICLDJAC + 1 !!!! 6
           JAC_CLD_OUT(ICLDJAC,1:NCHAN) = -PURE_RAD4(1,1,1:NCHAN) + PURE_RAD4(3,1,1:NCHAN)  !!! dr/d cfrac1 = -rclr + r2
 
@@ -403,8 +427,11 @@ c cld1+cld2 : cfrac12
           ICLDJAC = ICLDJAC + 1    !!! skipped 1 cld1,2 jacs        
         END IF
 
+c          print *,'bah bah cloud 2',ICLDJAC
+
 c %%%%%%%%%%%%%%%%%%%%%%%%%
 c stemp jac for fun
+c        print *,'bah bah ST jac'
         JAC_ST_C(1:NCHAN)  = EMIS(1:NCHAN) * DBTDT(NLAY+1,1:NCHAN)
         JAC_ST_1(1:NCHAN)  = EMIS(1:NCHAN) * DBTDT(NLAY+1,1:NCHAN)
         JAC_ST_2(1:NCHAN)  = EMIS(1:NCHAN) * DBTDT(NLAY+1,1:NCHAN)
@@ -426,7 +453,7 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%
 c write it all out
         !! ** <> ** <> ** <> ** <> ** !!
         !! finally, write out the [5 cld1, 5 cld2, 1 cld12, 1 stemp jacs ] !!!
-!        CALL WRTJAC_CLD(IOUNCLD,IPROF,11,NCHAN,300,FREQ,RAD,JAC_OUTPUT_UNITS*0,CLDJACFAKEAMT,JAC_CLD_OUT)    !!! test raw rad diffs
+!        CALL WRTJAC_CLD(IOUNCLD,IPROF,12,   NCHAN,300,FREQ,RAD,JAC_OUTPUT_UNITS*0,CLDJACFAKEAMT,JAC_CLD_OUT)    !!! test raw rad diffs
         CALL WRTJAC_CLD(IOUNCLD,IPROF,CLDJAC,NCHAN,300,FREQ,RAD,JAC_OUTPUT_UNITS*1,CLDJACFAKEAMT,JAC_CLD_OUT)
         !! ** <> ** <> ** <> ** <> ** !!
         !! finally, write it out!!!

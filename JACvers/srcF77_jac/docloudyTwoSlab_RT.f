@@ -186,12 +186,14 @@ C     Calculate clear radiance
      $       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM,
      $       EMIS,TSURF,IPROF,FREQ )
       ELSE
-        RAD0=0.0
+        RAD0 = 0.0
+        RTHERM = 0.0
       ENDIF
       IF (DOJAC) THEN
+C        print *,'CLR : ',RTHERM,SECANG(10)
         TAU4(1,:,I) = TAU(:,I)   !!! CLDTAU is a dummy
         RTHERM4_SOLAR4(1,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
-                                                  !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                                  !!! -RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         PURE_RAD4(1,:,I)   = (+RADLAY)
         PLANCK_RAD4(1,:,I) = (-RADLAY + RPLNCK)
@@ -235,13 +237,15 @@ C    Calculate bottom cloud2 radiance
      $          RADC2, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD2 )
          ENDIF
       ELSE
-         RADC2=0.0
+         RADC2 = 0.0
+        RTHERM = 0.0
       ENDIF
       RAACLDOD4(3,:,I) = 0
       IF (DOJAC) THEN
+c        print *,'CLD2 : ',RTHERM,SECANG(10)
         TAU4(3,:,I) = CLDTAU
         RTHERM4_SOLAR4(3,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
-                                                  !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                                  !!! -RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         PURE_RAD4(3,:,I)   = (+RADLAY)
         PLANCK_RAD4(3,:,I) = (-RADLAY + RPLNCK)
@@ -268,13 +272,15 @@ C      Calculate combined cloud1+cloud2 radiance
      $          RADC12, DOJAC, CLDTAU, RADLAY, RTHERM )
          ENDIF
       ELSE
-         RADC12=0.0
+        RADC12 = 0.0
+        RTHERM = 0.0
       ENDIF
       RAACLDOD4(4,:,I) = 0
       IF (DOJAC) THEN
+c        print *,'CLD12 : ',RTHERM,SECANG(10)
         TAU4(4,:,I) = CLDTAU
         RTHERM4_SOLAR4(4,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
-                                                  !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                                  !!! -RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         PURE_RAD4(4,:,I)   = (+RADLAY)
         PLANCK_RAD4(4,:,I) = (-RADLAY + RPLNCK)
@@ -318,13 +324,15 @@ C     Calculate top cloud1 radiance
      $          RADC1, DOJAC, CLDTAU, RADLAY, RTHERM, CLDEFFOD1 )
          ENDIF
       ELSE
-         RADC1=0.0
+        RADC1 = 0.0
+        RTHERM = 0.0
       ENDIF
       RAACLDOD4(2,:,I) = 0
       IF (DOJAC) THEN
+c        print *,'CLD1 : ',RTHERM,SECANG(10)
         TAU4(2,:,I) = CLDTAU
         RTHERM4_SOLAR4(2,:,I) = RTHERM*SECANG     !!! I think this is a little odd to include since writeoutjac does 
-                                                  !!! - RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
+                                                  !!! -RTHERM4_SOLAR4(1,1:NLAY,1:NCHAN) * dTAU_DG1(1:NLAY,1:NCHAN)
                                                   !!! and that dTAU_DG1 etc derivative already should have factor of 1/mu
         PURE_RAD4(2,:,I)   = (+RADLAY)
         PLANCK_RAD4(2,:,I) = (-RADLAY + RPLNCK)

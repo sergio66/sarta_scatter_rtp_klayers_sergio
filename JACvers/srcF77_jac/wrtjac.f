@@ -121,6 +121,7 @@ c************************************************************************
         d = (RAD(1:NCHAN))**2
         raDeriv_Rad(1:NCHAN) = a/(b*c*d)
         DO iL = 1,NLAY
+c          print *,iL,CLDJACFAKEAMT(IL),raDeriv_rad(10),JAC_CLD_OUT(IL,10)
           WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC) * CLDJACFAKEAMT(IL),iC=1,NCHAN)
 !          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC),iC=1,NCHAN)
         END DO
