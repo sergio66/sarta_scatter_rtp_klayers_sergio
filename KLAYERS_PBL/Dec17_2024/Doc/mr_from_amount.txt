@@ -1,0 +1,197 @@
+These notes describe how it is possible to accurately deduce layer
+average dry air volume mixing ratio from layer column density.  The
+algorithm has been developed for use with the AIRS fast model.
+
+Scott Hannon, 7 November 2000
+Last updated: 15 November 2000. Also 13 Dec 2000 to correct a few typos.
+
+Values of important constants: 
+   Loschmidt = 2.6867775E+19 molecules per cm^3 (at 1 atm and 273.15 K)
+   kAvogadro = 6.022142E+26 molecules per kilomole
+   T0 = 273.15 K
+
+In the following discussion, all profile values are layer average
+values.  
+
+For a homogeneous air path, the relationship between column density
+and mixing ratio is:
+
+1)   CD_i = PP_i/kAvogadro * dz *  T0/T * Loschmidt
+
+with
+
+2a)   PP_i = MR_i * Ptotal
+
+where
+   CD_i is the column density of gas "i" (kilomoles/cm^2)
+   PP_i is the partial pressure of gas "i" (atm)
+   dz is the pathlength (cm)
+   T is the gas temperature (K)
+   MR_i is the volume mixing ratio of gas "i" expressed as the
+      number of gas "i" molecules per total number of molecules
+      making up the air.
+   Ptotal is the total air pressure (atm)
+
+The above equations are relatively simple, but unfortunately they
+reply upon an accurate value for the pathlength, "dz", which is not
+available to the AIR fast model code.  The layer thickness is a
+function of temperature, gravity, and air mass.  In particular,
+latitude affects gravity (as does altitude) and water vapor affects
+air mass (in the lower troposphere).  In addition the atmosphere is
+not really homogenous over the thickness of the AIRS layers; the
+profiles typically change continuously with altitude.  (Our KLAYERS
+code assumes they vary linearly in log(Pressure)). The layer
+thicknesses can be computed by integrating the atmosphere if the
+gas mixing ratios are known, but the reverse problem is more
+difficult.  However, this is a problem which has indirectly already
+been solved and built into the AIRS fast model: the "fixed gases"
+adjustment.
+
+Of the many gases making up "air", water vapor is the only gas that
+varies enough in the atmosphere to have a significant effect upon
+the structure of the atmosphere.  In the lower tropopause water
+might be anywhere from a hundredth of a percent to a few percent of
+the molecules making up the air.  For this reason, we distinguish
+between dry-air, which includes all gases except water vapor, and
+wet-air, which includes all gases including water.  Water molecules
+are less massive than the average mass of the many particules making
+up dry air (mostly N2), and so water vapor acts to decrease air mass
+and thus affects the relationship between pressure and altitude.  In
+addition, because water in the lower troposphere may be as much as a
+few percent of the total air molecules, water can reduce the mixing
+ratios of the dry gases by displacing a little of the dry air.
+
+We now modify equation (2a) to introduce a distinction between
+dry-air and wet-air mixing ratios:
+
+2b)   PP_i = MRwet_i * Ptotal = MRdry_i * (Ptotal - PP_water)
+
+The AIRS fast model retrieves layer column densities and average
+temperatures.  It does not start with profile point values and
+then integrate the atmosphere to form layers; it directly assigns
+layer values without ever dealing with anything else.  This is
+fine for the variable gases, but it complicates the problem of
+accurately deducing the corresponding fixed gases layer column
+densities.  To work around this problem, I developed a simple
+parameterized adjustment factor for the fixed gases column
+densities.  This factor takes into account the effects of
+temperature, gravity/latitude, and water vapor displacement on
+the layer column densities (and thus the optical depth).
+ 
+3)   fmult = ( 1 - pmult*PP_x )/( fx * gscal )
+
+such that
+
+4)   CD_fixed = CD_fixed_ref * fmult
+
+where
+
+   PP_x = PP_i as in equation (1) for water CD_i, but using dz = dzref
+      instead of the true (but unknown) layer thickness.   This is
+      NOT intended as a good estimate of the water partial pressure
+      (and it isn't!); it is simply the appropriate term for use in
+      equation (3).
+
+   gscal = scaling factor for gravity
+      gscal = ( 9.78050518 + 0.0518017*( COS( (lat - 90.0)*pi/180))^2 )/
+         9.80683613
+      where lat is the latitude (degrees).  This term is basically
+      the ratio of gravity at sea level for the profile of interest
+      (the numerator) and the reference profile (the denominator).
+
+   pmult = 0.58 = empirically determined coefficient for term PP_x.
+      This coefficient is more than just the mass ratio of water vapor
+      to dry air; it includes a fit adjustment factor.
+
+   fx = empirically determined coefficient with a unique value for
+      every layer.  This term is a minor tweak used to remove the
+      small bias error of the calculated fmult.  The value is close
+      to unity in all 100 layers.
+
+Equation (3) is an approximation, but I estimate it to be accurate to
+within a couple tenths of a percent for any plausible profile.  This
+equation is already implemented in the AIRS code; it is evaluated for
+the profile to assign a value to fmult for all 100 layers.
+
+Since there is no such thing as "fixed" gases, the reference profile
+values were arbitrary chosen to be represented by CO2.  The standard
+(unperturbed) CO2 dry-air mixing ratio is known; it's value is read
+in to the AIRS level2 processing code along with the other reference
+profile values.  MRdry_fixed = 370 parts per million in all layers
+(actually slightly less in the top few layers but we can ignore
+this minor variation).
+
+With equations (1), (2b), and (4), plus the complete profile
+information (CD_fixed_ref, Tref, dzref, and MRdry_fixed) for the
+reference profile "fixed" gases, we now have a means of solving for
+the (layer average) dry air mixing ratio of all gases from their
+retrieved 100 layer column densities and temperature profile.  The
+may be done as follows:
+
+If we plug equation (1) and (2b) into the left side of equation (4),
+we have one equation and two unknowns: PP_water and dz.  If we
+re-arranging equation (1) for water, we can express PP_water
+as a function of the the known CD_water and the unknown dz.  Thus we
+end up with two equations and two unknowns, which we can now solve
+for both unknowns.  With dz and PP_water now determined, it is a
+simple matter to calculate MRdry_i for ozone, carbon monoxide, and
+methane by a simple re-arrangement of equations (1) and (2b).
+
+What we end up with are layer average mixing ratios, not mixing
+ratios at discreet pressure levels.  However, if we choose to
+treat the layer average values (both mixing ratio and temperature)
+as discrete level values at the layer average pressure, then we
+may interpolate the profile onto any arbitrary pressure grid.  For
+consistency with KLAYERS and the fixed gases adjustment, this may
+be done via a linear interpolation in log(Pavg), where
+   Pavg = (P2-P1)/log(P2/P1).
+
+
+Here is one additional useful equation which can easily be
+derived from equation 2b above.  Since
+   PP_water = MRwet_water * Ptotal
+then if we divide both sides of equation 2b by Ptotal we get
+
+2c)   MRwet_i = MRdry_i * (1 - MRwet_water) for any gas i
+
+Note that equation 2c is valid for any gas i, including water.
+
+
+The following MATLAB code illustrates the solution:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Approximate values inverted from incomplete profile info
+% Note: all values are layer averages       
+
+% constants
+loschmidt=2.6867775E+19;
+kavagadro=6.022142E+26;
+tzero=273.15;
+
+load prof_info;
+% Note: this file includes the complete info on the reference profile,
+% plus the layer average temperature & H2O, CO, & CH4 column densities
+% (but not layer thickness or Fixed gases column denisity) for the 48
+% regression profiles.
+
+% Dry air mixing ratio of CO2
+% Note: the CO2 mixing ratio actually drops slightly in the top few layers
+mrfdry=370/1E+6;
+
+% Calc fmult
+pmult=0.58;
+load fx;
+fx=fx(:,2); % the fx coefs are actually in column 2 of this file
+fmult=calf0(wall,tall,latall,pref,dzref,fx,pmult);
+
+dzcal=(fmult.*frefall + mrfdry*wall)./(frefall.*trefall./(tall.*dzrefall));
+
+ppwcal=(kavagadro * wall .* tall)./(tzero * loschmidt * 100 * dzcal);
+
+pdry=prefall - ppwcal;
+
+mrwcal=ppwcal./pdry;
+mrocal=(kavagadro * tall .* oall)./(tzero * loschmidt * 100 * dzcal .* pdry);
+mrccal=(kavagadro * tall .* call)./(tzero * loschmidt * 100 * dzcal .* pdry);
+mrmcal=(kavagadro * tall .* mall)./(tzero * loschmidt * 100 * dzcal .* pdry);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

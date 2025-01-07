@@ -11,6 +11,15 @@
 #----------------------------------------------------------------------------------------
 # Builds cloudy
 #----------------------------------------------------------------------------------------
+# AIRS for L1C Jan 2025, H2020
+# YAYAYAYAYAYAYAYAYA
+airs_cloudy_jan25_H2020:
+	rm -f *.o incFTC.f fnmie.f
+	ln -s incFTC_airs_jan25_H2020_pclsam.f incFTC.f
+	ln -s fnmie_iceGHMbaum_waterdrop_desertdust.f fnmie.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_airs_l1c_2834_cloudy_jan25_H2020
+
 # AIRS for L1C May 2019
 # YAYAYAYAYAYAYAYAYA
 airs_cloudy_may19:
@@ -29,7 +38,6 @@ airs_cloudy_may19_tun:
 	make -f make_sarta_pclsam
 	mv a.out ../bin/jac_airs_l1c_2834_cloudy_may19_tun_fix_v1
 
-
 # AIRS
 m140_icebaumGHM_waterdrop_desertdust:
 	rm -f *.o incFTC.f fnmie.f
@@ -40,6 +48,13 @@ m140_icebaumGHM_waterdrop_desertdust:
 
 ########################################################################
 # CrisHiRes YAYAYAYAYAYAYAYAYA
+crisg4_hires_jan25_H2020_icebaumGHM_waterdrop_desertdust:
+	rm -f *.o incFTC.f fnmie.f
+	ln -s incFTC_crisg4_jan25_H2020_new.f incFTC.f
+	ln -s fnmie_iceGHMbaum_waterdrop_desertdust_cris_hires_new.f fnmie.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new
+
 crisg4_hires_dec17_icebaumGHM_waterdrop_desertdust:
 	rm -f *.o incFTC.f fnmie.f
 	ln -s incFTC_crisg4_oct16_new.f incFTC.f
@@ -167,6 +182,13 @@ cris_hrg4_p2019_dec18:
 # this is what I kinda used in the SingleFootprint retrievals
 # copied from ../../v108_Src_rtpV201_pclsam_slabcloud_hg3/Makefile
 # YAYAYAYAYAYAYAYAYA
+iasi_jan25_H2020_iceaggr_waterdrop_desertdust_wcon_nte_swch4:
+	rm -f *.o incFTC.f fnmie.f
+	ln -s incFTC_iasi_jan25_H2020_wcon_nte_swch4.f incFTC.f
+	ln -s fnmie_iasi_iceaggr_waterdrop_desertdust.f fnmie.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_sarta_iasi_jan25_H2020_iceaggr_waterdrop_desertdust_slabcloud_hg3_wcon_nte_swch4
+
 iasi_may09_iceaggr_waterdrop_desertdust_wcon_nte_swch4:
 	rm -f *.o incFTC.f fnmie.f
 	ln -s incFTC_iasi_may09_wcon_nte_swch4.f incFTC.f

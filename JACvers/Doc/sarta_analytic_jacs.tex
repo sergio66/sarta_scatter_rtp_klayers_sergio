@@ -843,6 +843,23 @@ compared to running \sa over and over for about 10 extra
 perturbations $\times$ 100 layers to get the corresponding finite
 difference jacobians, which is about 66 hours or about 2.75 days.
 
+\textcolor{red}{NOTE : For clear sky, the RTA integral is 
+\[
+r(\nu) = \epsilon(\nu) B(\nu,T_s) e^{-\tau_{total}(\nu)} + \int_{psurface}^{0} B(T(p)) \frac{\partial \tau}{\partial p} dp
+\]
+which for numerical integration reduces to (see eg \citep{mac:17*2})
+\[
+r(\nu) = \epsilon(\nu) B(\nu,T_s) e^{-\tau_{total}(\nu)} + \sum B(T(i)) \frac{(1-e^{-\tau_i}) e^{-\tau_{i+1 \rightarrow TOA}(\nu)}}{\delta p} \delta p
+\]
+\[
+r(\nu) = \epsilon(\nu) B(\nu,T_s) e^{-\tau_{total}(\nu)} + \sum B(T(i)) (1-e^{-\tau_i}) e^{-\tau_{i+1 \rightarrow TOA}(\nu)}
+\]
+where $B$ is the planck function. The weighting functions we save are
+simply the term in front of $B(T(i))$ ie $ (1-e^{-\tau_i})
+e^{-\tau_{i+1 \rightarrow TOA}(\nu)} = \delta \tau_{i \rightarrow
+  TOA}(\nu)$ . You still need to divide the output weighting function by $\delta(pressure)$ at each
+layer to get the true weighting function.}
+
 \section{Acknowledgment}
 Scott Hannon wrote/developed most of the original \sa code with
 Larrabee Strow and Howard Motteler. He worked closely with me on the
