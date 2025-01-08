@@ -21,6 +21,7 @@ bin
 *.mat
 *.o
 *.x
+*.tgz
 *.gz
 *_genmod.f90 
 *_genmod.mod
