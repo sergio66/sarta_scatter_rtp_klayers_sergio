@@ -515,7 +515,7 @@ C      ---------
        CHARACTER*80 FNSUN  ! solar data
        CHARACTER*80 FNCOFN ! non-LTE
 C
-Co
+C
        PARAMETER(FNCOF1=
      $ '/home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Coef/set1.dat')
        PARAMETER(FNCOF2=

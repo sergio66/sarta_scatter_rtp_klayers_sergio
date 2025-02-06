@@ -135,6 +135,8 @@ c local
        REAL VSTORE(6)             ! temporary storage for various variables
        REAL QIKEXP, RJUNK1, RJUNK2, RAD2BT
 
+       INTEGER intersect
+
 c************************************************************************
 C     Radiation constants for current channel
       C1V3=C1*(FREQ(I)**3)
@@ -385,9 +387,11 @@ C         Calculate non-LTE
 C         -----------------
 C         comment: the nonLTE calculation does not consider cloud effects,
 C         but clouds are generally below the altitude where nonLTE occurs.
+c      print *,'docloudyTwoSlab_RT.f : DOSUN = ',DOSUN
       IF (DOSUN) THEN
 CC FORGET THIS  III = INTERSECT(I,CLISTN(1:NCHNTE),NCHNTE)
         III = QUICKINDNTE(I)
+c        print *,DOSUN,I,III
         IF (III .GT. 0) THEN
           RADNTE = RAD(I)
           CALL YCALNTE ( INDCHN, TEMP, SUNCOS, SCOS1, SECANG(1),

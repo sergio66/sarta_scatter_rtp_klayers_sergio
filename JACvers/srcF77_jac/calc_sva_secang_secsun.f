@@ -82,11 +82,11 @@ C         Truncate angle if too big
 
 C      Convert from satellite to earth viewing angle (in radians)
        DO L=1,LBOT
-             EVA=VACONV(SVA, SALT, ALT(L))
-             SECANG(L)=1.0E+0/COS(EVA)
+         EVA=VACONV(SVA, SALT, ALT(L))
+         SECANG(L)=1.0E+0/COS(EVA)
 ccccccccccccc
-c            for testing
-c             SECANG(L)=SVA
+c        for testing
+c        SECANG(L)=SVA
 ccccccccccccc
        ENDDO
 
@@ -117,12 +117,13 @@ C
              SZALAY=SACONV(RJUNK1,ALT(L))
              SECSUN(L)=SECANG(L) + 1.0E+0/COS(SZALAY)
           ENDDO
-         
+ 
           QUICKINDNTE = 0
           !! LSTCHN = h.ichan
           !! so eg if I = 1520, h.ichan(1520) = listchn(1520) = 1291; h.vchan(1520) = freq(1520) = 1231.3 cm-1
           !! so eg if I = 2600, h.ichan(2600) = listchn(2600) = 2333; h.vchan(2600) = freq(2600) = 2616.4 cm-1
           !! so eg if I = 2371, h.ichan(2371) = listchn(2371) = 2100; h.vchan(2371) = freq(2371) = 2379.4 cm-1
+
           IF (DEBUG) THEN
             do I = 1,MXCHAN
               if (LSTCHN(I) .GT. 0) THEN
@@ -142,9 +143,8 @@ C
   
           DO I = 1,NCHNTE
             QUICKINDNTE(INDCHN(CLISTN(I))) = I
-C            print *,'MIAOW MIAOW',I,III,INDCHN(CLISTN(I)),QUICKINDNTE(INDCHN(CLISTN(I)))
+c            print *,'MIAOW MIAOW',I,III,INDCHN(CLISTN(I)),QUICKINDNTE(INDCHN(CLISTN(I)))
           END DO
-
        ENDIF
 
        RETURN

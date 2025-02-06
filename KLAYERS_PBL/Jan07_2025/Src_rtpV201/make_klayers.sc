@@ -21,5 +21,5 @@ cd /home/sergio/MATLABCODE/QUICKTASKS_TELECON/PBL_BillIrion_klayers/PROFILES/
 /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Jan02_2025/klayersV205/BinV201/klayers_airs_wetwater_g80_test fin=sub6000clr.ip.rtp fout=sergio_sub6000clr_airs_g80.op.rtp  nwantp=-1 >& ugh
 /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Jan02_2025/klayersV205/BinV201/klayers_pbl_wetwater_test      fin=sub6000clr.ip.rtp fout=sergio_sub6000clr_pbl.op.rtp        >& ugh
 /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Jan02_2025/klayersV205/BinV201/klayers_airs_wetwater_test     fin=sub6000clr.ip.rtp fout=sergio_sub6000clr_airs.op.rtp       >& ugh
-cd /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Jan02_2025/klayersV205/Src_rtpV201/
+cd /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Jan07_2025/klayersV205/Src_rtpV201/
 

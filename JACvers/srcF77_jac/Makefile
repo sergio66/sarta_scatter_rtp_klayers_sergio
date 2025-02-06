@@ -20,6 +20,15 @@ airs_cloudy_jan25_H2020:
 	make -f make_sarta_pclsam
 	mv a.out ../bin/jac_airs_l1c_2834_cloudy_jan25_H2020
 
+# AIRS for L1C Feb 2025, H2020, PBL
+# YAYAYAYAYAYAYAYAYA
+airs_cloudy_feb25_H2020_PBL:
+	rm -f *.o incFTC.f fnmie.f
+	ln -s incFTC_airs_feb25_H2020_PBL_pclsam.f incFTC.f
+	ln -s fnmie_iceGHMbaum_waterdrop_desertdust.f fnmie.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_airs_l1c_2834_cloudy_feb25_H2020_PBL
+
 # AIRS for L1C May 2019
 # YAYAYAYAYAYAYAYAYA
 airs_cloudy_may19:
@@ -54,6 +63,14 @@ crisg4_hires_jan25_H2020_icebaumGHM_waterdrop_desertdust:
 	ln -s fnmie_iceGHMbaum_waterdrop_desertdust_cris_hires_new.f fnmie.f
 	make -f make_sarta_pclsam
 	mv a.out ../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new
+
+# CrisHiRes YAYAYAYAYAYAYAYAYA
+crisg4_hires_feb25_H2020_icebaumGHM_waterdrop_desertdust_PBL:
+	rm -f *.o incFTC.f fnmie.f
+	ln -s incFTC_crisg4_feb25_H2020_PBL_new.f incFTC.f
+	ln -s fnmie_iceGHMbaum_waterdrop_desertdust_cris_hires_new.f fnmie.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_crisg4_hires_feb25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new_PBL
 
 crisg4_hires_dec17_icebaumGHM_waterdrop_desertdust:
 	rm -f *.o incFTC.f fnmie.f
