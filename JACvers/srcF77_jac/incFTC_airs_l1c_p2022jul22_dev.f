@@ -570,7 +570,7 @@ C
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C Tuning filename
-       CHARACTER*80 FNTMLT ! tuning multiplier filename
+       CHARACTER*90 FNTMLT ! tuning multiplier filename
 C
        PARAMETER(FNTMLT=
      $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/tunmlt.txt')

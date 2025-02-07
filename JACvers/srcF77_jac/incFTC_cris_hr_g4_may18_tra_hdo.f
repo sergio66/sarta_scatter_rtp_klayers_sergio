@@ -525,7 +525,7 @@ C
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C Tuning filename
-       CHARACTER*80 FNTMLT ! tuning multiplier filename
+       CHARACTER*90 FNTMLT ! tuning multiplier filename
 C
        PARAMETER(FNTMLT='/home/chepplew/data/sarta/prod_2018/cris_hr_mar18/Coef/tunmlt.txt')
 C

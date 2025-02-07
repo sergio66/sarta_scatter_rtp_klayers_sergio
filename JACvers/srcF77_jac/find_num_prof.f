@@ -5,7 +5,7 @@
        include 'incFTC.f'
        include 'rtpdefs.f'
 
-       CHARACTER*80 FIN
+       CHARACTER*90 FIN
        INTEGER NUMPROF,NUMCHAN
 
        INTEGER rtpopen       ! function rtpopen

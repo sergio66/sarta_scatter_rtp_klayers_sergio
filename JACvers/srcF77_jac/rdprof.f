@@ -27,7 +27,7 @@ C       CAMNT, MAMNT, SAMNT, HAMNT, NAMNT, AAMNT )
 C    type      name    purpose                     units
 C    --------  ------  --------------------------  ---------------------
 C    INTEGER   IOUN    I/O unit number             none
-C    CHAR*80   PFILE   filename for desired prof   none
+C    CHAR*90   PFILE   filename for desired prof   none
 
 
 !OUTPUT PARAMETERS:
@@ -156,7 +156,7 @@ C      ARGUMENTS
 C-----------------------------------------------------------------------
 C      Input
        INTEGER   IOUN
-       CHARACTER*80  PFILE
+       CHARACTER*90  PFILE
 C
 C      Output
        CHARACTER*40   PNAM

@@ -41,8 +41,8 @@ C    none
 !OUTPUT PARAMETERS:
 C    type      name    purpose                     units
 C    --------  ------  --------------------------  ---------------------
-C    CHAR*80   FIN     input filename              none
-C    CHAR*80   FOUT    output filename             none
+C    CHAR*90   FIN     input filename              none
+C    CHAR*90   FOUT    output filename             none
 C    LOGICAL   LRHOT   force RHO for refl thermal? none
 C    INTEGER   NWANTP  Number of desired profiles  none
 C    INT arr   LISTP   List of desired prof nums   none
@@ -141,7 +141,7 @@ C------------ ----------------- ----------------------------------------
 C 13 Feb 2001 H.Motteler/S.Hannon Re-write of KLAYERS version
 C 28 Nov 2001 Scott Hannon      Remove command-line argument "nwantp"
 C  5 Dec 2001 Scott Hannon      Remove unused local var LENNB
-C 05 Aug 2003 Scott Hannon      Correct FIN & FOUT to CHAR*80 (not 70)
+C 05 Aug 2003 Scott Hannon      Correct FIN & FOUT to CHAR*90 (not 70)
 C 06 Feb 2004 Scott Hannon      Add LRHOT argument and associated code
 
 
@@ -183,8 +183,8 @@ C      Input:
 C      none
 C
 C      Output:
-       CHARACTER*80 FIN
-       CHARACTER*80 FOUT
+       CHARACTER*90 FIN
+       CHARACTER*90 FOUT
        LOGICAL  LRHOT
        INTEGER NWANTP
        INTEGER  LISTP(MAXPRO)
@@ -207,9 +207,9 @@ C-----------------------------------------------------------------------
        INTEGER NARGS   ! number of arguments
        INTEGER SORTED  ! flag for sorting
 
-       CHARACTER*80 BUF
-       CHARACTER*80 VAL
-       CHARACTER*80 VAR
+       CHARACTER*90 BUF
+       CHARACTER*90 VAL
+       CHARACTER*90 VAR
 
        LOGICAL LLISTP
        LOGICAL LLISTC

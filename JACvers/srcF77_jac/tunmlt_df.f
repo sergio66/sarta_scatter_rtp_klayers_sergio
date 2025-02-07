@@ -267,7 +267,7 @@ C      INPUT/OUTPUT
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
-       CHARACTER*80 FNTMLT
+       CHARACTER*90 FNTMLT
        CHARACTER*80  CLINE
        REAL  RJUNK
        REAL XMULTS(7,MXCHAN)

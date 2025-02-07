@@ -28,7 +28,7 @@ C    IOPCI, HEAD, HATT, PATT, LCO2PM)
 !INPUT PARAMETERS:
 C    type      name    purpose                     units
 C    --------  ------  --------------------------  ---------------------
-C    CHAR*80   FIN     input RTP file name         none
+C    CHAR*90   FIN     input RTP file name         none
 C    LOGICAL   LRHOT   force refl therm rho?       none
 
 
@@ -104,7 +104,7 @@ C                               to use VSARTA, VSCOEF, & VCLOUD; add
 C                               CJUNK2, CJUNK3, & COMMNT; CJUNK
 C                               decreased from 80 to 40;
 C 20 Sep 2002 Scott Hannon      If exists, overwrite old "sarta" hattr
-C 05 Aug 2003 Scott Hannon      Correct FIN to CHAR*80 (not 70)
+C 05 Aug 2003 Scott Hannon      Correct FIN to CHAR*90 (not 70)
 C 06 Feb 2004 Scott Hannon      Add LRHOT & PTYPE to arguments and add
 C                                  associated code.
 C 18 May 2005 Scott Hannon      Add HNO3 based on from SO2 code
@@ -148,7 +148,7 @@ C-----------------------------------------------------------------------
 C      ARGUMENTS
 C-----------------------------------------------------------------------
 C      Input
-       CHARACTER*80 FIN        ! input RTP filename
+       CHARACTER*90 FIN        ! input RTP filename
        LOGICAL  LRHOT          ! force refl therm rho? {for COMMNT}
 C
 C      Output

@@ -268,20 +268,20 @@ C      Output
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
-       CHARACTER*80 FNCOF1 ! coef set1 
-       CHARACTER*80 FNCOF2 ! coef set2 
-       CHARACTER*80 FNCOF3 ! coef set3 
-       CHARACTER*80 FNCOF4 ! coef set4 
-       CHARACTER*80 FNCOF5 ! coef set5 
-       CHARACTER*80 FNCOF6 ! coef set6 
-       CHARACTER*80 FNCOF7 ! coef set7 
-       CHARACTER*80 FNCO2  ! coef CO2
-       CHARACTER*80 FNSO2  ! coef SO2
-       CHARACTER*80 FNHNO3 ! coef HNO3
-       CHARACTER*80 FNN2O  ! coef N2O
-       CHARACTER*80 FNOPTR ! coef optran
-       CHARACTER*80 FNTHER ! coef therm
-       CHARACTER*80 FNCOFN ! coef non-LTE
+       CHARACTER*90 FNCOF1 ! coef set1 
+       CHARACTER*90 FNCOF2 ! coef set2 
+       CHARACTER*90 FNCOF3 ! coef set3 
+       CHARACTER*90 FNCOF4 ! coef set4 
+       CHARACTER*90 FNCOF5 ! coef set5 
+       CHARACTER*90 FNCOF6 ! coef set6 
+       CHARACTER*90 FNCOF7 ! coef set7 
+       CHARACTER*90 FNCO2  ! coef CO2
+       CHARACTER*90 FNSO2  ! coef SO2
+       CHARACTER*90 FNHNO3 ! coef HNO3
+       CHARACTER*90 FNN2O  ! coef N2O
+       CHARACTER*90 FNOPTR ! coef optran
+       CHARACTER*90 FNTHER ! coef therm
+       CHARACTER*90 FNCOFN ! coef non-LTE
        CHARACTER*80  CLINE
        REAL FRQCHN
        REAL  FCHAN(NFCOEF)

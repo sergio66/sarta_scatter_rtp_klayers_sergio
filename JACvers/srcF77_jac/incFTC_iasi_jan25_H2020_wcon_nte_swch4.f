@@ -497,26 +497,26 @@ C
 C      ---------
 C      Filenames
 C      ---------
-       CHARACTER*80 FNCOF1 ! coef set1 
-       CHARACTER*80 FNCOF2 ! coef set2 
-       CHARACTER*80 FNCOF3 ! coef set3 
-       CHARACTER*80 FNCOF4 ! coef set4 
-       CHARACTER*80 FNCOF5 ! coef set5 
-       CHARACTER*80 FNCOF6 ! coef set6 
-       CHARACTER*80 FNCOF7 ! coef set7 
-       CHARACTER*80 FNCO2  ! coef CO2
-       CHARACTER*80 FNSO2  ! coef SO2
-       CHARACTER*80 FNHNO3 ! coef HNO3
-       CHARACTER*80 FNN2O  ! coef N2O
-       CHARACTER*80 FNCH4  ! coef CH4
-       CHARACTER*80 FNNH3  ! coef NH3
-       CHARACTER*80 FNHDO  ! coef HDO
-       CHARACTER*80 FNOPTR ! coef optran
-       CHARACTER*80 FNTHER ! coef therm
-       CHARACTER*80 FNFX   ! coef fx
-       CHARACTER*80 FNPREF ! ref prof
-       CHARACTER*80 FNSUN  ! solar data
-       CHARACTER*80 FNCOFN ! non-LTE
+       CHARACTER*90 FNCOF1 ! coef set1 
+       CHARACTER*90 FNCOF2 ! coef set2 
+       CHARACTER*90 FNCOF3 ! coef set3 
+       CHARACTER*90 FNCOF4 ! coef set4 
+       CHARACTER*90 FNCOF5 ! coef set5 
+       CHARACTER*90 FNCOF6 ! coef set6 
+       CHARACTER*90 FNCOF7 ! coef set7 
+       CHARACTER*90 FNCO2  ! coef CO2
+       CHARACTER*90 FNSO2  ! coef SO2
+       CHARACTER*90 FNHNO3 ! coef HNO3
+       CHARACTER*90 FNN2O  ! coef N2O
+       CHARACTER*90 FNCH4  ! coef CH4
+       CHARACTER*90 FNNH3  ! coef NH3
+       CHARACTER*90 FNHDO  ! coef HDO
+       CHARACTER*90 FNOPTR ! coef optran
+       CHARACTER*90 FNTHER ! coef therm
+       CHARACTER*90 FNFX   ! coef fx
+       CHARACTER*90 FNPREF ! ref prof
+       CHARACTER*90 FNSUN  ! solar data
+       CHARACTER*90 FNCOFN ! non-LTE
 C
 C
        PARAMETER(FNCOF1=
@@ -569,7 +569,7 @@ c       PARAMETER(MXMIEA = 10) ! ice aggregates=8, all others 10
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C Tuning filename
-       CHARACTER*80 FNTMLT ! tuning multiplier filename
+       CHARACTER*90 FNTMLT ! tuning multiplier filename
 C
        PARAMETER(FNTMLT=
      $ '/asl/data/sarta_database/Data_IASI_may09/Coef/'

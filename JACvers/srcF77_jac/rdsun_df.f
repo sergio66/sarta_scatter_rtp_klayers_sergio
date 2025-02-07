@@ -127,7 +127,7 @@ C      Output
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
-       CHARACTER*80  FNSUN
+       CHARACTER*90  FNSUN
        CHARACTER*80  CLINE
        INTEGER      I
        INTEGER   IERR
