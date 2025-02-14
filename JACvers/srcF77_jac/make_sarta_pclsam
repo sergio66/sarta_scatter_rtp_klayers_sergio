@@ -57,40 +57,6 @@ RTPDEFS_FILE = $(RTPHOME)/include/rtpdefs.f
 # Compilers
 # ------------------------------------------------------------------------
 
-# INTEL ifort F77
-# ------------------------------------------------------------------------
-# -u  : turn off implicit typing of variables
-# -g  : generate debugging information (turns off optimization)
-# -C  : do run time subscript range checking
-# -w0 : inform about unused variables
-# -O3 : heavy optimization
-# -64 : 64-bit objects (libraries must match)
-# -us : puts trailing underscore
-F77 = /usr/ebuild/software/intel-compilers/2021.2.0/compiler/2021.2.0/linux/bin/intel64/ifort
-F77 = ifort
-FLIB = 
-OPTEXEC = 
-
-## with profiling
-## after running the code, then do eg
-##   time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=junk.op.rtp fout=newdayx.rtp
-##   gprof ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug gmon.out >& ughnew
-## and if you profile eg Scotts code 
-##   time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=junk.op.rtp fout=origdayx.rtp
-##   gprof ../bin/airs_l1c_2834_cloudy_may19_prod_debug gmon.out >& ughnew
-## then compare Scotts code vs My code using
-##   compare_gprof_profiler_output('ughorig','ughnew');
-OPT = -convert big_endian -extend-source 132 -pg
-OPT = -O2 -convert big_endian -extend-source 132 -pg
-OPT = -O0 -convert big_endian -extend-source 132 -check all -g -cpp -traceback -fp-stack-check -warn interface
-OPT = -O2 -convert big_endian -extend-source 132 -check bounds -g -traceback -debug -gen-interfaces -warn interfaces
-OPT = -O2 -convert big_endian -extend-source 132 -pg -check bounds -g -traceback -debug -gen-interfaces -warn interface
-OPTEXEC = -pg
-
-## speedy, no profiling
-OPT = -O2 -convert big_endian -extend-source 132
-OPTEXEC =
-
 # Portland Group F77:
 # ------------------------------------------------------------------------
 #    -byteswapio  read big-endian binary files (needed for coefficient files)
@@ -123,6 +89,46 @@ OPTEXEC =
 # # OPT = -O0 -fconvert=big-endian -ffixed-line-length-none -pg -fcheck=all -g -fbacktrace -Waliasing -fdec-structure -Wall -fsanitize=address 
 # # OPT = -O3 -fconvert=big-endian -ffixed-line-length-none -pg -fdec-structure
 # # OPTEXEC = -pg -fdec-structure
+
+# INTEL ifort F77
+# ------------------------------------------------------------------------
+# -u  : turn off implicit typing of variables
+# -g  : generate debugging information (turns off optimization)
+# -C  : do run time subscript range checking
+# -w0 : inform about unused variables
+# -O3 : heavy optimization
+# -64 : 64-bit objects (libraries must match)
+# -us : puts trailing underscore
+F77 = /usr/ebuild/software/intel-compilers/2021.2.0/compiler/2021.2.0/linux/bin/intel64/ifort
+F77 = ifort
+FLIB = 
+OPTEXEC = 
+
+## with profiling
+## after running the code, then do eg
+##   time ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug fin=junk.op.rtp fout=newdayx.rtp
+##   gprof ../bin/jac_airs_l1c_2834_cloudy_may19_prod_debug gmon.out >& ughnew
+## and if you profile eg Scotts code 
+##   time ../bin/airs_l1c_2834_cloudy_may19_prod_debug fin=junk.op.rtp fout=origdayx.rtp
+##   gprof ../bin/airs_l1c_2834_cloudy_may19_prod_debug gmon.out >& ughnew
+## then compare Scotts code vs My code using
+##   compare_gprof_profiler_output('ughorig','ughnew');
+OPT = -convert big_endian -extend-source 132 -pg
+OPT = -O2 -convert big_endian -extend-source 132 -pg
+OPT = -O0 -convert big_endian -extend-source 132 -check all -g -cpp -traceback -fp-stack-check -warn interface
+OPT = -O2 -convert big_endian -extend-source 132 -check bounds -g -traceback -debug -gen-interfaces -warn interfaces
+OPT = -O2 -convert big_endian -extend-source 132 -pg -check bounds -g -traceback -debug -gen-interfaces -warn interface
+OPTEXEC = -pg
+
+## slow, no profiling
+OPT = -O2 -convert big_endian -extend-source 132 -pg -check bounds -g -traceback -debug -gen-interfaces -warn interface
+OPTEXEC = -pg
+OPTEXEC =
+
+## speedy, no profiling
+OPT = -O2 -convert big_endian -extend-source 132
+OPTEXEC =
+
 
 # ------------------------------------------------------------------------
 # Build

@@ -423,6 +423,14 @@ C under-estimates the amount of solar radianced scattered into the
 C view angle (RSUNSC).  If ODTOTL is replaced by XFUDGE the solar
 C scattering term is increased.
 
+c check for infinity
+c             IF (I .EQ. 1100) THEN
+c               write(*,'(A,I3,5(F12.4))') 'calrad2 rsunsc',L,SCOSL(L),VCOSL(L),WTILDE(L),
+c     $          HG3(-SCOSL(L),VCOSL(L),COSDAZ,GL(L))*SUNFAC*HSUN(I)*
+c     $          QIKEXP( -ODTOTZ(L)*SSECL(L) ),
+c     $          (1.0 - QIKEXP( -XFUDGE(L)*(SECANG(L)+SSECL(L)) ))
+c             END IF
+             IF ( (ABS(RSUNSC) .GT. 1000) .OR. ( (ABS(RSUNSC)-1) .EQ. ABS(RSUNSC)))  RSUNSC = 0.0
           ELSE
              RSUNSC=0.0
           ENDIF
@@ -432,6 +440,10 @@ C         Calc the downward radiance from this layer
           RDOWN = RDOWN + ( RPLNCK(L)*(TDOWNN - TDOWNF) )
           TDOWNN=TDOWNF
 C
+c          IF (I. EQ. 1100) THEN
+c            write(*,'(A,I8,I3,4(F12.4))') 'calrad2',I,L,TAULX(L),RPLNCK(L),RSUNSC,RADUP
+c          END IF
+c          if (I .EQ. 1100) print *,'calrad2',L,RADUP,TAULX(L),RPLNCK(L),RSUNSC
           RADUP=RADUP*TAULX(L) + RPLNCK(L)*(1.0 - TAULX(L)) + RSUNSC
           IF (DOJAC) RADLAY(L) = RADUP
        ENDDO
@@ -444,6 +456,9 @@ C      ------------------------
 C replaced 03Feb2006          TAUZCD=QIKEXP(-MASUN1*K1-MASUN2*K2) ! downward path
           TAUZCD=QIKEXP(-MASUN1*NEXTO1(I)-MASUN2*NEXTO2(I)) ! downward path
           RSUN=RHOSUN(I)*SUNFAC*HSUN(I)*TAUZSN(I)*TAUZCU*TAUZCD
+c          IF (I .EQ. 1100) write(*,'(A,6F12.4)') 'calrad2 RSUN',RHOSUN(I),SUNFAC,HSUN(I),TAUZSN(I),TAUZCU,TAUZCD
+c check for infinity
+          IF ( (ABS(RSUN) .GT. 1000) .OR. ( (ABS(RSUN)-1) .EQ. ABS(RSUN)))  RSUN = 0.0
        ELSE
           RSUN=0.0
        ENDIF
@@ -472,6 +487,8 @@ C      --------------
 
 c      raTauL2S(L) = ODSUM
        RAD2=RADUP + RSUN + RTHERM
+c       IF (I .EQ. 1100) print *,'calrad2 final ',RADUP,RSUN,RTHERM,RAD2,sum(raTangCorrect)*rXTang
+
        IF (rXTang .GT. 0.0) THEN
          RAD2  = RAD2 + sum(raTangCorrect)*rXTang
        ENDIF

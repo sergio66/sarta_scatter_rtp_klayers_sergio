@@ -353,6 +353,7 @@ c      END DO
 
 c      Total the clear & various cloudy radiances
       RAD(I)=RAD0*FCLEAR + RADC1*CFRA1X + RADC2*CFRA2X + RADC12*CFRA12
+c      write(*,'(I8,8F12.4)') I,RAD0,CFRA1X,RADC1,CFRA2X,RADC2,CFRA12,RADC12,RAD(I)
 
 c rdinfo.f : these are 8 nice chans to look at
 c       sarta  fin=input.rtp  fout=output.rtp  listp=1,2,3 listc=445,449,1092,1291,1614,2070,2333,2353 listj=-1

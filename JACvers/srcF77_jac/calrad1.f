@@ -370,10 +370,11 @@ C under-estimates the amount of solar radianced scattered into the
 C view angle (RSUNSC).  If ODTOTL is replaced by XFUDGE the solar
 C scattering term is increased.
 
+c check for infinity
+            IF ( (ABS(RSUNSC) .GT. 1000) .OR. ( (ABS(RSUNSC)-1) .EQ. ABS(RSUNSC)))  RSUNSC = 0.0
           ELSE
              RSUNSC=0.0
           ENDIF
-c          print *,'calrad1',L,RADUP,TAULX(L),RPLNCK(L),RADUP*TAULX(L) + RPLNCK(L)*(1.0 - TAULX(L)) + RSUNSC
           RADUP=RADUP*TAULX(L) + RPLNCK(L)*(1.0 - TAULX(L)) + RSUNSC
           IF (DOJAC) RADLAY(L) = RADUP
 
@@ -393,6 +394,8 @@ C      Calc the reflected solar reaching the satellite
 C replaced 03Feb2006          TAUZCD=QIKEXP( -MASUN1*K1 ) ! downward path
           TAUZCD=QIKEXP( -MASUN1*NEXTO1(I) ) ! downward path
           RSUN=RHOSUN(I)*SUNFAC*HSUN(I)*TAUZSN(I)*TAUZCU*TAUZCD
+c check for infinity
+          IF ( (ABS(RSUN) .GT. 1000) .OR. ( (ABS(RSUN)-1) .EQ. ABS(RSUN)))  RSUN = 0.0
        ELSE
           RSUN=0.0
        ENDIF
@@ -421,6 +424,8 @@ C      --------------
 
 c      raTauL2S(L) = ODSUM
        RAD1=RADUP + RSUN + RTHERM
+c       IF (I .EQ. 1100) print *,'calrad1 final ',RADUP,RSUN,RTHERM,RAD1,sum(raTangCorrect)*rXTang
+
        IF (rXTang .GT. 0.0) THEN
          RAD1 = RAD1 + sum(raTangCorrect)*rXTang
        ENDIF

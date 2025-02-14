@@ -178,7 +178,8 @@ C
        PARAMETER(CFNH3  = .FALSE.)
        PARAMETER(CFSO2  = .FALSE.)
        PARAMETER(CFHDO  = .FALSE.)
-       PARAMETER(CFOPTR = .FALSE.)
+c       PARAMETER(CFOPTR = .FALSE.)
+       PARAMETER(CFOPTR = .TRUE.)
        PARAMETER(CFTHER = .TRUE.)
        PARAMETER(COFNTE = .FALSE.)
 
@@ -417,8 +418,9 @@ C      Used in part by modules: 12, 11, 10, 9, 7, 6, 5, 2b, 1b, 2a
        INTEGER MXCHNC ! max # of channels with CO2 pert coefs (was 567)
        INTEGER NCO2   ! number of CO2 pert predictors/coefs (5)
        PARAMETER(MXCHNC = 893)    ! placeholder
-c       PARAMETER(  NCO2 = 5)       ! was 4-term. otherwise 5-term XXXX before
-       PARAMETER(  NCO2 = 4)
+       PARAMETER(  NCO2 = 5)       ! was 4-term. otherwise 5-term XXXX before
+c       PARAMETER(  NCO2 = 4)
+
 C
 C
 C      ----------------

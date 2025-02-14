@@ -222,6 +222,8 @@ C      Reflected solar radiance
 C      ------------------------
        IF (DOSUN) THEN
           RSUN=RHOSUN(I)*SUNFAC*HSUN(I)*TAUZSN(I)
+c check for infinity
+          IF ( (ABS(RSUN) .GT. 1000) .OR. ( (ABS(RSUN)-1) .EQ. ABS(RSUN)))  RSUN = 0.0
        ELSE
           RSUN=0.0
        ENDIF
@@ -266,6 +268,7 @@ C      --------------
 C      Total radiance
 C      --------------
        RAD0=RADUP + RSUN + RTHERM
+c       IF (I .EQ. 1100) print *,'calrad0 ',RADUP,RSUN,RTHERM,RAD0
 
        IF ((DOJAC) .AND. (DOSUN)) RTHERM = RSUN + RTHERM
 C

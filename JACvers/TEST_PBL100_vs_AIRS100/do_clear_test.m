@@ -1,4 +1,3 @@
-
 [h,ha,p,pa] = rtpread(fip);
 p.cngwat  = 0 * p.cngwat;
 p.cngwat2 = 0 * p.cngwat2;
@@ -47,6 +46,6 @@ figure(2); clf;
 plot(hA.vchan,nanmean(tcalcB'-tcalcA'),'b',hA.vchan,nanstd(tcalcB'-tcalcA'),'c')
 plotaxis2;
 legend('mean PBL-100A','std PBL-100A','location','best','fontsize',10);
+title('this is CLEAR SARTA CrIS : PBL 100 - L2 100')
 axis([625 2750 -10 +10])
-
 figure(2); ylim([-1 +1])

@@ -239,6 +239,7 @@ C          LR = MAXLAY + 1 - L ! replaced by line below 21 July 2003
           LR = LBOT + 1 - L
           IF (PLEV(L) .LE. CPRTOP) LCTOP=L
           IF (PLEV(LR+1) .GE. CPRBOT) LCBOT=LR
+C          write(*,'(I3,3(F12.5),2(I3))') L,PLEV(L),CPRTOP,CPRBOT,LCTOP,LCBOT
        ENDDO
 C
 C      Calc fraction of layer at top & bottom of cloud that is

@@ -9,5 +9,5 @@
 -rw-r--r-- 1 chepplew pi_strow 6511 Jun  6  2023 /home/chepplew/gitLib/sarta/src_f90/Makefile_donotuse
 -rw-r--r-- 1 chepplew pi_strow 5295 Jun  6  2023 /home/chepplew/gitLib/sarta/src_f90/faketz_pclsam.f90
 
-[sergio@taki-usr2 srcF77_jac]$ cp -a  /home/chepplew/gitLib/sarta/src_f90/incFTC_airs_pbl_p2025jan25a_dev.f90 .
-[sergio@taki-usr2 srcF77_jac]$ cp -a  /home/chepplew/gitLib/sarta/src_f90/incFTC_cris_hrg4_pbl_p2025jan25a_dev.f90 .
+   [sergio@taki-usr2 srcF77_jac]$ cp -a  /home/chepplew/gitLib/sarta/src_f90/incFTC_airs_pbl_p2025jan25a_dev.f90 .
+   [sergio@taki-usr2 srcF77_jac]$ cp -a  /home/chepplew/gitLib/sarta/src_f90/incFTC_cris_hrg4_pbl_p2025jan25a_dev.f90 .
