@@ -68,7 +68,8 @@ crisg4_hires_jan25_H2020_icebaumGHM_waterdrop_desertdust:
 	ln -s fnmie_iceGHMbaum_waterdrop_desertdust_cris_hires_new.f fnmie.f
 	ln -s cbplev_L2100.f cbplev.f
 	make -f make_sarta_pclsam
-	mv a.out ../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new
+#	mv a.out ../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new
+	mv a.out ../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_newFeb2025
 
 # CrisHiRes YAYAYAYAYAYAYAYAYA
 crisg4_hires_feb25_H2020_icebaumGHM_waterdrop_desertdust_PBL:
@@ -85,7 +86,8 @@ crisg4_hires_dec17_icebaumGHM_waterdrop_desertdust:
 	ln -s fnmie_iceGHMbaum_waterdrop_desertdust_cris_hires_new.f fnmie.f
 	ln -s cbplev_L2100.f cbplev.f
 	make -f make_sarta_pclsam
-	mv a.out ../bin/jac_crisg4_hires_dec17_iceGHMbaum_wdrop_ddust_sc_hg3_new
+#	mv a.out ../bin/jac_crisg4_hires_dec17_iceGHMbaum_wdrop_ddust_sc_hg3_new
+	mv a.out ../bin/jac_crisg4_hires_dec17_iceGHMbaum_wdrop_ddust_sc_hg3_newFeb2025
 
 crisg4_hires_dec17_icebaumGHM_waterdrop_biosmoke:
 	rm -f *.o incFTC.f fnmie.f cbplev.f

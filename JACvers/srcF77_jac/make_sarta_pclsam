@@ -72,6 +72,7 @@ RTPDEFS_FILE = $(RTPHOME)/include/rtpdefs.f
 #    -C           array bounds checking
 #    -g           include symbol table info
 #    -O           moderate optimization
+#    -fdec-structure  allow rtp structures
 # F77 = /usr/ebuild/software/GCCcore/11.2.0/bin/gfortran
 # # 
 # # FLIB = 
