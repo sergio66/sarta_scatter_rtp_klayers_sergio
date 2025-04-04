@@ -563,9 +563,9 @@ C
      $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Solar/sol.txt')
              
       PARAMETER(FNTHER =
-     $     '/home/chepplew/data/sarta/prod_2021/cris_hr/jan2025a/dbase/Coef/therm.dat')
+     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/refl_therm.dat')
       PARAMETER(FNCOFN =
-     $     '/home/chepplew/data/sarta/prod_2021/cris_hr/jan2025a/dbase/Coef/xnte_2x7term.dat')
+     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/xnte_2x7term.dat')
             
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! Tuning filename

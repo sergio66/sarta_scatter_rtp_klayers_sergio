@@ -25,7 +25,7 @@ C       PTYPE, RALT,LCO2PM,NLAY, NEMIS, LAT, LON, SATANG, SATZEN,
 C       ZSAT, SUNANG, COSDAZ, PSURF, TSURF, CO2PPM,
 C       FEMIS, EMIS, RHO,
 C       TEMP, WAMNT, OAMNT, CAMNT, MAMNT, FAMNT, SAMNT, HAMNT, NAMNT,
-C       ALT, PROF, ISTAT )
+C       ALT, PROF, PLEV_RTP, ISTAT )
 
 
 !INPUT PARAMETERS:
@@ -139,7 +139,7 @@ C      =================================================================
      $    SUNANG, COSDAZ,
      $    PSURF, TSURF, CO2PPM, FEMIS, EMIS, RHO,
      $    TEMP, WAMNT, OAMNT, CAMNT, MAMNT, FAMNT, SAMNT, HAMNT, NAMNT,
-     $    ALT, PROF, ISTAT )
+     $    ALT, PROF, PLEV_RTP, ISTAT )
 C      =================================================================
 
 
@@ -207,6 +207,8 @@ C      Output parameters:
        REAL  HAMNT(MAXLAY)
        REAL  NAMNT(MAXLAY)
        REAL    ALT(MAXLAY)
+
+       REAL PLEV_RTP(MAXLAY+1)
 C
 C      Profile data structure
        RECORD /RTPPROF/ PROF
@@ -373,6 +375,14 @@ C         WARNING! does not check if emis is ok
           ENDIF
        ENDDO
 C
+C      ----------------------------------
+C      Get plevs
+C      ----------------------------------
+
+        DO L=1,NLAY+1
+          PLEV_RTP(L)=PROF%plevs(L)
+        END DO
+
 C      ----------------------------------
 C      Get layer temperature & gas amount
 C      ----------------------------------

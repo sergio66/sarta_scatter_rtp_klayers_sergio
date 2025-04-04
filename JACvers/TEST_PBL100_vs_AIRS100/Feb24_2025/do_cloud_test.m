@@ -18,7 +18,6 @@ eval(sartaer);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 [hA,pA] = proxy_box_to_ham_fsr_CHepplewhite(hA,pA,0);
 [hB,pB] = proxy_box_to_ham_fsr_CHepplewhite(hA,pB,0);
 
@@ -41,11 +40,12 @@ legend('mean PBL-100A','std PBL-100A','location','best','fontsize',10);
 title('this is CLD SARTA CrIS : PBL 100 - L2 100')
 axis([625 2750 -10 +10])
 figure(2); ylim([-1 +5])
+figure(2); ylim([-1 +1])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(3)
-plot(hA.vchan,tobs(:,1)-tcalcA(:,1),'b',hA.vchan,tobs(:,1)-tcalcB(:,1),'r',hA.vchan,ones(size(hA.vchan))*pA.stemp(1)-tobs(:,1),'k')
+plot(hA.vchan,tobs(:,1)-tcalcA(:,1),'b.-',hA.vchan,tobs(:,1)-tcalcB(:,1),'r',hA.vchan,ones(size(hA.vchan))*pA.stemp(1)-tobs(:,1),'k')
 plotaxis2;
 legend('obs-sarta L2 100','obs-sarta PBL 100','stemp - obs','location','best','fontsize',10);
 title('CrIS : Profile 1 : obs, sarta L2, sarta PBL, stemp')

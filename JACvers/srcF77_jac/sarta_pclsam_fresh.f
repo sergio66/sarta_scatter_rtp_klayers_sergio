@@ -659,6 +659,7 @@ C
 C      Boundary pressure levels
        COMMON /COMLEV/ PLEV
        REAL PLEV(MAXLAY+1)
+       REAL PLEV_RTP(MAXLAY+1)
 C
 C      for function QIKEXP
        REAL QIKEXP
@@ -981,7 +982,7 @@ C      --------------
      $    SALT, SUNANG, COSDAZ, PSURF, TSURF, CO2PPM,
      $    FEMIS, XEMIS, XRHO,
      $    TEMP, WAMNT, OAMNT, CAMNT, MAMNT, FAMNT, SAMNT, HAMNT, NAMNT,
-     $     ALT, PROF, ISTAT )
+     $     ALT, PROF, PLEV_RTP, ISTAT )
 C
 
 C        Get basic cloud parameters from input RTP
@@ -1010,7 +1011,7 @@ C         Skip this profile
 
        CALL get_lbot_fix_salt_temp(
      $   NLAY, PLEV, PLAY, PSURF, LBOT, BLMULT,                 !!! for getbot
-     $   TEMP, SALT, IPROF, AIRSLAY)
+     $   TEMP, SALT, IPROF, PLEV_RTP, AIRSLAY)
  
        CALL CALC_SVA_SECANG_SECSUN(SALT,SATZEN,SATANG,SUNANG,LBOT,ALT,
      $      IPROF,LSTCHN,NCHNTE,CLISTN,FREQ,INDCHN,
@@ -1175,6 +1176,10 @@ C        Calculate cloudy radiance; also no NLTE if needed
      $      RAD, DOJAC, TAU4, PLANCK_RAD4, PURE_RAD4, RTHERM4_SOLAR4, DBTDT, 
      $               NLTEJACPRED5T,NLTEJACPRED7Q,
      $               RAACLDOD4,CLDEFFOD1,CLDEFFOD2)
+
+c       IF (i .EQ. 403) THEN
+c         print *,IPROF,I,RAD(I)
+c       END IF
 
        ENDDO ! channels
 

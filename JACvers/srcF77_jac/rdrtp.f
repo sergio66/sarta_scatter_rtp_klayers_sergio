@@ -142,7 +142,7 @@ C      =================================================================
      $    NLAY, NEMIS, LAT, LON, SATANG, SATZEN, ZSAT, SUNANG,
      $    PSURF, TSURF, CO2PPM, FEMIS, EMIS, RHO,
      $    TEMP, WAMNT, OAMNT, CAMNT, MAMNT, FAMNT, SAMNT, HAMNT, NAMNT,
-     $    AAMNT, ALT, PROF, ISTAT )
+     $    AAMNT, ALT, PROF, PLEV_RTP, ISTAT )
 C      =================================================================
 
 
@@ -211,6 +211,8 @@ C      Output parameters:
        REAL  NAMNT(MAXLAY)
        REAL  AAMNT(MAXLAY)
        REAL    ALT(MAXLAY)
+       REAL PLEV_RTP(MAXLAY+1)
+
 C
 C      Profile data structure
        RECORD /RTPPROF/ PROF
@@ -369,6 +371,14 @@ C      Emissivity (range 0 to 1) and Reflectance (range 0 to 1/pi)
              RHO(I)=PROF%rho(I)
           ENDIF
        ENDDO
+
+C      ----------------------------------
+C      Get plevs
+C      ----------------------------------
+
+        DO L=1,NLAY+1
+          PLEV_RTP(L)=PROF%plevs(L)
+        END DO
 C
 C      ----------------------------------
 C      Get layer temperature & gas amount

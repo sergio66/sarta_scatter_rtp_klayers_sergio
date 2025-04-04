@@ -4,8 +4,18 @@ a selection of offending profiles: [1749 5274 7128 7740 8609 9276 12313 16712 18
 
 %% all have spres < 900 except for profile 6 which has sprees = 1013
 
-../../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_newFeb2025 fin=mktemp_4PjEkGC2_cris_hr_pbl_op.rtp fout=test.rp.rtp listp=1,6,1749,5274,7128,7740,8609,9276,12313,16712,18118,18127,19051 
+#### sarta
+../../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_newFeb2025 fin=mktemp_4PjEkGC2_cris_hr_pbl_op.rtp fout=test.rp.rtp listp=1,6,1749,5274,7128,7740,8609,9276,12313,16712,18118,18127,19051 OOOOOPS
+../../bin/jac_crisg4_hires_feb25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new_PBL    fin=mktemp_4PjEkGC2_cris_hr_pbl_op.rtp fout=test.rp.rtp listp=1,6,1749,5274,7128,7740,8609,9276,12313,16712,18118,18127,19051 
+
+../../bin/jac_crisg4_hires_feb25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new_PBL    fin=mktemp_4PjEkGC2_cris_hr_pbl_op.rtp fout=testall.rp.rtp
+
+../../bin/jac_crisg4_hires_feb25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new_PBL    fin=mktemp_4PjEkGC2_cris_hr_pbl_op.rtp fout=test1749.rp.rtp listp=1749
+../../bin/jac_crisg4_hires_feb25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new_PBL    fin=mktemp_4PjEkGC2_cris_hr_pbl_op.rtp fout=test1749_900cm.rp.rtp listp=1749 listc=403
+
+### kcarta
 /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse.nml profile1.dat
+/home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse.nml profile3.dat
 
 plevs101 = flipud(load('/home/sergio/MATLABCODE/airsleves.dat'));
 

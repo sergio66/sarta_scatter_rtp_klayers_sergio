@@ -30,24 +30,29 @@ toptsSARTA.PBL.sarta_cris = '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACve
 toptsSARTA.PBL.sarta_airs = '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/bin/jac_airs_l1c_2834_cloudy_feb25_H2020_PBL';                            %% H2020
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp('doing SARTA CrIS clr test ...')
 fip = fipClr;
 do_clear_test
 disp('ret to continue'); pause
 
+disp('doing SARTA CrIS cld test ...')
 fip = fipCld;
 do_cloud_test
 disp('ret to continue'); pause
 
+disp('doing SARTA CrIS cld jac test ...')
 fip = fipCld;
 do_jac_test
 disp('ret to continue'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp('doing SARTA AIRS clr test ...')
 fip = fipClr;
 do_clear_test_airs
 disp('ret to continue'); pause
 
+disp('doing SARTA AIRS cld test ...')
 fip = fipCld;
 do_cloud_test_airs
 disp('ret to continue'); pause

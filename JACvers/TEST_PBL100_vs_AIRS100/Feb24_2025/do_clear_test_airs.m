@@ -34,10 +34,10 @@ disp('these are CRIS obs and CRIS chans ---> changed to AIRS chans and SARTA AIR
 disp('these are CRIS obs and CRIS chans ---> changed to AIRS chans and SARTA AIRS calcs ... VEWY VEWY STWANGE')
 
 figure(1); clf; 
-plot(hA.vchan,nanmean(tobs'-tcalcA'),'b',hA.vchan,nanmean(tobs'-tcalcB'),'r',hA.vchan,nanstd(tobs'-tcalcA'),'c',hA.vchan,nanstd(tobs'-tcalcB'),'m')
+plot(hA.vchan,nanmean(tobs'-tcalcA'),'b.-',hA.vchan,nanmean(tobs'-tcalcB'),'r',hA.vchan,nanstd(tobs'-tcalcA'),'c.-',hA.vchan,nanstd(tobs'-tcalcB'),'m')
 plotaxis2;
 legend('mean obs-100A','mean obs-PBL','std obs-100A','std obs-PBL','location','best','fontsize',10);
-title('CRIS OBS - SARTA AIRS calcs ... HAHAHA')
+title('CRIS OBS - SARTA AIRS CLR calcs ... HAHAHA')
 axis([625 2750 -20 +20])
 
 figure(2); clf; 

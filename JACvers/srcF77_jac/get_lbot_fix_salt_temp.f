@@ -1,6 +1,6 @@
       SUBROUTINE get_lbot_fix_salt_temp(
      $   NLAY, PLEV, PLAY, PSURF, LBOT, BLMULT,                 !!! for getbot
-     $   TEMP, SALT, IPROF, AIRSLAY)
+     $   TEMP, SALT, IPROF, PLEV_RTP, AIRSLAY)
 
       IMPLICIT NONE
       
@@ -8,6 +8,7 @@
 
 c input
        REAL PLEV(MAXLAY+1)
+       REAL PLEV_RTP(MAXLAY+1)
        REAL PLAY(MAXLAY)   ! layer mean pressureo
        INTEGER NLAY        ! number of layers in profile
        REAL  PSURF         ! surface pressure
@@ -29,6 +30,19 @@ C      for MEAN_T
 C      -------------------------------------
 C      Determine bottom layer, CO2, & angles
 C      -------------------------------------
+
+       RJUNK1 = 0.0
+       DO I=1,NLAY+1
+c         write(*,'(I3,5(F12.5))') I, PLEV(I), PLEV_RTP(I), PLEV(I) - PLEV_RTP(I), 
+c     $              PLEV(I)-PLEV(I+1),PLEV_RTP(I)-PLEV_RTP(I+1)
+         RJUNK1 = RJUNK1 + abs(PLEV(I) - PLEV_RTP(I))
+       ENDDO
+       RJUNK1 = RJUNK1/(NLAY+1)
+       IF (RJUNK1 .GT. 1.0) THEN
+         print *,'oh no : difference between plevs in rtp and plevs in cbplev = ',RJUNK1
+         STOP
+       END IF
+       
        CALL GETBOT(NLAY, PLEV, PSURF, LBOT, BLMULT)
 
 C      Calc the fractional bottom layer air temperature
