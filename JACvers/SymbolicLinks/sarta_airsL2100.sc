@@ -25,12 +25,12 @@
 
 ########################################################################
 
-echo "making L2_100/AIRS/ links ...."
-cd L2_100/AIRS/
+echo "making L2_100/AIRS/2022 links ...."
+cd L2_100/AIRS/2022
 
 rm xnte.dat;          ln -s /home/sergio/asl/s1/chepplew//data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_xnte_2x7term.dat       xnte.dat
 rm xnte_v02.dat;      ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/xnte_v02.dat                 .
-rm nte_7term.dat;     ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_nte_all_7term.dat       nte_7term.dat 
+rm nte_7term.dat;     ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_nte_all_7term.dat       nte_7term.dat
 rm hdo.dat;           ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/fitc/r49/AIRS_L1C_R49_cutcoef_hdo_all.dat             hdo.dat
 rm therm.dat;         ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/fitc/r49/thermFactor_airs_l1c_2834.dat                therm.dat
 rm nte.dat;           ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/fitc/r49/AIRS_L1C_R49_cutcoef_nte_all_7term.dat      nte.dat
@@ -51,4 +51,6 @@ rm set3.dat;          ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/ai
 rm set2.dat;          ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/fitc/r49/AIRS_L1C_r49_cutcoef_set2_fowp.dat          set2.dat
 rm set1.dat;          ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/fitc/r49/AIRS_L1C_r49_cutcoef_set1_fowp.dat          set1.dat
 
-cd ../../
+cd ../../../
+echo "from /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/srcF77_jac  test on chip using eg "
+echo "     ../bin/jac_airs_l1c_2834_cloudy_jan25_H2020 fin=../TEST_RTP/newdayx_1_100_12150.op.rtp fout=junk.rp.rtp"

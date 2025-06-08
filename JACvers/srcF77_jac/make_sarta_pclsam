@@ -73,7 +73,10 @@ RTPDEFS_FILE = $(RTPHOME)/include/rtpdefs.f
 #    -g           include symbol table info
 #    -O           moderate optimization
 #    -fdec-structure  allow rtp structures
-# F77 = /usr/ebuild/software/GCCcore/11.2.0/bin/gfortran
+# taki
+F77 = /usr/ebuild/software/GCCcore/11.2.0/bin/gfortran
+# chip
+F77 = /usr/ebuild/installs/software/GCCcore/12.3.0/bin/gfortran
 # # 
 # # FLIB = 
 # # OPTEXEC = 
@@ -81,7 +84,7 @@ RTPDEFS_FILE = $(RTPHOME)/include/rtpdefs.f
 # # ## speedy, no profiling
 # # ##OPT = -O0 -fconvert=big-endian -ffixed-line-length-none -check all -g -cpp -traceback -fp-stack-check -warn interface -fdec-structure
 # # #OPT = -O2 -fconvert=big-endian -ffixed-line-length-none -check bounds -g -traceback -debug -gen-interfaces -warn interfaces -fdec-structure
-# OPT = -O2 -fconvert=big-endian -ffixed-line-length-none -fdec-structure
+OPT = -O2 -fconvert=big-endian -ffixed-line-length-none -fdec-structure
 # # 
 # # ## with profiling
 # # OPT = -O2 -fconvert=big-endian -ffixed-line-length-none -pg -fdec-structure

@@ -306,6 +306,8 @@ C      ----------
  1020     FORMAT('rdcoef.f : Error ',I5,' opening file:',/,A120)
           STOP
        ENDIF
+c       write(*,'(A,A)') 'opened rdcoef.f : FNCOF1 = ',FNCOF1
+       
 C
        J=1
        DO I=1,MXCHN1

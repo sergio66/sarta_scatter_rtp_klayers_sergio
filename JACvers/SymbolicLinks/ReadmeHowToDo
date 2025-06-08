@@ -1,0 +1,68 @@
+1) Check the files in Chris' directory
+2) Make the script that makes the symbolic links, and 
+     replace /home/chepplew/  with /home/sergio/asl/s1/chepplew/
+3) go to srcF77jac directory, copy and edit the inFTC and fnmie files
+4) test!!!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+see for example 
+  sarta_airsL2100.sc
+
+1A) First in the ../srcF77jac directory
+  more make_sarta_exec_AIRS_CRIS_IASI_H20.sc
+  make clean; make -f Makefile airs_cloudy_jan25_H2020
+
+1B) then
+  ../bin/jac_airs_l1c_2834_cloudy_jan25_H2020 fin=../TEST_RTP/newdayx_1_100_12150.op.rtp fout=junk.rp.rtp
+
+1C) And look at error messages since it canot find Chris' files
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+2A) [sergio@strow-interact SymbolicLinks]$ ls -lt /home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Coef
+Copy all that stuff into sarta_airsL2100.sc
+
+2B) and start editing. mving thje iles on the left eg
+   set1.dat --> /home/chpellew/blah/r49/CRIS_HR_r49_cutcoef_set1_fowp_g4.dat
+
+2C) to the right, also removing them
+   rm set1.dat; ln -s /home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/fitc/r49/CRIS_HR_r49_cutcoef_set1_fowp_g4.dat             set1.dat
+
+2D) VERY IMPORTANT : chip.rs.umbc.edu cannot see /home/chepplew
+    So replace /home/chepplew/  with /home/sergio/asl/s1/chepplew/
+
+2D) run  sarta_airsL2100.sc
+
+2E) Check that files are indeed made with unbroken links in 
+      ls -lt L2_100/AIRS/
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+3A) Now go to srcF77jac directory
+
+-rw-rwxr-- 1 sergio pi_strow 22209 Jun  8 02:33 incFTC_airs_l1c_p2022jul22_dev.f
+-rw-rwxr-- 1 sergio pi_strow 21704 Apr  3 08:27 incFTC_cris_hrg4_p2022jul22_dev.f
+-rw-rwxr-- 1 sergio pi_strow  6458 Apr  6  2023 fnmie_iceGHMbaum_waterdrop_desertdust.f
+-rw-rwxr-- 1 sergio pi_strow  6642 Aug 19  2020 fnmie_iceGHMbaum_waterdrop_desertdust_cris_hires_new.f
+
+[sergio@c21-04 srcF77_jac]$ cp -a incFTC_airs_l1c_p2022jul22_dev.f TAKI_DIRS/
+[sergio@c21-04 srcF77_jac]$ cp -a fnmie_iceGHMbaum_waterdrop_desertdust_cris_hires_new.f TAKI_DIRS/.
+
+for the fnmie.f file
+make sure FNMIEA/E/G are character*120
+c Replace "/asl/rta/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
+c Replace "/asl/rta/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
+c Replace "/asl/rta/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
+OR
+c Replace "/asl/rta/sarta_coef/" with "/home/sergio/asl/rta/sarta_coef/"
+c Replace "/asl/rta/sarta_coef/" with "/home/sergio/asl/rta/sarta_coef/"
+c Replace "/asl/rta/sarta_coef/" with "/home/sergio/asl/rta/sarta_coef/"
+
+for the incFTC file
+make sure FNCOF1 etc are CHARACTER*120
+c Replace "/home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CRIS_HR/2022/"
+or
+c Replace "/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/"
+       PARAMETER(FNSUN =
+     $ '/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Solar/sol.txt')
+c     $ '/home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Solar/sol.txt')

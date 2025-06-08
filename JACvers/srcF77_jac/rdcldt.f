@@ -124,9 +124,9 @@ C      Input
        INTEGER   IOUN                    ! I/O unit number
        INTEGER INDCHN(MXCHAN)            ! channel use/index
        INTEGER MIETYP(NMIETY)            ! particle type code number
-       CHARACTER*79 FNMIEA(NMIETY)       ! absorption filenames
-       CHARACTER*79 FNMIEE(NMIETY)       ! extinction filenames
-       CHARACTER*79 FNMIEG(NMIETY)       ! asymmetry filenames
+       CHARACTER*120 FNMIEA(NMIETY)       ! absorption filenames
+       CHARACTER*120 FNMIEE(NMIETY)       ! extinction filenames
+       CHARACTER*120 FNMIEG(NMIETY)       ! asymmetry filenames
 
 C      Output
        INTEGER MIENPS(NMIETY)            ! number of particle sizes

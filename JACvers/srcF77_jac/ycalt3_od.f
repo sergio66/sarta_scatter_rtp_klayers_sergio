@@ -907,7 +907,7 @@ c             ENDIF
              DK = 0
 
 C            Calc total layer optical depth
-                 IF (LH2O .EQ. .FALSE.) THEN
+                 IF (LH2O .EQV. .FALSE.) THEN
                    IF (IWHICHJAC .EQ. 1) THEN 
                      KW(ILAY) = KW_T(ILAY)
                    ELSEIF (IWHICHJAC .EQ. 2) THEN 

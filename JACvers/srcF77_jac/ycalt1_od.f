@@ -995,7 +995,7 @@ c                   DK = DKCO2 + DKSO2 + DKHNO3 + DKN2O + DKNH3
                    
 C                  Calc effective layer optical
 C                   write(*,'(A,3(I5),5(F12.4))') 'ycalt1_od',I,J,ILAY,KCON,KFIX,KW(ILAY),KOZO,DK
-                   IF (LH2O .EQ. .FALSE.) THEN
+                   IF (LH2O .EQV. .FALSE.) THEN
                      IF (IWHICHJAC .EQ. 1) THEN 
                        KW(ILAY) = KW_T(ILAY)
                      ELSEIF (IWHICHJAC .EQ. 2) THEN 

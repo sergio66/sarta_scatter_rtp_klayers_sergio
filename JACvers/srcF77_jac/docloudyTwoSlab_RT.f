@@ -228,8 +228,9 @@ C    Calculate bottom cloud2 radiance
       IF (CFRA2X .GT. 0.0) THEN
          IF (LBLAC2) THEN
             CALL CALRAD0( DOSUN, I, LCTOP2, RPLNCK, RSURFC, SECANG,
-     $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC2, DOJAC, CLDTAU, RADLAY, RTHERM )
+     $         TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
+     $         RHOTHR, LABOVE, COEFF, RADC2, DOJAC, CLDTAU, RADLAY, RTHERM,
+     $         EMIS, TSURF, IPROF, FREQ )            
          ELSE
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
@@ -316,7 +317,8 @@ C     Calculate top cloud1 radiance
          IF (LBLAC1) THEN
             CALL CALRAD0( DOSUN, I, LCTOP1, RPLNCK, RSURFC, SECANG,
      $          TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
-     $          RHOTHR, LABOVE, COEFF, RADC1, DOJAC, CLDTAU, RADLAY, RTHERM )
+     $           RHOTHR, LABOVE, COEFF, RADC1, DOJAC, CLDTAU, RADLAY, RTHERM,
+     $           EMIS,TSURF,IPROF,FREQ )            
          ELSE
             CALL CALRAD1( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $          TAU, TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,

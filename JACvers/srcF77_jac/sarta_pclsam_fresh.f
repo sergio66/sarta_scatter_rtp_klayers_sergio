@@ -238,9 +238,9 @@ C
 C      for FNMIE
        CHARACTER*240 VCLOUD        ! cloud version string
        INTEGER MIETYP(NMIETY)      ! mie type
-       CHARACTER*79 FNMIEA(NMIETY) ! mie absorption filenames
-       CHARACTER*79 FNMIEE(NMIETY) ! mie extinction filenames
-       CHARACTER*79 FNMIEG(NMIETY) ! mie asymmetry filenames
+       CHARACTER*120 FNMIEA(NMIETY) ! mie absorption filenames
+       CHARACTER*120 FNMIEE(NMIETY) ! mie extinction filenames
+       CHARACTER*120 FNMIEG(NMIETY) ! mie asymmetry filenames
 C
 C      for OPNRTP
        INTEGER  PTYPE          ! profile type

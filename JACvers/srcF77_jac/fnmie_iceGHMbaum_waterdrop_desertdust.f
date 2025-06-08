@@ -134,9 +134,9 @@ C-----------------------------------------------------------------------
 C      Output
        CHARACTER*240 VCLOUD
        INTEGER MIETYP(NMIETY)
-       CHARACTER*79 FNMIEA(NMIETY)
-       CHARACTER*79 FNMIEE(NMIETY)
-       CHARACTER*79 FNMIEG(NMIETY)
+       CHARACTER*120 FNMIEA(NMIETY)
+       CHARACTER*120 FNMIEE(NMIETY)
+       CHARACTER*120 FNMIEG(NMIETY)
 
 
 C-----------------------------------------------------------------------
