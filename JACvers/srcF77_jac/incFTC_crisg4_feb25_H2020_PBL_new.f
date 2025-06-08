@@ -504,46 +504,58 @@ C
 C      ---------
 C      Filenames
 C      ---------
-       CHARACTER*90 FNCOF1 ! coef set1 
-       CHARACTER*90 FNCOF2 ! coef set2 
-       CHARACTER*90 FNCOF3 ! coef set3 
-       CHARACTER*90 FNCOF4 ! coef set4 
-       CHARACTER*90 FNCOF5 ! coef set5 
-       CHARACTER*90 FNCOF6 ! coef set6 
-       CHARACTER*90 FNCOF7 ! coef set7 
-       CHARACTER*90 FNCO2  ! coef CO2
-       CHARACTER*90 FNSO2  ! coef SO2
-       CHARACTER*90 FNHNO3 ! coef HNO3
-       CHARACTER*90 FNN2O  ! coef N2O
-       CHARACTER*90 FNNH3  ! coef NH3
-       CHARACTER*90 FNHDO  ! coef HDO
-       CHARACTER*90 FNOPTR ! coef optran
-       CHARACTER*90 FNTHER ! coef therm
-       CHARACTER*90 FNFX   ! coef fx
-       CHARACTER*90 FNPREF ! ref prof
-       CHARACTER*90 FNSUN  ! solar data
-       CHARACTER*90 FNCOFN ! non-LTE
+       CHARACTER*120 FNCOF1 ! coef set1 
+       CHARACTER*120 FNCOF2 ! coef set2 
+       CHARACTER*120 FNCOF3 ! coef set3 
+       CHARACTER*120 FNCOF4 ! coef set4 
+       CHARACTER*120 FNCOF5 ! coef set5 
+       CHARACTER*120 FNCOF6 ! coef set6 
+       CHARACTER*120 FNCOF7 ! coef set7 
+       CHARACTER*120 FNCO2  ! coef CO2
+       CHARACTER*120 FNSO2  ! coef SO2
+       CHARACTER*120 FNHNO3 ! coef HNO3
+       CHARACTER*120 FNN2O  ! coef N2O
+       CHARACTER*120 FNNH3  ! coef NH3
+       CHARACTER*120 FNHDO  ! coef HDO
+       CHARACTER*120 FNOPTR ! coef optran
+       CHARACTER*120 FNTHER ! coef therm
+       CHARACTER*120 FNFX   ! coef fx
+       CHARACTER*120 FNPREF ! ref prof
+       CHARACTER*120 FNSUN  ! solar data
+       CHARACTER*120 FNCOFN ! non-LTE
 C
 C
+c strowinteract --> chip
+C everywhere you see /home/chepplew/data/sarta/ replace with  /home/sergio/asl/s1/chepplew/data/sarta/
+C but then eg 
+C   /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set1.dat
+C is a symbolic link to /home/chepplew//data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_xnte_2x7term.dat
+C or /home/sergio/asl/s1/chepplew//data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_xnte_2x7term.dat
+C so use /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/
+c
+c Replace "/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/"
+c Replace "/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/"
+c Replace "/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/"
+
       PARAMETER(FNCOF1=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/set1.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/set1.dat')
       PARAMETER(FNCOF2=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/set2.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/set2.dat')
       PARAMETER(FNCOF3=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/set3.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/set3.dat')
       PARAMETER(FNCOF4=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/set4.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/set4.dat')
       PARAMETER(FNCOF5=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/set5.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/set5.dat')
       PARAMETER(FNCOF6=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/set6.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/set6.dat')
       PARAMETER(FNCOF7=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/set7.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/set7.dat')
       PARAMETER(FNOPTR=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/optran.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/optran.dat')
                
       PARAMETER(FNCO2 =
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/co2.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/co2.dat')
       PARAMETER(FNSO2 =
      $     '/home/chepplew/data/sarta/prod_2021/cris_hr/dec2018/dbase/Coef/so2.dat')
       PARAMETER(FNHNO3 =
@@ -553,26 +565,27 @@ C
       PARAMETER(FNNH3 =
      $     '/home/chepplew/data/sarta/prod_2021/cris_hr/dec2018/dbase/Coef/nh3.dat')
       PARAMETER(FNHDO =  
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/hdo.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/hdo.dat')
                 
       PARAMETER(FNFX  =
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/fx_pbl.txt')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/fx_pbl.txt')
       PARAMETER(FNPREF =
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/refprof_400ppm_pbl')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/refprof_400ppm_pbl')
       PARAMETER(FNSUN =
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Solar/sol.txt')
+     $ '/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Solar/sol.txt')
+c     $ '/home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Solar/sol.txt')
              
       PARAMETER(FNTHER =
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/refl_therm.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/refl_therm.dat')
       PARAMETER(FNCOFN =
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/xnte_2x7term.dat')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/xnte_2x7term.dat')
             
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! Tuning filename
-      CHARACTER (LEN=90) :: FNTMLT ! tuning multiplier filename
+      CHARACTER (LEN=120) :: FNTMLT ! tuning multiplier filename
                 
       PARAMETER(FNTMLT=
-     $     '/home/chepplew/data/sarta/prod_2025/cris_hr_pbl/jan2025a/dbase/Coef/' 
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/CRIS_HR/2025/' 
      $   // 'tunmlt_ones.txt')
                 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
