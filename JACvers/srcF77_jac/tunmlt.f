@@ -268,7 +268,7 @@ C      -------------------------------
      $    IOSTAT=IERR)
        IF (IERR .NE. 0) THEN
           WRITE(6,1020) IERR, FNTMLT
- 1020     FORMAT('Error ',I5,' opening file:',/,A80)
+ 1020     FORMAT('tunmlt.f : Error ',I5,' opening file:',/,A120)
           STOP
        ENDIF
 C

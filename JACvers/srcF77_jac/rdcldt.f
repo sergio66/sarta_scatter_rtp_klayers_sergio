@@ -173,7 +173,7 @@ C         -------------------------
      $       IOSTAT=IERR)
           IF (IERR .NE. 0) THEN
              WRITE(6,1020) IERR, FNMIEA(K)
-1020     FORMAT('Error ',I5,' opening file:',/,A80)
+1020     FORMAT('rdcldt.f : Error ',I5,' opening file:',/,A120)
              STOP
           ENDIF
 C

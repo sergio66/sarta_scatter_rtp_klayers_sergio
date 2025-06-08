@@ -173,28 +173,16 @@ C
        LOGICAL CFOPTR
        LOGICAL CFTHER
        LOGICAL COFNTE
-
        PARAMETER(CFCO2  = .TRUE.)
-       PARAMETER(CFHNO3 = .FALSE.)
-       PARAMETER(CFN2O  = .FALSE.)
-       PARAMETER(CFNH3  = .FALSE.)
-       PARAMETER(CFSO2  = .FALSE.)
-       PARAMETER(CFHDO  = .FALSE.)
+       PARAMETER(CFHNO3 = .TRUE.)
+       PARAMETER(CFN2O  = .TRUE.)
+       PARAMETER(CFNH3  = .TRUE.)
+       PARAMETER(CFSO2  = .TRUE.)
+       PARAMETER(CFHDO  = .TRUE.)
        PARAMETER(CFOPTR = .TRUE.)
 c       PARAMETER(COFNTE = .FALSE.)
-       PARAMETER(COFNTE = .FALSE.)
+       PARAMETER(COFNTE = .TRUE.)
        PARAMETER(CFTHER = .TRUE.)
-
-       ! PARAMETER(CFCO2  = .TRUE.)
-       ! PARAMETER(CFHNO3 = .TRUE.)
-       ! PARAMETER(CFN2O  = .TRUE.)
-       ! PARAMETER(CFNH3  = .TRUE.)
-       ! PARAMETER(CFSO2  = .TRUE.)
-       ! PARAMETER(CFHDO  = .TRUE.)
-       ! PARAMETER(CFOPTR = .TRUE.)
-c       ! PARAMETER(COFNTE = .FALSE.)
-       ! PARAMETER(COFNTE = .TRUE.)
-       ! PARAMETER(CFTHER = .TRUE.)
 C
        CHARACTER*40 VSARTA  ! SARTA source code version
        CHARACTER*40 VSCOEF  ! SARTA coefficient version
@@ -519,57 +507,74 @@ C      ---------
        CHARACTER*120 FNCOFN ! non-LTE
 C
 C
-
-c strowinteract --> chip
-C everywhere you see /home/chepplew/data/sarta/ replace with  /home/sergio/asl/s1/chepplew/data/sarta/
        PARAMETER(FNCOF1=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set1.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set1.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set1.dat')
        PARAMETER(FNCOF2=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set2.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set2.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set2.dat')
        PARAMETER(FNCOF3=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set3.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set3.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set3.dat')
        PARAMETER(FNCOF4=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set4.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set4.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set4.dat')
        PARAMETER(FNCOF5=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set5.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set5.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set5.dat')
        PARAMETER(FNCOF6=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set6.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set6.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set6.dat')
        PARAMETER(FNCOF7=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set7.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set7.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set7.dat')
        PARAMETER(FNOPTR=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/optran.dat')
-               
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/optran.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/optran.dat')
+C
        PARAMETER(FNCO2 =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/co2.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/co2.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/co2.dat')
        PARAMETER(FNSO2 =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/so2.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/so2.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/so2.dat')
        PARAMETER(FNHNO3 =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/hno3.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/hno3.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/hno3.dat')
        PARAMETER(FNN2O =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/n2o.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/n2o.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/n2o.dat')
        PARAMETER(FNNH3 =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/nh3.dat')
-               
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/nh3.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/nh3.dat')
+       PARAMETER(FNHDO =
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/hdo.dat')
+C
        PARAMETER(FNFX  =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/fx_pbl.txt')
-       PARAMETER(FNPREF=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/refprof_400ppm_pbl')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/fx.txt')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/fx.txt')
+       PARAMETER(FNPREF =
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/'
+     $ // 'refprof_trace400')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/refprof_trace400')
        PARAMETER(FNSUN =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Solar/solar.txt')
-               
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Solar/sol.txt')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Solar/sol.txt')
+C
        PARAMETER(FNTHER=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/refltherm.dat')
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/therm.dat')
        PARAMETER(FNCOFN=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/nte_7term.dat')
-                
-                
-!CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-! Tuning filename
-       CHARACTER (LEN=90) :: FNTMLT ! tuning multiplier filename
-                
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/nte_7term.dat')
+C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/nte_7term.dat')
+C
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Tuning filename
+       CHARACTER*120 FNTMLT ! tuning multiplier filename
+C
        PARAMETER(FNTMLT=
-     $     '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/tunmlt_ones.txt')
-                
+     $ '/home/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/tunmlt.txt')
+C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C      ----------------

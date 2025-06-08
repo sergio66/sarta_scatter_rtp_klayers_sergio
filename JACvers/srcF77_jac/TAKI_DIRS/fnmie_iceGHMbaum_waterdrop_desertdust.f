@@ -168,20 +168,17 @@ C      Make sure NMIETY is as this routine expects
  1010     FORMAT('incFTC.f NMIETY=',I3,' but fnmie.f expects ',I3)
        ENDIF
 
-c Replace "/asl/rta/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
-c Replace "/asl/rta/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
-c Replace "/asl/rta/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
 C      mie particles #1: PingYang/BryanBaum GeneralHabitMixture
 C                 123456789012345678901234567890123456789
 C                 <------------cloud string------------->
        CLDSTR(1)='201=ice_general habit 2013-07-25 Baum'
        MIETYP(1)=201
        FNMIEA(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_abs.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_abs.dat'
        FNMIEE(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_ext.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_ext.dat'
        FNMIEG(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_asy.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_asy.dat'
 C
 
 C      mie particles #2: water drop
@@ -189,11 +186,11 @@ C                 <------------cloud string------------->
        CLDSTR(2)='101=waterdrop 2008-06-13'
        MIETYP(2)=101
        FNMIEA(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_abs.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/waterdrop_abs.dat'
        FNMIEE(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_ext.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/waterdrop_ext.dat'
        FNMIEG(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_asy.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/waterdrop_asy.dat'
 C
 
 C      mie particles #3: desert dust
@@ -201,11 +198,11 @@ C                 <------------cloud string------------->
        CLDSTR(3)='301=desertdust 2008-06-13'
        MIETYP(3)=301
        FNMIEA(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_abs.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/desertdust_abs.dat'
        FNMIEE(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_ext.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/desertdust_ext.dat'
        FNMIEG(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_asy.dat'
+     $ '/asl/rta/sarta_database/Data_mie_apr08/desertdust_asy.dat'
 C
 
 C      Assign VCLOUD string

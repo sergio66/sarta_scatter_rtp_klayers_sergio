@@ -156,7 +156,7 @@ C      ARGUMENTS
 C-----------------------------------------------------------------------
 C      Input
        INTEGER   IOUN
-       CHARACTER*90  PFILE
+       CHARACTER*120  PFILE
 C
 C      Output
        CHARACTER*40   PNAM

@@ -738,7 +738,7 @@ C      Mean layer pressure (KLAYERS definition)
 
 C      -----------------------------
 C      Read in the reference profile
-C      -----------------------------
+C     -----------------------------
        CALL RDPROF(IOUN, FNPREF, RPNAM, RALT, RDZ, RPRES, RTEMP,
      $    RFAMNT, RWAMNT, ROAMNT, RCAMNT, RMAMNT, RSAMNT,
      $    RHAMNT, RNAMNT, RAAMNT)
