@@ -497,82 +497,68 @@ C
 C      ---------
 C      Filenames
 C      ---------
-       CHARACTER*120 FNCOF1 ! coef set1 
-       CHARACTER*120 FNCOF2 ! coef set2 
-       CHARACTER*120 FNCOF3 ! coef set3 
-       CHARACTER*120 FNCOF4 ! coef set4 
-       CHARACTER*120 FNCOF5 ! coef set5 
-       CHARACTER*120 FNCOF6 ! coef set6 
-       CHARACTER*120 FNCOF7 ! coef set7 
-       CHARACTER*120 FNCO2  ! coef CO2
-       CHARACTER*120 FNSO2  ! coef SO2
-       CHARACTER*120 FNHNO3 ! coef HNO3
-       CHARACTER*120 FNN2O  ! coef N2O
-       CHARACTER*120 FNCH4  ! coef CH4
-       CHARACTER*120 FNNH3  ! coef NH3
-       CHARACTER*120 FNHDO  ! coef HDO
-       CHARACTER*120 FNOPTR ! coef optran
-       CHARACTER*120 FNTHER ! coef therm
-       CHARACTER*120 FNFX   ! coef fx
-       CHARACTER*120 FNPREF ! ref prof
-       CHARACTER*120 FNSUN  ! solar data
-       CHARACTER*120 FNCOFN ! non-LTE
+       CHARACTER*90 FNCOF1 ! coef set1 
+       CHARACTER*90 FNCOF2 ! coef set2 
+       CHARACTER*90 FNCOF3 ! coef set3 
+       CHARACTER*90 FNCOF4 ! coef set4 
+       CHARACTER*90 FNCOF5 ! coef set5 
+       CHARACTER*90 FNCOF6 ! coef set6 
+       CHARACTER*90 FNCOF7 ! coef set7 
+       CHARACTER*90 FNCO2  ! coef CO2
+       CHARACTER*90 FNSO2  ! coef SO2
+       CHARACTER*90 FNHNO3 ! coef HNO3
+       CHARACTER*90 FNN2O  ! coef N2O
+       CHARACTER*90 FNCH4  ! coef CH4
+       CHARACTER*90 FNNH3  ! coef NH3
+       CHARACTER*90 FNHDO  ! coef HDO
+       CHARACTER*90 FNOPTR ! coef optran
+       CHARACTER*90 FNTHER ! coef therm
+       CHARACTER*90 FNFX   ! coef fx
+       CHARACTER*90 FNPREF ! ref prof
+       CHARACTER*90 FNSUN  ! solar data
+       CHARACTER*90 FNCOFN ! non-LTE
 C
 C
-c strowinteract --> chip
-C everywhere you see /home/chepplew/data/sarta/ replace with  /home/sergio/asl/s1/chepplew/data/sarta/
-C but then eg 
-C   /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set1.dat
-C is a symbolic link to /home/chepplew//data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_xnte_2x7term.dat
-C or /home/sergio/asl/s1/chepplew//data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_xnte_2x7term.dat
-C so use /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/
-c
-c Replace "/asl/data/sarta_database/Data_IASI_may09/Coef/" with "/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/"
-c Replace "/asl/data/sarta_database/Data_IASI_may09/Coef/" with "/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/"
-c Replace "/asl/data/sarta_database/Data_IASI_may09/Coef/" with "/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/"
-
        PARAMETER(FNCOF1=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/set1.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/set1.dat')
        PARAMETER(FNCOF2=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/set2.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/set2.dat')
        PARAMETER(FNCOF3=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/set3.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/set3.dat')
        PARAMETER(FNCOF4=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/set4.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/set4.dat')
        PARAMETER(FNCOF5=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/set5.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/set5.dat')
        PARAMETER(FNCOF6=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/set6.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/set6.dat')
        PARAMETER(FNCOF7=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/set7.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/set7.dat')
 C
        PARAMETER(FNOPTR=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/optran.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/optran.dat')
 C
        PARAMETER(FNCO2 =
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/co2.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/co2.dat')
        PARAMETER(FNSO2 =
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/so2.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/so2.dat')
        PARAMETER(FNHNO3 =
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/hno3.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/hno3.dat')
        PARAMETER(FNN2O =
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/n2o.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/n2o.dat')
        PARAMETER(FNCH4 =
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/swch4.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/swch4.dat')
 C
        PARAMETER(FNTHER=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/therm.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/therm.dat')
        PARAMETER(FNCOFN=
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/nte_7term.dat')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/nte_7term.dat')
        PARAMETER(FNFX  =
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/fx.txt')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/fx.txt')
        PARAMETER(FNPREF=
-c     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/profref_trace385')
-c     $ '/asl/rta/sarta_coef/Data_CrIS_oct16/Coef/refprof_400_tra')
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CRIS_HR/2022/refprof_400_tra')
+c     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/profref_trace385')
+     $ '/asl/rta/sarta_coef/Data_CrIS_oct16/Coef/refprof_400_tra')
        PARAMETER(FNSUN =
-     $      '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Solar/solardata.txt')
-c     $ '/asl/data/sarta_database/Data_IASI_may09/Solar/solardata.txt')
+     $ '/asl/data/sarta_database/Data_IASI_may09/Solar/solardata.txt')
 
 C
 C Mie lookup tables; also see "fnmie.f"
@@ -583,11 +569,10 @@ c       PARAMETER(MXMIEA = 10) ! ice aggregates=8, all others 10
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C Tuning filename
-       CHARACTER*120 FNTMLT ! tuning multiplier filename
+       CHARACTER*90 FNTMLT ! tuning multiplier filename
 C
        PARAMETER(FNTMLT=
-c     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/'       
-     $ '/home/sergio/asl/rta/sarta_database/Data_IASI_may09/Coef/'      
+     $ '/asl/data/sarta_database/Data_IASI_may09/Coef/'
      $ // 'tunmlt_wcon_nte.txt')
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC

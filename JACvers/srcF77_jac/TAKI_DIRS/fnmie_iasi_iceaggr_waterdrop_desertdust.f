@@ -134,9 +134,9 @@ C-----------------------------------------------------------------------
 C      Output
        CHARACTER*240 VCLOUD
        INTEGER MIETYP(NMIETY)
-       CHARACTER*120 FNMIEA(NMIETY)
-       CHARACTER*120 FNMIEE(NMIETY)
-       CHARACTER*120 FNMIEG(NMIETY)
+       CHARACTER*79 FNMIEA(NMIETY)
+       CHARACTER*79 FNMIEE(NMIETY)
+       CHARACTER*79 FNMIEG(NMIETY)
 
 
 C-----------------------------------------------------------------------
@@ -168,21 +168,17 @@ C      Make sure NMIETY is as this routine expects
  1010     FORMAT('incFTC.f NMIETY=',I3,' but fnmie.f expects ',I3)
        ENDIF
 
-c Replace "/asl/data/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
-c Replace "/asl/data/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
-c Replace "/asl/data/sarta_database/" with "/home/sergio/asl/rta/sarta_database/"
-       
 C      mie particles #1: Baran ice aggregates
 C                 123456789012345678901234567890123456789
 C                 <------------cloud string------------->
        CLDSTR(1)='201=ice_aggr 2008-01-31 Baran'
        MIETYP(1)=201
        FNMIEA(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/ice_aggr_abs.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/ice_aggr_abs.dat'
        FNMIEE(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/ice_aggr_ext.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/ice_aggr_ext.dat'
        FNMIEG(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/ice_aggr_asy.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/ice_aggr_asy.dat'
 C
 
 C      mie particles #2: water drop
@@ -190,11 +186,11 @@ C                 <------------cloud string------------->
        CLDSTR(2)='101=waterdrop 2008-01-31'
        MIETYP(2)=101
        FNMIEA(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/waterdrop_abs.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/waterdrop_abs.dat'
        FNMIEE(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/waterdrop_ext.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/waterdrop_ext.dat'
        FNMIEG(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/waterdrop_asy.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/waterdrop_asy.dat'
 C
 
 C      mie particles #3: desert dust
@@ -202,11 +198,11 @@ C                 <------------cloud string------------->
        CLDSTR(3)='301=desertdust 2008-01-31'
        MIETYP(3)=301
        FNMIEA(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/desertdust_abs.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/desertdust_abs.dat'
        FNMIEE(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/desertdust_ext.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/desertdust_ext.dat'
        FNMIEG(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_IASI/desertdust_asy.dat'
+     $ '/asl/data/sarta_database/Data_mie_IASI/desertdust_asy.dat'
 C
 
 C      Assign VCLOUD string
