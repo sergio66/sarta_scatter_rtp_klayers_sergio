@@ -52,4 +52,4 @@ rm set1.dat;   ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/cris_hr/j
 
 cd ../../../
 echo "from /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/srcF77_jac  test on chip using eg "
-echo "     ../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_newFeb2025 fin=../TEST_RTP/cris_1_100_12150.op.rtp fout=junk.rp.rtp"
+echo "     ../bin/jac_crisg4_hires_jan25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_newFeb2025 fin=../TEST_RTP/newdayx_1_100_12150_cris.op.rtp fout=junk.rp.rtp"

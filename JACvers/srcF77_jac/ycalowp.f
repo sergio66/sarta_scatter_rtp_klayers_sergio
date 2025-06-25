@@ -204,7 +204,8 @@ C
 C         Center-of-layer-to-space amount*angle
 C         Note: do this before updating WAZSUM
           WAZ(L)=5.0E-1*WAANG(L) + WAZSUM
-C
+C          print *,L,WAMNT(L),SECANG(L),WAANG(L),WAZSUM,WAZ(L)
+
 C         Bottom-of-layer-to-space amount sum
           WAZSUM=WAANG(L) + WAZSUM
 C
@@ -276,6 +277,7 @@ C      --------------------------------------------------
        LOPMIN=1
        if (DEBUG) WRITE(6,'(A, E11.4)') 'calowp: WAZ(1) = ',WAZ(1)
  30    IF (WAZOP(LOPMIN+1) .LT. WAZ(1)) THEN
+c          print *,LOPMIN,WAZ(1),WAZOP(LOPMIN),WAZOP(LOPMIN+1)
           LOPMIN=LOPMIN + 1
           GOTO 30
        ENDIF

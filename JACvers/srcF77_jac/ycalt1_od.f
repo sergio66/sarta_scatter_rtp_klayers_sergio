@@ -470,13 +470,13 @@ C            ---------------------------
      $            ( COEF1(6,ILAY,I)*CONPRD1(6,ILAY) ) +
      $            ( COEF1(7,ILAY,I)*CONPRD1(7,ILAY) )
 
-              IF (DEBUG) THEN
-                IF (I .EQ. 2) THEN
-                  print *, COEF1(1:7,ILAY,I)
-                  print *, CONPRD1(1:7,ILAY)
-                  STOP
-                END IF
-              END IF
+c              IF (DEBUG) THEN
+c                IF (I .EQ. 1) THEN
+c                  print *, COEF1(1:7,ILAY,I)
+c                  print *, CONPRD1(1:7,ILAY)
+c                  STOP
+c                END IF
+c              END IF
 
              IF (KCON .LT. 0.0E+0) THEN
                 KCON=0.0E+0

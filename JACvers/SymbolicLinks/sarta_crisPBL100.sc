@@ -53,4 +53,4 @@ rm refprof_400ppm_pbl;  ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2025/
 
 cd ../../../
 echo "from /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/srcF77_jac  test on chip using eg "
-echo "     ../bin/jac_crisg4_hires_feb25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new_PBL fin=../TEST_RTP/cris_1_100_12150.op.rtp fout=junk.rp.rtp"
+echo "     ../bin/jac_crisg4_hires_feb25_H2020_iceGHMbaum_wdrop_ddust_sc_hg3_new_PBL fin=../TEST_PBL100_vs_AIRS100/cris_pbl_layering_example_clrsky.op.rtp fout=junk.rp.rtp"

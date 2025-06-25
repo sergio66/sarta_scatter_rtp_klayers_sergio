@@ -520,55 +520,66 @@ C      ---------
 C
 C
 
-c strowinteract --> chip
+c     strowinteract --> chip
+C everywhere you see /home/chepplew/data/sarta/ replace with  /home/sergio/asl/s1/chepplew/data/sarta/
+C but then eg 
+C   /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/set1.dat
+C is a symbolic link to /home/chepplew//data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_xnte_2x7term.dat
+C or /home/sergio/asl/s1/chepplew//data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_xnte_2x7term.dat
+C so use /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/
+c
+c Replace "/home/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/"
+c Replace "/home/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/"
+c Replace "/home/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/"
+
 C everywhere you see /home/chepplew/data/sarta/ replace with  /home/sergio/asl/s1/chepplew/data/sarta/
        PARAMETER(FNCOF1=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set1.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/set1.dat')
        PARAMETER(FNCOF2=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set2.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/set2.dat')
        PARAMETER(FNCOF3=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set3.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/set3.dat')
        PARAMETER(FNCOF4=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set4.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/set4.dat')
        PARAMETER(FNCOF5=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set5.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/set5.dat')
        PARAMETER(FNCOF6=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set6.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/set6.dat')
        PARAMETER(FNCOF7=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/set7.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/set7.dat')
        PARAMETER(FNOPTR=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/optran.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/optran.dat')
                
        PARAMETER(FNCO2 =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/co2.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/co2.dat')
        PARAMETER(FNSO2 =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/so2.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/so2.dat')
        PARAMETER(FNHNO3 =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/hno3.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/hno3.dat')
        PARAMETER(FNN2O =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/n2o.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/n2o.dat')
        PARAMETER(FNNH3 =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/nh3.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/nh3.dat')
                
        PARAMETER(FNFX  =
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/fx_pbl.txt')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/fx_pbl.txt')
        PARAMETER(FNPREF=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/refprof_400ppm_pbl')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/refprof_400ppm_pbl')
        PARAMETER(FNSUN =
      $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Solar/solar.txt')
                
        PARAMETER(FNTHER=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/refltherm.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/refltherm.dat')
        PARAMETER(FNCOFN=
-     $      '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/nte_7term.dat')
+     $      '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/nte_7term.dat')
                 
                 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! Tuning filename
-       CHARACTER (LEN=90) :: FNTMLT ! tuning multiplier filename
+       CHARACTER (LEN=120) :: FNTMLT ! tuning multiplier filename
                 
        PARAMETER(FNTMLT=
-     $     '/home/sergio/asl/s1/chepplew/data/sarta/prod_2025/airs_pbl/jan2025a/dbase/Coef/tunmlt_ones.txt')
+     $     '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/PBL_100/AIRS/2025/tunmlt_ones.txt')
                 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C

@@ -199,6 +199,7 @@ C      -----------------------------------------------------------------
 C      Loop upward over layers
 C      -----------------------------------------------------------------
        RADUP=RSURFE
+c       write(*,'(A,I,3F12.5)'),'sseerrggiioo',I,FREQ(I),TSURF,RADUP
        RDOWN=0.0
        TDOWNN=1.0
        DO L=LBOT,1,-1
@@ -209,7 +210,7 @@ C         Calc the downward radiance from this layer
           TDOWNF=TDOWNN*TAUL(L)
           RDOWN = RDOWN + ( RPLNCK(L)*(TDOWNN - TDOWNF) )
           TDOWNN=TDOWNF
-
+c          write(*,'(A,I,4F12.5)') 'sseerrggiioo',L,TAUL(L),RPLNCK(L),RADUP,RDOWN
        ENDDO
 C
 c       IF (I .EQ. 1291) THEN
@@ -268,7 +269,10 @@ C      --------------
 C      Total radiance
 C      --------------
        RAD0=RADUP + RSUN + RTHERM
-c       IF (I .EQ. 1100) print *,'calrad0 ',RADUP,RSUN,RTHERM,RAD0
+c       print *,'sseerrggiioo ',RADUP,RSUN,RTHERM,RAD0
+c       STOP
+
+c     IF (I .EQ. 1100) print *,'calrad0 ',RADUP,RSUN,RTHERM,RAD0
 
        IF ((DOJAC) .AND. (DOSUN)) RTHERM = RSUN + RTHERM
 C

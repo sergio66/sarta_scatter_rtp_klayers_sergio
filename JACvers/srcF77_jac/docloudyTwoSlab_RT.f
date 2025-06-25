@@ -183,6 +183,8 @@ C     Planck for surface
 
 C     Calculate clear radiance
       IF (FCLEAR .GT. 0.0) THEN
+c         print *,'sseerrggiioo 0',I,FCLEAR
+c         print *,'seerrggiioo 0',TRANL
          CALL CALRAD0( DOSUN, I, LBOT, RPLNCK, RSURFE, SECANG,
      $       TRANL, TRANZ, SUNFAC, HSUN, TRANS, RHOSUN,
      $       RHOTHR, LABOVE, COEFF, RAD0, DOJAC, CLDTAU, RADLAY, RTHERM,
@@ -379,7 +381,7 @@ c       endif
 
 c Tang
 c       IF (I .EQ. 1291) THEN
-c         write(*,'(I8,I8,13(F12.4))') 
+c         write(*,'(A,I8,I8,13(F12.4))') 'sergiotest',
 c     c    I,IPROF,FCLEAR,CFRA1X,CFRA2X,CFRA12,TCTOP1,TCTOP2,CLDEFFOD1,CLDEFFOD2,RAD0,RADC1,RADC2,RADC12,RAD(I)
 c       endif
 

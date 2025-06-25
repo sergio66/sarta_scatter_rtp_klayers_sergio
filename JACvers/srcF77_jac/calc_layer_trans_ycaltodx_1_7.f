@@ -211,20 +211,52 @@ C     for CALOWP
       INTEGER CLIST7(MXCHN7) ! list of set7 channels
 
 c local
-      INTEGER III
+      INTEGER III,intersect
 
 C       ----------------------------------
 C       Calculate the layer transmittances
 C       ----------------------------------
 C       Calculate TAU for set 1 thru 7
 
-      IF (DEBUG) THEN
-        DO III = 1,NCHAN
-          !! print iI,h.ichan(iI),h.vchan(Ii)
-          print *,III,LSTCHN(III),FREQ(III)
-        END DO
-      END IF
+c      so eg if you are doing IASI blah.rtp_2, then you should see    h.ichan,h.vchan
+c           1        4232   1702.750
+c           2        4233   1703.000
+c           .......
+c        4229        8460   2759.750
+c        4230        8461   2760.000
+c
+c      IF (DEBUG) THEN
+c        DO III = 1,NCHAN
+c          !! print iI,h.ichan(iI),h.vchan(Ii)
+c          print *,III,LSTCHN(III),FREQ(III)
+c       END DO
+c       stop
+c      END IF
 
+c      so eg if you are doing IASI blah.rtp_2, then you should see     iasi_rtp2_channels_set1_7
+c      IF (DEBUG) THEN
+c        DO III = 1,NCHAN
+c          write(*,'(I6,I6,F12.5,7(I6))') III,LSTCHN(III),FREQ(III),QUICKCLIST1(III),QUICKCLIST2(III),
+c     c            QUICKCLIST3(III),QUICKCLIST4(III),QUICKCLIST5(III),QUICKCLIST6(III),QUICKCLIST7(III)
+c       END DO
+c       stop
+c      END IF
+
+c************************************************************************
+C this was the orig code for eg calt4.f
+C     DO I=1,NCHN4
+C         Index for TAU
+C          J=INDCHN( CLIST4(I) )
+c
+C     this is the new code for eg ycalt4_od.f : IY = passed in using
+c      III = QUICKCLIST4(I)      
+c      III = QUICKCLIST4(LSTCHN(I))
+c      III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4)
+c      III = intersect(LSTCHN(I),INDCHN(CLIST4(1:NCHN4)), NCHN4)                       
+C         I = IY     
+C          J=INDCHN( CLIST4(I) )
+c
+c      
 C     ---------------------------
 C     Loop on channel (frequency)
 C     eventually fills in matrix as    X=1,2,3,4,5,6,7
@@ -237,15 +269,30 @@ C            TAUZ(ILAY,J)=KZ
 C          END DO
 C        END DO
 C     ---------------------------
-
+c
 C     print *,INDCHN(CLIST1(1:NCHN1))
 C     stop
-!     DO II = 1,NCHN1
-!       !! print iI,h.ichan(iI),h.vchan(Ii)
-!       print *,II,LSTCHN(II),FREQ(II),CLIST1(II)
-!     END DO
-        
-      III = QUICKCLIST1(I) ! III = intersect(I,INDCHN(CLIST1(1:NCHN1)), NCHN1)
+c     DO II = 1,NCHN1
+c       !! print iI,h.ichan(iI),h.vchan(Ii)
+c       print *,II,LSTCHN(II),FREQ(II),CLIST1(II)
+c     END DO
+c************************************************************************
+
+c        DO III = 1,NCHAN
+c          write(*,'(I6,I6,F12.5,7(I6))') III,LSTCHN(III),FREQ(III),QUICKCLIST1(III),QUICKCLIST2(III),
+c     c            QUICKCLIST3(III),QUICKCLIST4(III),QUICKCLIST5(III),QUICKCLIST6(III),QUICKCLIST7(III)
+c       END DO
+
+c III = QUICKCLISTN(I) is correct      
+      III = QUICKCLIST1(I)            !III = intersect(I,INDCHN(CLIST1(1:NCHN1)), NCHN1)      
+c III = QUICKCLISTN(I) is correct      
+cc      III = QUICKCLIST1(LSTCHN(I))
+cc      III = intersect(I,INDCHN(CLIST1(1:NCHN1)), NCHN1)
+cc      III = intersect(LSTCHN(I),INDCHN(CLIST1(1:NCHN1)), NCHN1)                  
+cc      print *, 'LIST 1 : I   III = BLAH(I) = ',I,III
+cc      print *,'INDCHN = ',INDCHN
+cc      print *,'LSTCHN = ',LSTCHN
+
 c      IF (I .EQ. 254) print *,'moo moo moo moo QUICKLIST 1',I,III
       IF (III .GT. 0) THEN
         CALL YCALT1( INDCHN,  LBOT,   NCHN1, CLIST1,  COEF1,
@@ -263,10 +310,16 @@ c      IF (I .EQ. 254) print *,'moo moo moo moo QUICKLIST 1',I,III
      $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
       END IF
-c         print *,'oneNew  ',tau(10,1),tauz(10,1)
+c      print *,'sseerrggiioo oneNew  ',tau(10,1),tauz(10,4230)
 
-      III = QUICKCLIST2(I) ! III = intersect(I,INDCHN(CLIST2(1:NCHN2)), NCHN2)
-c      IF (I .EQ. 254) print *,'moo moo moo moo QUICKLIST 2',I,III
+c III = QUICKCLISTN(I) is correct      
+      III = QUICKCLIST2(I)      ! III = intersect(I,INDCHN(CLIST2(1:NCHN2)), NCHN2)
+c III = QUICKCLISTN(I) is correct      
+cc      III = QUICKCLIST2(LSTCHN(I))
+cc      III = intersect(I,INDCHN(CLIST2(1:NCHN2)), NCHN2)
+cc      III = intersect(LSTCHN(I),INDCHN(CLIST2(1:NCHN2)), NCHN2)                  
+cc      print *, 'LIST 2 : I   III = BLAH(I) = ',I,III      
+cc      IF (I .EQ. 254) print *,'moo moo moo moo QUICKLIST 2',I,III
       IF (III .GT. 0) THEN  
         CALL YCALT2( INDCHN, LBOT,   NCHN2, CLIST2,  COEF2,
      $      FIXMUL, CONPRD, FPRED2, OPRED2, WPRED2, DPRED, TRCPRD,
@@ -281,9 +334,15 @@ c      IF (I .EQ. 254) print *,'moo moo moo moo QUICKLIST 2',I,III
      $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
       END IF
-c         print *,'twoNew  ',tau(10,1),tauz(10,1)
-
-      III = QUICKCLIST3(I) ! III = intersect(I,INDCHN(CLIST3(1:NCHN3)), NCHN3)
+c      print *,'sseerrggiioo twoNew  ',tau(10,1),tauz(10,4230)
+ 
+c III = QUICKCLISTN(I) is correct           
+      III = QUICKCLIST3(I)      ! III = intersect(I,INDCHN(CLIST3(1:NCHN3)), NCHN3)
+c III = QUICKCLISTN(I) is correct      
+cc      III = QUICKCLIST3(LSTCHN(I))
+cc      III = intersect(I,INDCHN(CLIST3(1:NCHN3)), NCHN3)
+cc      III = intersect(LSTCHN(I),INDCHN(CLIST3(1:NCHN3)), NCHN3)                  
+cc      print *, 'LIST 3 : I   III = BLAH(I) = ',I,III      
       IF (III .GT. 0) THEN  
         CALL YCALT3( INDCHN,   LBOT,  NCHN3, CLIST3,  COEF3,
      $       FIXMUL, CONPRD, FPRED3, MPRED3, WPRED3, DPRED, TRCPRD,
@@ -300,9 +359,15 @@ c         print *,'twoNew  ',tau(10,1),tauz(10,1)
      $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
       END IF
-c         print *,'threeNew  ',tau(10,1),tauz(10,1)
-
-      III = QUICKCLIST4(I) !  III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4)
+c      print *,'sseerrggiioo threeNew  ',tau(10,1),tauz(10,4230)
+      
+c III = QUICKCLISTN(I) is correct      
+      III = QUICKCLIST4(I)      !  III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4)
+c III = QUICKCLISTN(I) is correct      
+cc      III = QUICKCLIST4(LSTCHN(I))
+cc      III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4)
+cc      III = intersect(LSTCHN(I),INDCHN(CLIST4(1:NCHN4)), NCHN4)                  
+cc      print *, 'LIST 4 : I   III = BLAH(I) = ',I,III      
       IF (III .GT. 0) THEN  
         CALL YCALT4(INDCHN,   LBOT,  NCHN4, CLIST4,
      $       COEF4, FIXMUL, CONPRD, FPRED4, CPRED4, OPRED4, WPRED4,
@@ -316,9 +381,15 @@ c         print *,'threeNew  ',tau(10,1),tauz(10,1)
      $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
       END IF
-c         print *,'fourNew  ',tau(10,1),tauz(10,1)
-
-      III = QUICKCLIST5(I) ! III = intersect(I,INDCHN(CLIST5(1:NCHN5)), NCHN5)
+c      print *,'sseerrggiioo fourNew  ',tau(10,1),tauz(10,4230)
+      
+c III = QUICKCLISTN(I) is correct      
+      III = QUICKCLIST5(I)      ! III = intersect(I,INDCHN(CLIST5(1:NCHN5)), NCHN5)
+c III = QUICKCLISTN(I) is correct      
+cc      III = QUICKCLIST5(LSTCHN(I))
+cc      III = intersect(I,INDCHN(CLIST5(1:NCHN5)), NCHN5)
+cc      III = intersect(LSTCHN(I),INDCHN(CLIST5(1:NCHN5)), NCHN5)                  
+cc      print *, 'LIST 5 : I   III = BLAH(I) = ',I,III      
       IF (III .GT. 0) THEN  
         CALL YCALT5(INDCHN,   LBOT,  NCHN5, CLIST5,
      $       COEF5, FIXMUL, CONPRD, FPRED5, WPRED5, OPRED5, 
@@ -332,9 +403,15 @@ c         print *,'fourNew  ',tau(10,1),tauz(10,1)
      $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
       END IF
-c         print *,'fiveNew  ',tau(10,1),tauz(10,1)
-
-      III = QUICKCLIST6(I) ! III = intersect(I,INDCHN(CLIST6(1:NCHN6)), NCHN6)
+c      print *,'sseerrggiioo fiveNew  ',tau(10,1),tauz(10,4230)
+      
+c III = QUICKCLISTN(I) is correct      
+      III = QUICKCLIST6(I)      ! III = intersect(I,INDCHN(CLIST6(1:NCHN6)), NCHN6)
+c III = QUICKCLISTN(I) is correct      
+cc      III = QUICKCLIST6(LSTCHN(I))
+cc      III = intersect(I,INDCHN(CLIST6(1:NCHN6)), NCHN6)
+cc      III = intersect(LSTCHN(I),INDCHN(CLIST6(1:NCHN6)), NCHN6)                  
+cc      print *, 'LIST 6 : I   III = BLAH(I) = ',I,III      
       IF (III .GT. 0) THEN  
         CALL YCALT6(INDCHN,   LBOT,  NCHN6, CLIST6,
      $       COEF6, FIXMUL, CONPRD, FPRED6, WPRED6, OPRED6, DPRED, TRCPRD,
@@ -348,9 +425,15 @@ c         print *,'fiveNew  ',tau(10,1),tauz(10,1)
      $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
       END IF
-c         print *,'sixNew  ',tau(10,1),tauz(10,1)
-
-      III = QUICKCLIST7(I) ! III = intersect(I,INDCHN(CLIST7(1:NCHN7)), NCHN7)
+c      print *,'sseerrggiioo sixNew  ',tau(10,1),tauz(10,4230)
+      
+c III = QUICKCLISTN(I) is correct      
+      III = QUICKCLIST7(I)      ! III = intersect(I,INDCHN(CLIST7(1:NCHN7)), NCHN7)
+c III = QUICKCLISTN(I) is correct      
+cc      III = QUICKCLIST7(LSTCHN(I))
+cc      III = intersect(I,INDCHN(CLIST7(1:NCHN7)), NCHN7)
+cc      III = intersect(LSTCHN(I),INDCHN(CLIST7(1:NCHN7)), NCHN7)            
+cc      print *, 'LIST 7 : I   III = BLAH(I) = ',I,III      
       IF (III .GT. 0) THEN  
         CALL YCALT7(INDCHN,   LBOT,  NCHN7, CLIST7,
      $       COEF7, FIXMUL, CONPRD, FPRED7, WPRED7, OPRED7,
@@ -364,8 +447,8 @@ c         print *,'sixNew  ',tau(10,1),tauz(10,1)
      $    CO2JACMLT,SO2JACMLT,HNOJACMLT,N2OJACMLT,NH3JACMLT,HDOJACMLT,
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
       END IF
-c         print *,'sevenNew  ',tau(10,1),tauz(10,1)
-
+c      print *,'sseerrggiioo sevenNew  ',tau(10,1),tauz(10,4230)
+      
 c***********************************************************************
       IF (DOSUN) THEN
 
@@ -378,8 +461,12 @@ c          print *,'indfak',I,III,INDFAK(I),INDFAK(III),QUICKINDFAK(I)
      $        SECSUN, TAUZSN, III)
         END IF
 
-        III = QUICKCLIST4(I) ! III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4) 
-                               ! so I = INDCHN(CLIST4(III))
+        III = QUICKCLIST4(I)    ! III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4)
+                                !                       so I = INDCHN(CLIST4(III))
+c        III = QUICKCLIST4(LSTCHN(I))
+c        III = intersect(I,INDCHN(CLIST4(1:NCHN4)), NCHN4)
+c        III = intersect(LSTCHN(I),INDCHN(CLIST4(1:NCHN4)), NCHN4)
+c        print *, 'SUN LIST 4 : I   III = BLAH(I) = ',I,III        
         IF (III .GT. 0) THEN  
           CALL YCALT4(INDCHN,   LBOT,  NCHN4, CLIST4,
      $         COEF4, FIXMUL, SUNCONPRD, SUNFPRED4, SUNCPRED4, SUNOPRED4, SUNWPRED4,
@@ -396,7 +483,11 @@ C           dummy   actual
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
         END IF
 
-        III = QUICKCLIST5(I)  ! III = intersect(I,INDCHN(CLIST5(1:NCHN5)), NCHN5)
+        III = QUICKCLIST5(I)    ! III = intersect(I,INDCHN(CLIST5(1:NCHN5)), NCHN5)
+c        III = QUICKCLIST5(LSTCHN(I))
+c        III = intersect(I,INDCHN(CLIST5(1:NCHN5)), NCHN5)
+c        III = intersect(LSTCHN(I),INDCHN(CLIST5(1:NCHN5)), NCHN5)
+c        print *, 'SUN LIST 5 : I   III = BLAH(I) = ',I,III                
         IF (III .GT. 0) THEN  
           CALL YCALT5(INDCHN,   LBOT,  NCHN5, CLIST5,
      $         COEF5, FIXMUL, SUNCONPRD, SUNFPRED5, SUNWPRED5, SUNOPRED5,
@@ -411,7 +502,11 @@ C           dummy   actual
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
         END IF
 
-        III = QUICKCLIST6(I) !  III = intersect(I,INDCHN(CLIST6(1:NCHN6)), NCHN6)
+        III = QUICKCLIST6(I)    !  III = intersect(I,INDCHN(CLIST6(1:NCHN6)), NCHN6)
+c        III = QUICKCLIST7(LSTCHN(I))
+c        III = intersect(I,INDCHN(CLIST6(1:NCHN6)), NCHN6)
+c        III = intersect(LSTCHN(I),INDCHN(CLIST6(1:NCHN7)), NCHN6)
+c        print *, 'SUN LIST 6 : I   III = BLAH(I) = ',I,III                
         IF (III .GT. 0) THEN  
           CALL YCALT6(INDCHN,   LBOT,  NCHN6, CLIST6,
      $          COEF6, FIXMUL, SUNCONPRD, SUNFPRED6, SUNWPRED6, SUNOPRED6, DPRED,
@@ -427,7 +522,11 @@ C           dummy   actual
      $    DTAU_DTZ,DTAU_DG1,DTAU_DG2,DTAU_DG3,DTAU_DG4,DTAU_DG5,DTAU_DG6,DTAU_DG9,DTAU_DG12)
         END IF
 
-        III = QUICKCLIST7(I) !  III = intersect(I,INDCHN(CLIST7(1:NCHN7)), NCHN7)
+        III = QUICKCLIST7(I)    !  III = intersect(I,INDCHN(CLIST7(1:NCHN7)), NCHN7)
+c        III = QUICKCLIST7(LSTCHN(I))
+c        III = intersect(I,INDCHN(CLIST7(1:NCHN7)), NCHN7)
+c        III = intersect(LSTCHN(I),INDCHN(CLIST7(1:NCHN7)), NCHN7)
+c        print *, 'SUN LIST 7 : I   III = BLAH(I) = ',I,III                
         IF (III .GT. 0) THEN  
           CALL YCALT7(INDCHN,   LBOT,  NCHN7, CLIST7,
      $          COEF7, FIXMUL, SUNCONPRD, SUNFPRED7, SUNWPRED7, SUNOPRED7,
@@ -453,6 +552,15 @@ C       DOSUN = 'FALSE'; No sun; set the sun surface-to-space trans to zero
         TAUZSN(1:LBOT,I) = 0.0
       ENDIF
 
+c      print *,'sseerrggiioo calc_layer_trans_ycaltodx_1_7.f'
+c      print *,'tau(:,1)    = ',tau(:,1)
+c      print *,'tau(:,4230) = ',tau(:,4230)
+c      DO III = 1,4230
+c        print *,III,tau(20,III)
+c      end do
+c      print *,'calc_layer_trans_ycaltodx_1_7.f : stop'
+c      stop
+     
       RETURN
       END
       

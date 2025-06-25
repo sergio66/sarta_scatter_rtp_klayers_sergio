@@ -712,6 +712,8 @@ c       INTEGER IEFFCLD_TOP1,IEFFCLD_TOP2,IEFFCLD_BOT1,IEFFCLD_BOT2,IFOUND1,IFOU
      $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD
 
        INTEGER ijunk,icldjac
+       INTEGER is_nan_infinity
+
 C-----------------------------------------------------------------------
 C      SAVE STATEMENTS
 C-----------------------------------------------------------------------
@@ -864,7 +866,7 @@ C      --------------------------------------------------------------
      $ QUICKCLIST1, QUICKCLIST2, QUICKCLIST3, QUICKCLIST4, QUICKCLIST5, 
      $ QUICKCLIST6, QUICKCLIST7,
      $ NWANTC, LISTC, LSTCHN, RINDCHN)
-
+       
        IF (NWANTJ .GT. 0) THEN
          CALL write_header_jac_files(LISTJ,NWANTJ,NUMPROF,NUMCHAN,FREQ,
      $      IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,
@@ -1073,6 +1075,38 @@ C
 C      -----------------------------------
 C      Calculate the OPTRAN H2O predictors
 C      -----------------------------------
+       II = 0
+       DO I = 1,LBOT
+         III = is_nan_infinity(RPRES(I))
+         if (III > 0) print *,'ohoh (I),rpres(I) = ',I,RPRES(I)
+         if (III > 0) II = ii + 1
+
+         III = is_nan_infinity(TEMP(I))
+         if (III > 0) print *,'ohoh (I),temp(I) = ',I,temp(I)
+         if (III > 0) II = ii + 1
+
+         III = is_nan_infinity(WAMNT(I))
+         if (III > 0) print *,'ohoh (I),wamnt(I) = ',I,wamnt(I)
+         if (III > 0) II = ii + 1
+
+         III = is_nan_infinity(OAMNT(I))
+         if (III > 0) print *,'ohoh (I),oamnt(I) = ',I,OAMNT(I)
+         if (III > 0) II = ii + 1
+
+         III = is_nan_infinity(CAMNT(I))
+         if (III > 0) print *,'ohoh (I),camnt(I) = ',I,CAMNT(I)
+         if (III > 0) II = ii + 1
+
+       END DO
+         
+       IF (II .gt. 0) THEN
+         DO I = 1,LBOT
+           write(*,'(A,I4,E20.12,F20.12,F20.12)') 'sarta_pclsam INPUT ERROR',I,WAMNT(I),RPRES(I),TEMP(I)
+         END DO
+         write(*,'(A)') 'Pleae check input profiles in rtp file'
+         STOP
+       END IF
+
        CALL YCALOWP ( LBOT, WAMNT, RPRES, TEMP, SECANG, WAZOP, WAVGOP,
      $    WAANG, LOPMIN, LOPMAX, LOPUSE, H2OPRD, LOPLOW, DAOP, 
      $    DOJAC, H2OJACPRD, DAOPJAC )
@@ -1230,3 +1264,40 @@ C
 
        STOP
        END
+
+c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      integer function is_nan_infinity(x)
+
+      use ieee_arithmetic
+      implicit none 
+
+      real x
+      
+      integer :: bad(5),summ,blah
+      logical :: t
+      double precision :: infinity,dbl_prec_var
+
+      infinity = HUGE(dbl_prec_var)
+      bad = 0
+      bad(2) = 1
+      bad(3) = 1
+
+      t = ieee_is_nan(x);    if (t) bad(1) = 1
+      t = ieee_is_finite(x); if (t) bad(2) = 0
+      t = ieee_is_normal(x); if (t) bad(3) = 0
+
+      if (abs(x)  > infinity) bad(4) = 1
+      if(x /= x)              bad(5) = 1
+
+      blah = 0
+      summ = sum(bad(1:5))
+      if (summ .gt. 0) then
+        write(*,'(A,E20.8,5(I2))') 'Bad input NAN FINITE NORMAL INF NAN ',x,bad
+        blah = 1
+      end if
+
+      is_nan_infinity = blah
+      return
+      end 
+
+c ************************************************************************

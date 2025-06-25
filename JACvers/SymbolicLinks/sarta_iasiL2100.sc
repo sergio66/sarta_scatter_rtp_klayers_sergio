@@ -54,5 +54,7 @@ rm set2.dat;             ln -s /home/sergio/asl/rta/sarta_coef/Data_CrIS_oct16/C
 rm set1.dat;             ln -s /home/sergio/asl/rta/sarta_coef/Data_CrIS_oct16/Coef/set1.dat   .
 
 cd ../../../
+## this is from /home/sergio/asl/rtp/iasi/iasi1/ecmwf/2018/iasi1_ecmwf_d20180121_clear.rtp_2
 echo "from /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/srcF77_jac  test on chip using eg "
-echo "     ../bin/jac_sarta_iasi_jan25_H2020_iceaggr_waterdrop_desertdust_slabcloud_hg3_wcon_nte_swch4 fin=../TEST_RTP/newdayx_1_100_12150.op.rtp fout=junk.rp.rtp"
+echo "     ../bin/jac_sarta_iasi_jan25_H2020_iceaggr_waterdrop_desertdust_slabcloud_hg3_wcon_nte_swch4 fin=../TEST_RTP/newdayx_1_100_12150_iasi.op.rtp_2 fout=junk.rp.rtp"
+
