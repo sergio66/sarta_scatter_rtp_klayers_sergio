@@ -220,20 +220,22 @@ C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
 C-----------------------------------------------------------------------
 C
-       INTEGER   IOUN         ! I/O unit number
+       INTEGER   IOUN            ! I/O unit number
 C
 C      for RDINFO
-       CHARACTER*120 FIN       ! input RTP filename
-       CHARACTER*120 FOUT      ! output RTP filename
-       LOGICAL  LRHOT          ! force refl therm rho=(1-emis)/pi?
-       INTEGER NUMPROF,NUMCHAN ! number of channels, profiles in rtp file
-       INTEGER NWANTP          ! number of wanted profiles (default -1=all)
-       INTEGER  LISTP(MAXPRO)  ! list of wanted profiles
-       INTEGER NWANTC          ! number of wanted channels (default -1=all)
-       INTEGER  LISTC(MAXPRO)  ! list of wanted channels
-       INTEGER NWANTJ          ! number of wanted jacs (default 0=none)
-       INTEGER  LISTJ(MAXPRO)  ! list of wanted channels
-
+       CHARACTER*120 FIN         ! input RTP filename
+       CHARACTER*120 FOUT        ! output RTP filename
+       LOGICAL  LRHOT            ! force refl therm rho=(1-emis)/pi?
+       INTEGER NUMPROF,NUMCHAN   ! number of channels, profiles in rtp file
+       INTEGER NWANTP            ! number of wanted profiles (default -1=all)
+       INTEGER  LISTP(MAXPRO)    ! list of wanted profiles
+       INTEGER NWANTC            ! number of wanted channels (default -1=all)
+       INTEGER  LISTC(MAXPRO)    ! list of wanted channels
+       INTEGER NWANTJ            ! number of wanted jacs (default 0=none)
+       INTEGER  LISTJ(MAXPRO)    ! list of wanted channels
+       INTEGER JAC_OUTPUT_UNITS  ! 0 for drad/dT and drad/dq, 
+                                 ! 1 for dBT/dT and dBT/dq       =   dBT/dq
+                                 ! 2 for dBT/dT and dBT/d(log q) = q dBT/dq
 C
 C      for FNMIE
        CHARACTER*240 VCLOUD        ! cloud version string
@@ -707,7 +709,6 @@ c       INTEGER IEFFCLD_TOP1,IEFFCLD_TOP2,IEFFCLD_BOT1,IEFFCLD_BOT2,IFOUND1,IFOU
        REAL RTHERM4_SOLAR4(4,MAXLAY,MXCHAN)      ! downwell thermal background term at surface (about same for all 4 calcs but whatever)
 ! jac output
        INTEGER IOUNTZ,IOUNG1,IOUNG2,IOUNG3,IOUNG4,IOUNG5,IOUNG6,IOUNG9,IOUNG11,IOUNG12,IOUNG103,IOUNWGT,IOUNCLD,iFileErr
-       INTEGER JAC_OUTPUT_UNITS           ! 0 for drad/dT and drad/dq, 1 for dBT/dT and dBT/d(log q) = q dBT/dq
        CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
      $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD
 
@@ -752,7 +753,7 @@ C      ---------------------
 C      Get command-line info
 C      ---------------------
        CALL RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC, 
-     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
+     $           NWANTJ, LISTJ, NUMCHAN, NUMPROF, JAC_OUTPUT_UNITS, 
      $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
      $     caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD)
 ccc
@@ -780,6 +781,11 @@ ccc
        DOJAC = .FALSE.
        IF (NWANTJ .GT. 0) THEN
          DOJAC = .TRUE.
+         print *,'JAC_OUTPUT_UNITS = ',JAC_OUTPUT_UNITS
+         IF ((JAC_OUTPUT_UNITS . LT. 0) .OR. (JAC_OUTPUT_UNITS .GT. 2)) THEN
+           print *,'Error : need 0 <= JAC_OUTPUT_UNITS <= 2'
+           STOP
+         END IF
          print *,'for NUMPROF = ',numprof,' profiles with NUMCHAN = ',numchan,' channels '
          print *, 'want this # jacs nwantj = ',nwantj,' followed by list (100=ST/T, 200=WGT, 1,3 = WV/OZ)....'
          print *,listj(1:nwantj)
@@ -797,6 +803,7 @@ ccc
          IOUNG12 = 212
          IOUNG103 = 2103
        END IF
+
 
 C      -------------------------
 C      Get cloud table filenames
@@ -1229,7 +1236,6 @@ C      Output the radiance and jacs
 C      ----------------------------
        CALL WRTRTP(IPROF, IOPCO, NCHAN, RAD, PROF, NWANTC, RINDCHN)
        IF (DOJAC) THEN 
-         JAC_OUTPUT_UNITS = 1
          include "writeout_jacs.f"         
        END IF
 

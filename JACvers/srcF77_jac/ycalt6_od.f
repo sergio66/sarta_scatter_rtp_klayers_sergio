@@ -668,7 +668,7 @@ C                IF (KHDO .LT. 0.0E+0) KHDO=0.0E+0
 
              IF (LHDO) THEN
                QDKHDO = RAQDKHDO(ILAY)*HDOJACMLT(ILAY)
-               print *,ILAY,KHDO,HDOJACMLT(ILAY),RAQDKHDO(ILAY),HDOJACMLT(ILAY)
+c               print *,ILAY,KHDO,HDOJACMLT(ILAY),RAQDKHDO(ILAY),HDOJACMLT(ILAY)
              END IF
 
 C

@@ -711,8 +711,11 @@ additional command line arguments, and you read in the output
 jacobians using Matlab. A typical run would be \newline
 
 \begin{verbatim}
-  [name of exec] fin=blah.op.rtp fout=blah.rad.rtp               RADS ONLY
-  [name of exec] fin=blah.op.rtp fout=blah.rad.rtp listj=-1      RADS and JACS
+  [name of exec] fin=blah.op.rtp fout=blah.rad.rtp                      RADS ONLY
+  [name of exec] fin=blah.op.rtp fout=blah.rad.rtp listj=-1 jacunit=0   RADS,JACS (dr/dq)  
+  [name of exec] fin=blah.op.rtp fout=blah.rad.rtp listj=-1 jacunit=1   RADS, JACS (dBT/dq)
+  [name of exec] fin=blah.op.rtp fout=blah.rad.rtp listj=-1             RADS, JACS (q dBT/dq)
+                                                                        <default>
 \end{verbatim}
 
 \subsection{Command Line arguments}
@@ -722,6 +725,12 @@ couple new important ones; run times change appropriately as you
 change any or all of num of chans/jacs/profiles
 
 \begin{itemize}
+\item   jacunit = 0,1,2
+  \begin{itemize}  
+  \item 0 : units are d(rad)/dX (ie d(rad)/dT or d(rad)/dq)
+  \item 1 : units are d(BT)/dX (ie d(BT)/dT or d(BT)/dq)
+  \item 2 : units are q(dBT)/dX (ie d(BT)/dT or d(BT)/dq) <DEFAULT>
+  \end{itemize}  
 \item   listp = list of profiles [Scott had this]
   \begin{itemize}
   \item listp allows you to choose upto 20 profiles (default -1 = all, or just

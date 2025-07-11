@@ -30,7 +30,7 @@ C    files, the channel list, and list of profile numbers.
 
 !CALL PROTOCOL:
 C       SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
-C     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
+C     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, JAC_OUTPUT_UNITS,
 C     $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
 C     $     caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD)
 
@@ -50,6 +50,9 @@ C    INTEGER   NWANTC  Number of desired channels  none
 C    INT arr   LISTC   List of desired channels nums   none
 C    INTEGER   NWANTJ  Number of desired jacs      none
 C    INT arr   LISTJ   List of desired jac nums    none
+c       INTEGER JAC_OUTPUT_UNITS  ! 0 for drad/dT and drad/dq, 
+C                                 ! 1 for dBT/dT and dBT/dq       =   dBT/dq
+c                                 ! 2 for dBT/dT and dBT/d(log q) = q dBT/dq
 
 !INPUT/OUTPUT PARAMETERS: none
 
@@ -150,7 +153,7 @@ C 06 Feb 2004 Scott Hannon      Add LRHOT argument and associated code
 
 C      =================================================================
        SUBROUTINE RDINFO(FIN, FOUT, LRHOT, NWANTP, LISTP, NWANTC, LISTC,
-     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, 
+     $             NWANTJ, LISTJ, NUMCHAN, NUMPROF, JAC_OUTPUT_UNITS, 
      $     caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
      $     caJACG6,caJACG9,caJacG11,caJACG12,caJacG103,caJACCLD)
 C      =================================================================
@@ -194,6 +197,10 @@ C      Output:
        INTEGER  LISTJ(MAXPRO)
        CHARACTER*180 caJacTZ,caJACWGT,caJACG1,caJACG2,caJACG3,caJACG4,caJACG5,
      $               caJACG6,caJACG9,caJACG11,caJACG12,caJACG103,caJACCLD
+       INTEGER JAC_OUTPUT_UNITS  ! 0 for drad/dT and drad/dq, 
+                                 ! 1 for dBT/dT and dBT/dq       =   dBT/dq
+                                 ! 2 for dBT/dT and dBT/d(log q) = q dBT/dq
+
 
 C-----------------------------------------------------------------------
 C      LOCAL VARIABLES
@@ -241,6 +248,8 @@ C      ------------
        NWANTC = -1   ! do sarta for all channels found in input file
        NWANTJ = 0    ! do sarta rads only (no jacs)
 
+       JAC_OUTPUT_UNITS = 2  ! default dBT/dT and dBT/d(log q) = q dBT/dq
+
        NUMPROF = NWANTP
        NUMCHAN = NWANTC
        caJacTZ  = ' '
@@ -285,6 +294,9 @@ C            ----------------------------
              ELSEIF (VAR(1:5) .EQ. 'LRHOT') THEN
                 LRHOT=STR2BO(VAL)
 
+             ELSEIF (VAR(1:7) .EQ. 'JACUNIT') THEN
+                READ(VAL,*) JAC_OUTPUT_UNITS
+
              ELSEIF (VAR(1:5) .EQ. 'LISTP') THEN
                 LLISTP=.TRUE.
 
@@ -306,7 +318,6 @@ C               Read the indices of the desired profiles
                 ENDDO
                 NWANTP=K
 C
-
              ELSEIF (VAR(1:5) .EQ. 'LISTC') THEN
                 LLISTC=.TRUE.
 
@@ -351,7 +362,7 @@ C               Read the indices of the desired channels
 
              ELSE
                 WRITE(6,1020) VAR(1:6)
- 1020           FORMAT('Unknown command-line argument: ',A6)
+ 1020           FORMAT('Unknown command-line argument: ',A10)
                 STOP
 
              ENDIF

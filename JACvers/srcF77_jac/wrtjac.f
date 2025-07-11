@@ -21,13 +21,14 @@
       WRITE(IOUNTZ) IPROF,NLAY+1,NCHAN,100  
 
       IF (JAC_OUTPUT_UNITS .EQ. 0) THEN
-        !! JAC_OUTPUT_UNITS = 0  ==> output drad/dT
+        !! JAC_OUTPUT_UNITS = 0  ==> output drad/dT, notice convert to mW
         DO iL = 1,NLAY
-          WRITE(IOUNTZ) (JAC_TZ_C(IL,iC),iC=1,NCHAN)
+          WRITE(IOUNTZ) (JAC_TZ_C(IL,iC)*1000.0,iC=1,NCHAN)
         END DO
-        WRITE(IOUNTZ) (JAC_ST_C(iC),iC=1,NCHAN)
-      ELSEIF (JAC_OUTPUT_UNITS .EQ. 1) THEN
+        WRITE(IOUNTZ) (JAC_ST_C(iC)*1000.0,iC=1,NCHAN)
+      ELSEIF ((JAC_OUTPUT_UNITS .EQ. 1) .OR. (JAC_OUTPUT_UNITS .EQ. 2)) THEN
         !! JAC_OUTPUT_UNITS = 1  ==> output dBT/dT
+        !! JAC_OUTPUT_UNITS = 2  ==> output dBT/dT
         a = c1*c2*(FREQ(1:NCHAN)**4)
         b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
         c = (log(b))**2
@@ -68,10 +69,21 @@ c************************************************************************
       IF ((IGASID .EQ. 200) .OR. (JAC_OUTPUT_UNITS .EQ. 0)) THEN
         !! IGASID == 200 ==> weighting function = no units
         !! JAC_OUTPUT_UNITS = 0  ==> output drad/dq
+        !! notice convert to mW
         DO iL = 1,NLAY
-          WRITE(IOUNG1) (JAC_G1_C(IL,iC),iC=1,NCHAN)
+          WRITE(IOUNG1) (JAC_G1_C(IL,iC)*1000.0,iC=1,NCHAN)
         END DO
       ELSEIF (((IGASID .LE. 12) .OR. (IGASID .EQ. 103)) .AND. (JAC_OUTPUT_UNITS .EQ. 1)) THEN
+        !! JAC_OUTPUT_UNITS = 1  ==> output dBT/dq
+        a = c1*c2*(FREQ(1:NCHAN)**4)
+        b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
+        c = (log(b))**2
+        d = (RAD(1:NCHAN))**2
+        raDeriv_Rad(1:NCHAN) = a/(b*c*d)
+        DO iL = 1,NLAY
+          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_G1_C(IL,iC),iC=1,NCHAN)
+        END DO
+      ELSEIF (((IGASID .LE. 12) .OR. (IGASID .EQ. 103)) .AND. (JAC_OUTPUT_UNITS .EQ. 2)) THEN
         !! JAC_OUTPUT_UNITS = 1  ==> output q dBT/dq = dBT/dlog(q)) 
         a = c1*c2*(FREQ(1:NCHAN)**4)
         b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
@@ -110,10 +122,23 @@ c************************************************************************
       !! prof number, number of layers to write, number of chans to write, what jac being done
       WRITE(IOUNG1) IPROF,NLAY,NCHAN,iGASID  
       IF (JAC_OUTPUT_UNITS .EQ. 0) THEN
+        !! notice convert to mW
         DO iL = 1,NLAY
-          WRITE(IOUNG1) (JAC_CLD_OUT(IL,iC),iC=1,NCHAN)
+          WRITE(IOUNG1) (JAC_CLD_OUT(IL,iC)*1000.0,iC=1,NCHAN)
         END DO
       ELSEIF (JAC_OUTPUT_UNITS .EQ. 1) THEN
+        !! JAC_OUTPUT_UNITS = 1  ==> output dBT/dq
+        a = c1*c2*(FREQ(1:NCHAN)**4)
+        b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
+        c = (log(b))**2
+        d = (RAD(1:NCHAN))**2
+        raDeriv_Rad(1:NCHAN) = a/(b*c*d)
+        DO iL = 1,NLAY
+c          print *,iL,CLDJACFAKEAMT(IL),raDeriv_rad(10),JAC_CLD_OUT(IL,10)
+          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC),iC=1,NCHAN)
+!          WRITE(IOUNG1) (raDeriv_rad(IC) * JAC_CLD_OUT(IL,iC),iC=1,NCHAN)
+        END DO
+      ELSEIF (JAC_OUTPUT_UNITS .EQ. 2) THEN
         !! JAC_OUTPUT_UNITS = 1  ==> output q dBT/dq = dBT/dlog(q)) 
         a = c1*c2*(FREQ(1:NCHAN)**4)
         b = c1*(FREQ(1:NCHAN)**3)/RAD(1:NCHAN) + 1
