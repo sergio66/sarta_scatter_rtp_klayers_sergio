@@ -31,6 +31,25 @@ airs_cloudy_feb25_H2020_PBL:
 	make -f make_sarta_pclsam
 	mv a.out ../bin/jac_airs_l1c_2834_cloudy_feb25_H2020_PBL
 
+# TEST TEST TEST
+airs_cloudy_jul25_H2020_ecm83:
+	rm -f *.o incFTC.f fnmie.f cbplev.f 
+	ln -s incFTC_airs_jul25_H2020_ecm83_pclsam.f incFTC.f
+	ln -s fnmie_iceGHMbaum_waterdrop_desertdust.f fnmie.f
+	ln -s cbplev_L2100.f cbplev.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_airs_l1c_2834_cloudy_jul25_H2020_ecm83
+
+# TEST TEST TEST
+airs_cloudy_aug25_H2020_saf703:
+	rm -f *.o incFTC.f fnmie.f cbplev.f 
+	ln -s incFTC_airs_jul25_H2020_saf703_pclsam.f incFTC.f
+	ln -s fnmie_iceGHMbaum_waterdrop_desertdust.f fnmie.f
+	ln -s cbplev_L2100.f cbplev.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_airs_l1c_2834_cloudy_aug25_H2020_saf703
+
+
 # AIRS for L1C May 2019
 # YAYAYAYAYAYAYAYAYA
 airs_cloudy_may19:

@@ -1,0 +1,92 @@
+OBJS=klayers_rtp.o \
+   rdinfo_klayers.o  opnrtp_klayers.o  rdrtp_klayers.o  wrtrtp_klayers.o \
+   rdafgl.o  merge.o  intlev.o  integ.o  grav.o  wexsvp.o  setxop.o \
+   spline.o  splint.o  spllev.o  wrtspl.o  cbplev.o  adafgl.o \
+   cbgids.o  util_klayers.o  chkgas.o  chkguc.o  cbgucs.o  toppmv.o  zbot.o
+
+
+# ------------------------------------------------------------------------
+# HDF LIBS
+# ------------------------------------------------------------------------
+# #HDFLIB = -L/asl/packages/external/hdf/hdf4/lib -ldf \
+# #	 -L/asl/packages/external/jpeg -ljpeg       \
+# #	 -L/asl/packages/external/zlib -lz         
+# 
+# HDF_INSTALL1 = /usr/cluster/contrib/hdf4/4.2.11
+# HDFLIB1   = -L$(HDF_INSTALL1)/lib -ldf -ljpeg -lz       ## -lmfhdf
+# 
+# # more libs
+# HDF_INSTALL2 = /usr/cluster/contrib/szip2/szip2.1
+# HDF_INSTALL2 = /usr/ebuild/software/Szip/2.1.1-GCCcore-6.4.0
+# HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
+# 
+# HDFLIB = $(HDFLIB1) $(HDFLIB2)
+
+HDFHOME = /usr/ebuild/software/HDF/4.2.14-GCCcore-8.3.0
+HDFINC = -I$(HDFHOME)/include/hdf
+HDFLIB = -L$(HDFHOME)/lib -ldf
+
+
+# ------------------------------------------------------------------------
+# RTP LIB and INCLUDE
+# ------------------------------------------------------------------------
+# RTPLIB = -L/asl/packages/rtp/lib -lrtp
+# RTPINC = -I/asl/packages/rtp/include
+# 
+# RTPLIB = -L/home/sergio/RTPV201/rtpV201_140levs/lib -lrtp
+# RTPINC = -I/home/sergio/RTPV201/rtpV201_140levs/include
+
+RTPHOME = /home/sergio/git/rtp/rtpV221_150levs/
+RTPHOME = /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_120km/rtpV221/
+RTPLIB = -L$(RTPHOME)/lib -lrtp
+RTPINC = -I$(RTPHOME)/include
+RTPDEFS_FILE = $(RTPHOME)/include/rtpdefs.f
+
+# -------------
+# FORTRAN flags
+# -------------
+# OPT  : compiler options
+# FLIB : fortran libraries (most compilers will not need any)
+# F77  : fortran compiler
+
+# -------
+# Generic
+#
+OPT = -O
+FLIB =
+F77 = f77
+
+# ------------
+# Linux Absoft
+#    -N109 fold all names to upper case
+#    -C    check array bounds
+#    -O    some optimizations
+#    -N3   add record info to unformatted files
+#    -s    static allocation
+# OPT = -N109 -C -O -N3 -s
+# OPT = -O
+OPT = -s -O -N3 -N26
+# Linux Absoft needs -lU77
+FLIB = -lU77
+F77 = /asl/opt/absoft/absoft10.0/bin/af77
+
+# ------------
+# ifort
+# see /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv201_150levs_80km/KLAYERS/Src_rtpV201/make_klayers
+
+OPT = -O
+F77 = /usr/ebuild/software/intel-compilers/2021.2.0/compiler/2021.2.0/linux/bin/intel64/ifort
+F77 = ifort
+FLIB =
+
+# -----
+# Build
+# -----
+
+# Link object files and libs to build executable
+klayers: $(OBJS)
+	$(F77) $(OBJS)  $(RTPLIB) $(HDFLIB) $(FLIB)
+
+# compile source to object files
+.f.o: incLAY.f cbplev.f
+	$(F77) $(RTPINC) -c $(OPT) $*.f
