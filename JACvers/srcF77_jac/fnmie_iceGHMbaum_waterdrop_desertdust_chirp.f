@@ -177,11 +177,11 @@ C                 <------------cloud string------------->
        CLDSTR(1)='201=ice_general habit 2013-07-25 Baum'
        MIETYP(1)=201
        FNMIEA(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_abs.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_abs_chirp.dat'
        FNMIEE(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_ext.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_ext_chirp.dat'
        FNMIEG(1)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_asy.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/ice_baumGHM_asy_chirp.dat'
 C
 
 C      mie particles #2: water drop
@@ -189,11 +189,11 @@ C                 <------------cloud string------------->
        CLDSTR(2)='101=waterdrop 2008-06-13'
        MIETYP(2)=101
        FNMIEA(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_abs.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_abs_chirp.dat'
        FNMIEE(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_ext.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_ext_chirp.dat'
        FNMIEG(2)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_asy.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/waterdrop_asy_chirp.dat'
 C
 
 C      mie particles #3: desert dust
@@ -201,11 +201,11 @@ C                 <------------cloud string------------->
        CLDSTR(3)='301=desertdust 2008-06-13'
        MIETYP(3)=301
        FNMIEA(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_abs.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_abs_chirp.dat'
        FNMIEE(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_ext.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_ext_chirp.dat'
        FNMIEG(3)=
-     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_asy.dat'
+     $ '/home/sergio/asl/rta/sarta_database/Data_mie_apr08/desertdust_asy_chirp.dat'
 C
 
 C      Assign VCLOUD string
