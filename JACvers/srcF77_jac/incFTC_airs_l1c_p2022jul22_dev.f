@@ -247,9 +247,7 @@ C      -----------------------------------
        INTEGER MAXPRO ! max # of user specified profiles
        INTEGER  MXGAS ! max # of gases in user profile
        INTEGER MXMIEA ! max # of mie particle sizes (cloud code only)
-       INTEGER MAXJAC    ! max # of jacs = 11 (since we have WV, CO2, O3, N2O, CO, CH4, SO2, NH3, HNO3, HDO, Tz .. WGT is separate)
-       INTEGER OPTRANJAC ! max # of jacs = 2  (since we have WV, Tz)
-       INTEGER CLDJAC    ! max # of jacs = 11  (since we have cfrac1,cfrac2,cfrac12,cngwat1,cngwat2,cpsize1,cpsize2,cprtop/bot)
+at2,cpsize1,cpsize2,cprtop/bot)
        PARAMETER(MAXLAY = 100)
        PARAMETER(  NSET = 7)
        PARAMETER(MXCHAN = 2834)
@@ -258,6 +256,10 @@ C      -----------------------------------
        PARAMETER(MAXPRO = 25)
        PARAMETER( MXGAS = 44)
        PARAMETER(MXMIEA = 10)
+
+       INTEGER MAXJAC    ! max # of jacs = 11 (since we have WV, CO2, O3, N2O, CO, CH4, SO2, NH3, HNO3, HDO, Tz .. WGT is separate)
+       INTEGER OPTRANJAC ! max # of jacs = 2  (since we have WV, Tz)
+       INTEGER CLDJAC    ! max # of jacs = 11  (since we have cfrac1,cfrac2,cfrac12,cngwat1,cngwat2
        PARAMETER(MAXJAC = 11)
        PARAMETER(OPTRANJAC = 2)
        PARAMETER(CLDJAC = 12)  
@@ -569,9 +571,12 @@ C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/fx.txt')
      $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/'
      $ // 'refprof_trace400')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/refprof_trace400')
+
+c in Dec 2025 had to do this emergency surgery
        PARAMETER(FNSUN =
-     $ '/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Solar/sol.txt')
-C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Solar/sol.txt')
+     $ '/umbc/rs/pi_sergio/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/sol.txt')
+C    $ '/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Solar/sol.txt')
+CC   $ '/asl/data/sarta_coef/Data_AIRS_may19/Solar/sol.txt')
 C
        PARAMETER(FNTHER=
      $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/therm.dat')

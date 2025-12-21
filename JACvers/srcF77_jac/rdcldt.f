@@ -183,6 +183,7 @@ C         Read the number of channels and mie types
              WRITE(6,1071) FNMIEA(K), I, MXCHAN
  1071        FORMAT('ERROR! unexpected number of channels in mie file',
      $       /,A80,/,'File has',I6,' channels, but MXCHAN=',I5)
+c NOTE YOU CAN COMMENT OUT THE STOP HERE< but then will have to do the same for EXT and ASYM
              STOP
           ENDIF
           IF (IC .GT. MXMIEA) THEN
@@ -201,6 +202,7 @@ C         Read the number of channels and mie types
 C
 C         Read mie particle sizes
           READ(IOUN) (MIEPS(IL,K),IL=1,MIENPS(K))
+c          print *,'READ MIESIZES'
 C
 C         Read mie abs data for required channels
           DO I=1,MXCHAN
@@ -210,7 +212,8 @@ C         Read mie abs data for required channels
                 READ(IOUN) (XJUNK(IL),IL=1,MIENPS(K))
              ENDIF
           ENDDO
-C
+c          print *,'READ MIE DATA'
+
           CLOSE(IOUN)
 C
 C

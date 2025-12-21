@@ -559,11 +559,14 @@ C
        PARAMETER(FNFX  =
      $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CRIS_HR/2022/fx.txt')
        PARAMETER(FNPREF =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CRIS_HR/2022/refprof_400_tra')
-c     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CRIS_HR/2022/refprof_trace400')
+     $  '/home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CRIS_HR/refprof_400_tra')   
+c     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CRIS_HR/2022/refprof_400_tra')
+cc     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CRIS_HR/2022/refprof_trace400')
+
        PARAMETER(FNSUN =
-     $ '/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Solar/sol.txt')
-c     $ '/home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Solar/sol.txt')
+     $ '/home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CRIS_HR/sol.txt')
+C     $ '/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Solar/sol.txt')
+CC     $ '/home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Solar/sol.txt')
 C
        PARAMETER(FNTHER =
      $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CRIS_HR/2022/therm.dat')

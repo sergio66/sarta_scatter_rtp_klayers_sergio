@@ -1,0 +1,6 @@
+/umbc/rs/pi_sergio/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP
+--------------------------------------------------------------
+
+scp -p sergio@yam.umbc.edu:///Users/chepplew/Data/Sarta_database/Prod_2022/prod_2022/chirp/jul2022/jul2022/dbase/Coef/* .
+
+scp -p sergio@yam.umbc.edu://Users/chepplew/Data/Sarta_database/Prod_2022/prod_2022/chirp/jul2022/jul2022/dbase/Solar/solardata.txt .

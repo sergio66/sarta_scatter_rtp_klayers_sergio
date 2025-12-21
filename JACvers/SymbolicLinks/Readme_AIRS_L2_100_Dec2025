@@ -1,0 +1,7 @@
+/umbc/rs/pi_sergio/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C
+--------------------------------------------------------------
+
+scp -p sergio@yam.umbc.edu://Users/chepplew/Data/Sarta_database/Prod_2022/prod_2022/airs_l1c/jul2022/jul2022/dbase/Coef/* .
+
+scp -p sergio@yam.umbc.edu://Users/chepplew/Data/Sarta_database/Prod_2022/prod_2022/airs_l1c/jul2022/jul2022/dbase/Solar/sol.txt .
+

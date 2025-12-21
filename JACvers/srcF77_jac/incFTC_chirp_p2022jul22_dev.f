@@ -201,6 +201,15 @@ C      ------------------------
        REAL     C2 ! radiation constant c2 (1.4387863 K/cm-1)
        PARAMETER(    PI = 3.1415926)
        PARAMETER(RADSUN = 6.956E+8)
+
+C
+c this is for Chou scaling
+       REAL rXTang ! do we include Tang correction???? the paper says 0.5, but I found use 0.3 for ice, 0.1 for water clouds
+                   ! use -1 for similarity (default before July 2023), -2 for chou, -3 for Maestri/Martinazzo
+                   ! ccprep_slab.f used as ISCALING = ABS(FLOOR(rXTang)), then calrad1,calrad2 uses this as well
+       PARAMETER(rXTang = 0.2000000)
+c       PARAMETER(rXTang = 0.8000000)
+c       PARAMETER(rXTang = -1.0000000)
 C
 Ccc    Previously used values; agrees w/JPL pre-Dec2000
 Ccc    PARAMETER(    C1 = 1.1910439E-8)  ! JPL value is 1E+3 bigger
@@ -243,6 +252,13 @@ C      -----------------------------------
        PARAMETER(MAXPRO = 25)
        PARAMETER( MXGAS = 44)
        PARAMETER(MXMIEA = 10)
+
+       INTEGER MAXJAC    ! max # of jacs = 11 (since we have WV, CO2, O3, N2O, CO, CH4, SO2, NH3, HNO3, HDO, Tz .. WGT is separate)
+       INTEGER OPTRANJAC ! max # of jacs = 2  (since we have WV, Tz)
+       INTEGER CLDJAC    ! max # of jacs = 11  (since we have cfrac1,cfrac2,cfrac12,cngwat1,cngwat2
+       PARAMETER(MAXJAC = 11)
+       PARAMETER(OPTRANJAC = 2)
+       PARAMETER(CLDJAC = 12)  
 C
 C***********************************************************************
 C      Variables for the coefficient sets
@@ -466,74 +482,77 @@ C
 C      ---------
 C      Filenames
 C      ---------
-       CHARACTER*90 FNCOF1 ! coef set1 
-       CHARACTER*90 FNCOF2 ! coef set2 
-       CHARACTER*90 FNCOF3 ! coef set3 
-       CHARACTER*90 FNCOF4 ! coef set4 
-       CHARACTER*90 FNCOF5 ! coef set5 
-       CHARACTER*90 FNCOF6 ! coef set6 
-       CHARACTER*90 FNCOF7 ! coef set7 
-       CHARACTER*90 FNCO2  ! coef CO2
-       CHARACTER*90 FNSO2  ! coef SO2
-       CHARACTER*90 FNHNO3 ! coef HNO3
-       CHARACTER*90 FNN2O  ! coef N2O
-       CHARACTER*90 FNNH3  ! coef NH3
-       CHARACTER*90 FNHDO  ! coef HDO
-       CHARACTER*90 FNOPTR ! coef optran
-       CHARACTER*90 FNTHER ! coef therm
-       CHARACTER*90 FNFX   ! coef fx
-       CHARACTER*90 FNPREF ! ref prof
-       CHARACTER*90 FNSUN  ! solar data
-       CHARACTER*90 FNCOFN ! non-LTE
+       CHARACTER*120 FNCOF1 ! coef set1 
+       CHARACTER*120 FNCOF2 ! coef set2 
+       CHARACTER*120 FNCOF3 ! coef set3 
+       CHARACTER*120 FNCOF4 ! coef set4 
+       CHARACTER*120 FNCOF5 ! coef set5 
+       CHARACTER*120 FNCOF6 ! coef set6 
+       CHARACTER*120 FNCOF7 ! coef set7 
+       CHARACTER*120 FNCO2  ! coef CO2
+       CHARACTER*120 FNSO2  ! coef SO2
+       CHARACTER*120 FNHNO3 ! coef HNO3
+       CHARACTER*120 FNN2O  ! coef N2O
+       CHARACTER*120 FNNH3  ! coef NH3
+       CHARACTER*120 FNHDO  ! coef HDO
+       CHARACTER*120 FNOPTR ! coef optran
+       CHARACTER*120 FNTHER ! coef therm
+       CHARACTER*120 FNFX   ! coef fx
+       CHARACTER*120 FNPREF ! ref prof
+       CHARACTER*120 FNSUN  ! solar data
+       CHARACTER*120 FNCOFN ! non-LTE
 C
 C
+c replace    /home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/   
+c with       /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/
        PARAMETER(FNCOF1=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/set1.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/set1.dat')
        PARAMETER(FNCOF2=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/set2.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/set2.dat')
        PARAMETER(FNCOF3=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/set3.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/set3.dat')
        PARAMETER(FNCOF4=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/set4.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/set4.dat')
        PARAMETER(FNCOF5=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/set5.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/set5.dat')
        PARAMETER(FNCOF6=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/set6.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/set6.dat')
        PARAMETER(FNCOF7=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/set7.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/set7.dat')
        PARAMETER(FNOPTR=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/optran.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/optran.dat')
 C
        PARAMETER(FNCO2 =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/co2.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/co2.dat')
        PARAMETER(FNSO2 =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/so2.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/so2.dat')
        PARAMETER(FNHNO3 =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/hno3.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/hno3.dat')
        PARAMETER(FNN2O =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/n2o.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/n2o.dat')
        PARAMETER(FNNH3 =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/nh3.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/nh3.dat')
 C
        PARAMETER(FNFX  =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/fx.txt')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/fx.txt')
        PARAMETER(FNPREF =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/refprof_trace400')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/refprof_trace400')
        PARAMETER(FNSUN =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Solar/solardata.txt')
+     $  '/umbc/rs/pi_sergio/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/solardata.txt')
+c     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Solar/solardata.txt')
 C
        PARAMETER(FNTHER =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/therm.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/therm.dat')
        PARAMETER(FNCOFN =
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/nte_7term.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/nte_7term.dat')
 C
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C Tuning filename
-       CHARACTER*90 FNTMLT ! tuning multiplier filename
+       CHARACTER*120 FNTMLT ! tuning multiplier filename
 C
        PARAMETER(FNTMLT=
-     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Coef/'
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/'
      $ // 'tunmlt_ones.txt')
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -560,7 +579,11 @@ c       PARAMETER( GUCIN = 2 ) ! GUC number for:  kilomoles/cm^2
 
 c
 c rtpV201 compatibility
-       CHARACTER*40 VCLOUD
-       PARAMETER( VCLOUD = 'no clouds' )
+c       CHARACTER*40 VCLOUD
+c       PARAMETER( VCLOUD = 'no clouds' )
+
+c number of mie types : dust, liquid cloud, ice cloud
+        INTEGER NMIETY
+        PARAMETER(NMIETY=3)
 
 C      End of include file

@@ -292,6 +292,15 @@ iasi_jun19:
 	mv a.out ../bin/jac_iasi_jun19_xnte
 
 # --------------------- CHIRP -------------------
+# CHIRP prod_2022, build: jul2022
+chirp_jul22_dev:
+	rm -f *.o incFTC.f fnmie.f cbplev.f
+	ln -s incFTC_chirp_p2022jul22_dev.f incFTC.f
+	ln -s fnmie_iceGHMbaum_waterdrop_desertdust_chirp.f fnmie.f
+	ln -s cbplev_L2100.f cbplev.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_chirp_p2022jul22_dev_cloudy
+
 # CHIRP Bare bones
 chirp_feb20:
 	rm -f *.o incFTC.f
@@ -299,6 +308,13 @@ chirp_feb20:
 	ln -s incFTC_chirp_base_tra_thrm_nte.f incFTC.f
 	make -f make_sarta
 	mv a.out ../bin/jac_chirp_feb20_base_tra_thrm_nte
+
+# CHIRP prod_2022, build: jul2022 xnte
+chirp_p2022jul22_xnte:
+	rm -f *.o incFTC.f
+	ln -s incFTC_chirp_p2022jul22_xnte_dev.f incFTC.f
+	make -f make_sarta_xnte
+	mv a.out ../bin/chirp_p2022jul22_xnte_dev
 
 #----------------------------------------------------------------------------------------
 # File management
