@@ -324,6 +324,7 @@ C      -----------------------------------
 C      Add klayers comment to header attributes
 C      Count the number of header attributes
        I=1
+c       DO WHILE (ICHAR(HATT(I).fname) .NE. 0 .AND. I .LE. MAXNATTR)
        DO WHILE (ICHAR(HATT(I).fname) .NE. 0 .AND. I .LE. MAXNATTR)
           I=I + 1
        ENDDO
@@ -394,7 +395,8 @@ C      --------------------------------------
 C      Check input rtp gas_i units attributes
 C      --------------------------------------
        I=1
-       DO WHILE (ICHAR(PATT(I).fname) .NE. 0 .AND. I .LE. MAXNATTR)
+c       DO WHILE (ICHAR(PATT(I).fname) .NE. 0 .AND. I .LE. MAXNATTR)
+       DO WHILE (ICHAR(PATT(I).fname(1:1)) .NE. 0 .AND. I .LE. MAXNATTR)
 C
           IF ( PATT(I).fname(1:4) .EQ. 'gas_' .AND.
      $         PATT(I).aname(1:5) .EQ. 'units') THEN

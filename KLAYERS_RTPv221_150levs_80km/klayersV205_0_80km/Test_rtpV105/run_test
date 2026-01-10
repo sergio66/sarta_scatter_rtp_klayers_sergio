@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# run_test : script to run klayers for the example test case.
+#
+# Usage:  run_test  {ie just enter "run_test"}
+#
+# Last updated: 26 November 2001, Scott Hannon
+###############################################################################
+
+# Name of klayers executable
+KLAYERS='../Bin/klayers_airs'
+
+# RTP input and output file suffixes
+#IKSUF='_ip.rtp'
+#OKSUF='_op.rtp'
+IKSUF='_in.rtp'
+OKSUF='_out.rtp'
+
+# RTP input and outpiut file directories
+IKDIR='./'
+OKDIR='./'
+
+# Name of file to work on (without dir or suffix)
+NAME='test'
+
+# Build full filenames for input and output files
+IKFILE=$IKDIR$NAME$IKSUF
+OKFILE=$OKDIR$NAME$OKSUF
+
+# Run KLAYERS to calculate layers-type profile
+echo 'running klayers'
+$KLAYERS  fin=$IKFILE  fout=$OKFILE
+
+### end of script ###

@@ -1,0 +1,13 @@
+maxlev = 120
+maxgas =  80
+
+inside
+[sergio@taki-usr2 rtpV221_80gases]$ ls -lt include
+total 92
+-rw-r--r-- 1 sergio pi_strow 10474 Dec 30 20:18 rtpdefs120lev.f
+-rw-r--r-- 1 sergio pi_strow  9442 Dec 30 20:18 rtp120lev.h
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+copied this to /home/sergio/git/rtp/rtpV221_80gases from here (/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_120km/rtpV221_80gases/)

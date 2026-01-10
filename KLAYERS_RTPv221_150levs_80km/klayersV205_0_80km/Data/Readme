@@ -1,0 +1,6 @@
+[sergio@c24-52 WORK]$ ls -lt /home/sergio/git/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Feb05_2025/klayersV205/Data/glatm*
+-rw-rw-r-- 1 sergio pi_sergio 106055 Dec 19 05:52 /home/sergio/git/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Feb05_2025/klayersV205/Data/glatm_16Aug2010.dat
+-rw-rw-r-- 1 sergio pi_sergio  84471 Dec 19 05:52 /home/sergio/git/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Feb05_2025/klayersV205/Data/glatm_24Feb1998.dat
+lrwxrwxrwx 1 sergio pi_sergio     19 Dec 19 05:52 /home/sergio/git/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_PBL/Feb05_2025/klayersV205/Data/glatm.dat -> glatm_16Aug2010.dat
+
+

@@ -1,0 +1,23 @@
+cp -aR /asl/packages/rtpV221 .
+
+xnw rtpV221/include/rtpdefs.f
+       parameter ( MAXLEV    =  150 )
+xnw rtpV221/include/rtp.h
+      #define MAXLEV    150	/* max number of levels or layers	*/
+
+at rtpV221 (ie the main dir level)
+  make clean
+  make
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+cp -aR ../KLAYERS_RTPv201_150levs_80km    klayersV205_0_120km
+
+new file   klayersV205_0_120km/Src_rtpV221/plevs_0_120km.m
+  edited Makefile     to look for    klayersV205_0_120km/Grid/cbplev_airs_0_120km.f
+  edited make_klayers to look for    
+    RTPHOME = /asl/packages/rtpV201
+    RTPHOME = /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_120km/rtpV221/
+
+cd klayersV205_0_120km/Test_rtpV221
+  test.sc
