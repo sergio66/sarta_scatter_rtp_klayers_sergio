@@ -1,0 +1,21 @@
+01/30/2026      rdrtp_pclsam.f has finite difference perturbation possibilies;
+                NOTE you have to
+		(1) do perturbations on layers NLAY (=gnd), NLAY-1 (just abve gnd), NLAY-2 ... 1
+                (2) appropriate finite diff jac lines are comments out, uncomment and recompile as needed
+		
+01/29/2026      Fixed a bug in lowest (fractional) layer jacobian ... now at output time,
+                   jacX(v,lowest lay) --> jacX(v,lowest lay) * BLMULT
+		wnere X = T or G1,2,3,4,5,6,9,12
+		
+10/07/2025      sarta jac now has jacunit as a command line option for sarta jac (0,1,2 <default>)
+
+01/07/2025      Cleaned up scripts to make SARTA with different coefficients
+                See eg SymbolicLinks/sarta
+
+01/04/2025      PBL version of SARTA (adding in correct cbplevs.f throu makefiles)
+
+01/10/2024      RTP v2.21
+
+01/07/2023      Hooks and code for Chou/Tang/Yang PCLSAM improvement
+
+01/04/2024	Started the analyic jacobians code

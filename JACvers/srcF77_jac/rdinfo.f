@@ -50,7 +50,7 @@ C    INTEGER   NWANTC  Number of desired channels  none
 C    INT arr   LISTC   List of desired channels nums   none
 C    INTEGER   NWANTJ  Number of desired jacs      none
 C    INT arr   LISTJ   List of desired jac nums    none
-c       INTEGER JAC_OUTPUT_UNITS  ! 0 for drad/dT and drad/dq, 
+c    INTEGER   JAC_OUTPUT_UNITS   ! 0 for drad/dT and drad/dq, 
 C                                 ! 1 for dBT/dT and dBT/dq       =   dBT/dq
 c                                 ! 2 for dBT/dT and dBT/d(log q) = q dBT/dq
 
@@ -130,7 +130,11 @@ C          listj='-1 1 2 3 4 5'
 C       Due to the 80 char limit, the maximum number of entries
 C       in listc is limited.  (Eg 15 four digit numbers, or
 C       25 two digit numbers.  MAXPRO is the hardcoded limit.)
-
+c
+c    jacunit +2  DEFAULT for dBT/dT and dBT/d(log q) = q dBT/dq
+c            +1          for dBT/dT and dBT/dq       =   dBT/dq
+c             0          for drad/dT and drad/dq
+  
 !ALGORITHM REFERENCES: see DESCRIPTION
 
 

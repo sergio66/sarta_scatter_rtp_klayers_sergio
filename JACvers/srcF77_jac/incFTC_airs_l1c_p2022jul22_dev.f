@@ -247,7 +247,6 @@ C      -----------------------------------
        INTEGER MAXPRO ! max # of user specified profiles
        INTEGER  MXGAS ! max # of gases in user profile
        INTEGER MXMIEA ! max # of mie particle sizes (cloud code only)
-at2,cpsize1,cpsize2,cprtop/bot)
        PARAMETER(MAXLAY = 100)
        PARAMETER(  NSET = 7)
        PARAMETER(MXCHAN = 2834)

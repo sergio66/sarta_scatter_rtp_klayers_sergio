@@ -673,7 +673,8 @@ C      for jacobians
 ! optran
        REAL  DAOPJAC(OPTRANJAC, MAXLAY)        !!!! OPTRAN
        REAL  H2OJACPRD(OPTRANJAC,NH2O,MXOWLY)  !!!! OPTRAN
-! usual jacs (, G1,G2,G3,G4,G5,G6,G9,G12
+! usual jacs T, G1,G2,G3,G4,G5,G6,G9,G12
+! we need clear [_C] and  clouds  [_1, _2, _12]
        REAL JAC_ST_C(MXCHAN),         JAC_ST_1(MXCHAN),         JAC_ST_2(MXCHAN),         JAC_ST_12(MXCHAN)
        REAL JAC_TZ_C(MAXLAY,MXCHAN),  JAC_TZ_1(MAXLAY,MXCHAN),  JAC_TZ_2(MAXLAY,MXCHAN),  JAC_TZ_12(MAXLAY,MXCHAN)
        REAL JAC_G1_C(MAXLAY,MXCHAN),  JAC_G1_1(MAXLAY,MXCHAN),  JAC_G1_2(MAXLAY,MXCHAN),  JAC_G1_12(MAXLAY,MXCHAN)
@@ -1236,6 +1237,7 @@ C      Output the radiance and jacs
 C      ----------------------------
        CALL WRTRTP(IPROF, IOPCO, NCHAN, RAD, PROF, NWANTC, RINDCHN)
        IF (DOJAC) THEN 
+c note : we know "blmult" in sarta_pclsam.f and will use it to adjust jacobians for lowest layer
          include "writeout_jacs.f"         
        END IF
 

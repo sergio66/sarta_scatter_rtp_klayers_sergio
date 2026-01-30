@@ -28,6 +28,7 @@ c       FCLEAR = 1.0; CFRA1X = 0.0; CFRA2X = 0.0; CFRA12 = 0.0
 
 !!!!      RTHERM4_SOLAR4 = 0    !!! DEBUG
 c%%%%%%%%%%%%%%%%%%%%%%%%%
+c note : we know "blmult" in sarta_pclsam.f and will use it to adjust jacobians for lowest layer
       include "writeout_gas1_12jacs.f"
       include "writeout_TZjacs_WGTFCN.f"
       include "writeout_cldjacs.f"

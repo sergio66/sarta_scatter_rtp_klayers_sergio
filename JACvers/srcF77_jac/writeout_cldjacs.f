@@ -454,7 +454,7 @@ c write it all out
         !! ** <> ** <> ** <> ** <> ** !!
         !! finally, write out the [5 cld1, 5 cld2, 1 cld12, 1 stemp jacs ] !!!
 !        CALL WRTJAC_CLD(IOUNCLD,IPROF,12,   NCHAN,300,FREQ,RAD,JAC_OUTPUT_UNITS*0,CLDJACFAKEAMT,JAC_CLD_OUT)    !!! test raw rad diffs
-        CALL WRTJAC_CLD(IOUNCLD,IPROF,CLDJAC,NCHAN,300,FREQ,RAD,JAC_OUTPUT_UNITS*1,CLDJACFAKEAMT,JAC_CLD_OUT)
+        CALL WRTJAC_CLD(IOUNCLD,BLMULT,IPROF,CLDJAC,NCHAN,300,FREQ,RAD,JAC_OUTPUT_UNITS*1,CLDJACFAKEAMT,JAC_CLD_OUT)
         !! ** <> ** <> ** <> ** <> ** !!
         !! finally, write it out!!!
 

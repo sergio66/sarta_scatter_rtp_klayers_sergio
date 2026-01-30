@@ -479,6 +479,20 @@ c
 c for now ignore clouds
 c
 
+c see /home/sergio/git/kcarta/downlookjac.m for testing finite difference jacobians
+c         profileG.mtemp(ind_perturb) = profileG.mtemp(ind_perturb) + 1;
+c         profileG.gamnt(ind_perturb) = profileG.gamnt(ind_perturb)*1.1;
+c sarta finite difference jacobians  
+c NOTE you have to do perturbations on layers NLAY (=gnd), NLAY-1 (just abve gnd), NLAY-2 ... 1
+c NOTE you have to do perturbations on layers NLAY (=gnd), NLAY-1 (just abve gnd), NLAY-2 ... 1
+c NOTE you have to do perturbations on layers NLAY (=gnd), NLAY-1 (just abve gnd), NLAY-2 ... 1
+c   T pert
+c       TEMP(NLAY-6) = TEMP(NLAY-6)+0.1
+c       write(*,'(A,I3,A)') 'perturbing temperature of layer ',NLAY-6,' by 0.1 K'
+c   WV pert
+c       WAMNT(NLAY-0) = WAMNT(NLAY-0)*1.01
+c       write(*,'(A,I3,A,ES12.5)') 'perturbing WV amte of layer ',NLAY-0,' by a mult factor of 1.01, dq = ',WAMNT(NLAY-0)*0.01
+
 C
  9999  RETURN
        END

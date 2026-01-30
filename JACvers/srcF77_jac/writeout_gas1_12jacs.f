@@ -13,7 +13,7 @@
      $                             CFRA1X*JAC_G1_1(1:NLAY,1:NCHAN)  * L2S4above(2,1:NLAY,1:NCHAN) + 
      $                             CFRA2X*JAC_G1_2(1:NLAY,1:NCHAN)  * L2S4above(3,1:NLAY,1:NCHAN) + 
      $                             CFRA12*JAC_G1_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
-        CALL WRTJAC_GAS(IOUNG1,IPROF,NLAY,NCHAN,1,FREQ,RAD,JAC_OUTPUT_UNITS,WAMNT,JAC_G1_C)
+        CALL WRTJAC_GAS(IOUNG1,BLMULT,IPROF,NLAY,NCHAN,1,FREQ,RAD,JAC_OUTPUT_UNITS,WAMNT,JAC_G1_C)
       END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -29,7 +29,7 @@ c%%%%%%%%%%%%%%%%%%%%%%%%%
      $                             CFRA12*JAC_G2_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
 
         JAC_G2_C(1,1:NCHAN) = JAC_G2_C(1,1:NCHAN) + NLTEJACPRED7Q(1:NCHAN)
-        CALL WRTJAC_GAS(IOUNG2,IPROF,NLAY,NCHAN,2,FREQ,RAD,JAC_OUTPUT_UNITS,FAMNT,JAC_G2_C)
+        CALL WRTJAC_GAS(IOUNG2,BLMULT,IPROF,NLAY,NCHAN,2,FREQ,RAD,JAC_OUTPUT_UNITS,FAMNT,JAC_G2_C)
       END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,7 +44,7 @@ c%%%%%%%%%%%%%%%%%%%%%%%%%
      $                             CFRA2X*JAC_G3_2(1:NLAY,1:NCHAN)  * L2S4above(3,1:NLAY,1:NCHAN) + 
      $                             CFRA12*JAC_G3_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
 
-        CALL WRTJAC_GAS(IOUNG3,IPROF,NLAY,NCHAN,3,FREQ,RAD,JAC_OUTPUT_UNITS,OAMNT,JAC_G3_C)
+        CALL WRTJAC_GAS(IOUNG3,BLMULT,IPROF,NLAY,NCHAN,3,FREQ,RAD,JAC_OUTPUT_UNITS,OAMNT,JAC_G3_C)
       END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,7 +59,7 @@ c%%%%%%%%%%%%%%%%%%%%%%%%%
      $                             CFRA2X*JAC_G4_2(1:NLAY,1:NCHAN)  * L2S4above(3,1:NLAY,1:NCHAN) + 
      $                             CFRA12*JAC_G4_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
 
-        CALL WRTJAC_GAS(IOUNG4,IPROF,NLAY,NCHAN,4,FREQ,RAD,JAC_OUTPUT_UNITS,NAMNT,JAC_G4_C)
+        CALL WRTJAC_GAS(IOUNG4,BLMULT,IPROF,NLAY,NCHAN,4,FREQ,RAD,JAC_OUTPUT_UNITS,NAMNT,JAC_G4_C)
       END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,7 +74,7 @@ c%%%%%%%%%%%%%%%%%%%%%%%%%
      $                             CFRA2X*JAC_G5_2(1:NLAY,1:NCHAN)  * L2S4above(3,1:NLAY,1:NCHAN) + 
      $                             CFRA12*JAC_G5_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
 
-        CALL WRTJAC_GAS(IOUNG5,IPROF,NLAY,NCHAN,5,FREQ,RAD,JAC_OUTPUT_UNITS,CAMNT,JAC_G5_C)
+        CALL WRTJAC_GAS(IOUNG5,BLMULT,IPROF,NLAY,NCHAN,5,FREQ,RAD,JAC_OUTPUT_UNITS,CAMNT,JAC_G5_C)
       END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -89,7 +89,7 @@ c%%%%%%%%%%%%%%%%%%%%%%%%%
      $                             CFRA2X*JAC_G6_2(1:NLAY,1:NCHAN)  * L2S4above(3,1:NLAY,1:NCHAN) + 
      $                             CFRA12*JAC_G6_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
 
-        CALL WRTJAC_GAS(IOUNG6,IPROF,NLAY,NCHAN,6,FREQ,RAD,JAC_OUTPUT_UNITS,MAMNT,JAC_G6_C)
+        CALL WRTJAC_GAS(IOUNG6,BLMULT,IPROF,NLAY,NCHAN,6,FREQ,RAD,JAC_OUTPUT_UNITS,MAMNT,JAC_G6_C)
       END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,7 +104,7 @@ c%%%%%%%%%%%%%%%%%%%%%%%%%
      $                             CFRA2X*JAC_G9_2(1:NLAY,1:NCHAN)  * L2S4above(3,1:NLAY,1:NCHAN) + 
      $                             CFRA12*JAC_G9_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
 
-        CALL WRTJAC_GAS(IOUNG9,IPROF,NLAY,NCHAN,9,FREQ,RAD,JAC_OUTPUT_UNITS,SAMNT,JAC_G9_C)
+        CALL WRTJAC_GAS(IOUNG9,BLMULT,IPROF,NLAY,NCHAN,9,FREQ,RAD,JAC_OUTPUT_UNITS,SAMNT,JAC_G9_C)
       END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -119,7 +119,7 @@ c     $                              CFRA1X*JAC_G11_1(1:NLAY,1:NCHAN)  * L2S4abo
 c     $                              CFRA2X*JAC_G11_2(1:NLAY,1:NCHAN)  * L2S4above(3,1:NLAY,1:NCHAN) + 
 c     $                              CFRA11*JAC_G11_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
 c
-c        CALL WRTJAC_GAS(IOUNG11,IPROF,NLAY,NCHAN,11,FREQ,RAD,JAC_OUTPUT_UNITS,AAMNT,JAC_G11_C)
+c        CALL WRTJAC_GAS(IOUNG11,BLMULT,IPROF,NLAY,NCHAN,11,FREQ,RAD,JAC_OUTPUT_UNITS,AAMNT,JAC_G11_C)
 c      END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,7 +134,7 @@ c%%%%%%%%%%%%%%%%%%%%%%%%%
      $                              CFRA2X*JAC_G12_2(1:NLAY,1:NCHAN)  * L2S4above(3,1:NLAY,1:NCHAN) + 
      $                              CFRA12*JAC_G12_12(1:NLAY,1:NCHAN) * L2S4above(4,1:NLAY,1:NCHAN)
 
-        CALL WRTJAC_GAS(IOUNG12,IPROF,NLAY,NCHAN,12,FREQ,RAD,JAC_OUTPUT_UNITS,HAMNT,JAC_G12_C)
+        CALL WRTJAC_GAS(IOUNG12,BLMULT,IPROF,NLAY,NCHAN,12,FREQ,RAD,JAC_OUTPUT_UNITS,HAMNT,JAC_G12_C)
       END IF   
 
 c%%%%%%%%%%%%%%%%%%%%%%%%%
