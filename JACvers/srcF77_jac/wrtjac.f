@@ -122,12 +122,13 @@ c************************************************************************
       END
 
 c************************************************************************
-      SUBROUTINE WRTJAC_CLD(IOUNG1,IPROF,NLAY,NCHAN,iGASID,FREQ,RAD,JAC_OUTPUT_UNITS,CLDJACFAKEAMT,JAC_CLD_OUT)
+      SUBROUTINE WRTJAC_CLD(IOUNG1,BLMULT,IPROF,NLAY,NCHAN,iGASID,FREQ,RAD,JAC_OUTPUT_UNITS,CLDJACFAKEAMT,JAC_CLD_OUT)
 
       IMPLICIT NONE
 
       include 'incFTC.f'
 
+      REAL    BLMULT   !!! bottom layer fraction
       INTEGER iGasID   !!! gasID
       INTEGER IOUNG1   !!! I/O unit ID
       INTEGER IPROF    !!! current profile number

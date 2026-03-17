@@ -788,7 +788,7 @@ ccc
            STOP
          END IF
          print *,'for NUMPROF = ',numprof,' profiles with NUMCHAN = ',numchan,' channels '
-         print *, 'want this # jacs nwantj = ',nwantj,' followed by list (100=ST/T, 200=WGT, 1,3 = WV/OZ)....'
+         print *, 'want this # jacs nwantj = ',nwantj,' followed by list (100=ST/T, 200=WGT, 300=CLD, 1,2,3 = WV/CO2/OZ)....'
          print *,listj(1:nwantj)
          IOUNCLD = 300
          IOUNWGT = 200
@@ -818,7 +818,7 @@ C      ---------------------------
      $    INDCHN, IH2O, IO3, ICO, ICH4, ICO2, ISO2, IHNO3, IN2O,
      $    INH3, IOPCI, HEAD, HATT, PATT, LCO2PM, NWANTC, LISTC, RINDCHN)
   
-C       print*, 'sarta_cloudy: completed opnrtp'
+c       write(*,'(A,I4)')  'sarta_cloudy : sarta_pclsam_fresh.f : completed opnrtp, nchan = ',nchan
 ccc
 
 C      CO2 profile switch

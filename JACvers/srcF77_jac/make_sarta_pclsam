@@ -124,7 +124,7 @@ OPT = -O2 -convert big_endian -extend-source 132 -check bounds -g -traceback -de
 OPT = -O2 -convert big_endian -extend-source 132 -pg -check bounds -g -traceback -debug -gen-interfaces -warn interface
 OPTEXEC = -pg
 
-## slow, no profiling
+## slow, profiling, check bounds etc
 OPT = -O2 -convert big_endian -extend-source 132 -pg -check bounds -g -traceback -debug -gen-interfaces -warn interface
 OPTEXEC = -pg
 OPTEXEC =
