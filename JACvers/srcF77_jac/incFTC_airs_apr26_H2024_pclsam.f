@@ -521,53 +521,53 @@ c Replace "/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/db
 c Replace "/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/" with "/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/"
 
        PARAMETER(FNCOF1=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/set1.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/set1.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set1.dat')
        PARAMETER(FNCOF2=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/set2.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/set2.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set2.dat')
        PARAMETER(FNCOF3=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/set3.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/set3.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set3.dat')
        PARAMETER(FNCOF4=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/set4.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/set4.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set4.dat')
        PARAMETER(FNCOF5=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/set5.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/set5.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set5.dat')
        PARAMETER(FNCOF6=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/set6.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/set6.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set6.dat')
        PARAMETER(FNCOF7=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/set7.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/set7.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/set7.dat')
        PARAMETER(FNOPTR=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/optran.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/optran.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/optran.dat')
 C
        PARAMETER(FNCO2 =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/co2.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/co2.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/co2.dat')
        PARAMETER(FNSO2 =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/so2.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/so2.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/so2.dat')
        PARAMETER(FNHNO3 =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/hno3.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/hno3.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/hno3.dat')
        PARAMETER(FNN2O =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/n2o.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/n2o.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/n2o.dat')
        PARAMETER(FNNH3 =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/nh3.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/nh3.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/nh3.dat')
        PARAMETER(FNHDO =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/hdo.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/hdo.dat')
 C
        PARAMETER(FNFX  =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/fx.txt')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/fx.txt')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/fx.txt')
        PARAMETER(FNPREF =
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/'
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/'
      $ // 'refprof_trace400')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/refprof_trace400')
 
@@ -578,9 +578,9 @@ C    $ '/home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase
 CC   $ '/asl/data/sarta_coef/Data_AIRS_may19/Solar/sol.txt')
 C
        PARAMETER(FNTHER=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/therm.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/therm.dat')
        PARAMETER(FNCOFN=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/nte_7term.dat')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/nte_7term.dat')
 C     $ '/asl/data/sarta_coef/Data_AIRS_may19/Coef/nte_7term.dat')
 C
 C
@@ -589,7 +589,7 @@ C Tuning filename
        CHARACTER*120 FNTMLT ! tuning multiplier filename
 C
        PARAMETER(FNTMLT=
-     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2022/tunmlt.txt')
+     $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/AIRS/2026/tunmlt.txt')
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C

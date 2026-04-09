@@ -23,18 +23,19 @@ see for example
 2A) [sergio@strow-interact SymbolicLinks]$ ls -lt /home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/dbase/Coef
 Copy all that stuff into sarta_airsL2100.sc
 
-2B) and start editing. mving thje iles on the left eg
+2B) and start editing, removing the files on the left eg
    set1.dat --> /home/chpellew/blah/r49/CRIS_HR_r49_cutcoef_set1_fowp_g4.dat
 
-2C) to the right, also removing them
+2C) and making new links to the right, also removing them
    rm set1.dat; ln -s /home/chepplew/data/sarta/prod_2022/cris_hr/jul2022/fitc/r49/CRIS_HR_r49_cutcoef_set1_fowp_g4.dat             set1.dat
 
 2D) VERY IMPORTANT : chip.rs.umbc.edu cannot see /home/chepplew
     So replace /home/chepplew/  with /home/sergio/asl/s1/chepplew/
 
 2D) run  sarta_airsL2100.sc
-
-2E) Check that files are indeed made with unbroken links in 
+    It should do   ls -lt --color=always  L2_100/AIRS/
+OR     
+    Check that files are indeed made with unbroken links in 
       ls -lt L2_100/AIRS/
 
 %%%%%%%%%%%%%%%%%%%%%%%%%

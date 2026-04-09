@@ -23,33 +23,36 @@
 
 ########################################################################
 
+## note /home/sergio/asl/sergiodisk/ === /umbc/rs/pi_sergio/
+
 echo "making L2_100/CHIRP/2022/ links ...."
 cd L2_100/CHIRP/2022/
 
-rm nte_7term.dat;    ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/nte_7term.dat    nte_7term.dat
-rm xnte_14term.dat;  ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/xnte_14term.dat  xnte_14term.dat
+rm nte_7term.dat;    ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/nte_7term.dat    nte_7term.dat
+rm xnte_14term.dat;  ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/xnte_14term.dat  xnte_14term.dat
 
-rm hdo.dat;          ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/hdo.dat    hdo.dat
-rm nh3.dat;          ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/nh3.dat    nh3.dat
-rm n2o.dat;          ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/n2o.dat    n2o.dat
-rm hno3.dat;         ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/hno3.dat   hno3.dat
-rm so2.dat;          ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/so2.dat    so2.dat
-rm therm.dat;        ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/therm.dat  therm.dat
-rm co2.dat;          ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/co2.dat    co2.dat
+rm hdo.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/hdo.dat    hdo.dat
+rm nh3.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/nh3.dat    nh3.dat
+rm n2o.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/n2o.dat    n2o.dat
+rm hno3.dat;         ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/hno3.dat   hno3.dat
+rm so2.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/so2.dat    so2.dat
+rm therm.dat;        ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/therm.dat  therm.dat
+rm co2.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/co2.dat    co2.dat
 
-rm fx.txt;           ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/fx.txt          .
-rm refprof_trace400; ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/refprof_trace400 .
-rm tunmlt_ones.txt;  ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/tunmlt_ones.txt .
+rm fx.txt;           ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/fx.txt          .
+rm refprof_trace400; ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/refprof_trace400 .
+rm tunmlt_ones.txt;  ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/tunmlt_ones.txt .
 
-rm optran.dat; ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/optran.dat            optran.dat
-rm set7.dat;   ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set7.dat              set7.dat
-rm set6.dat;   ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set6.dat              set6.dat
-rm set5.dat;   ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set5.dat              set5.dat
-rm set4.dat;   ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set4.dat              set4.dat
-rm set3.dat;   ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set3.dat              set3.dat
-rm set2.dat;   ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set2.dat              set2.dat
-rm set1.dat;   ln -s /home/sergio/asl/sergiodisk/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set1.dat              set1.dat
+rm optran.dat; ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/optran.dat            optran.dat
+rm set7.dat;   ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set7.dat              set7.dat
+rm set6.dat;   ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set6.dat              set6.dat
+rm set5.dat;   ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set5.dat              set5.dat
+rm set4.dat;   ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set4.dat              set4.dat
+rm set3.dat;   ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set3.dat              set3.dat
+rm set2.dat;   ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set2.dat              set2.dat
+rm set1.dat;   ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/set1.dat              set1.dat
 
 cd ../../../
+ls -lt --color=always  L2_100/CHIRP/2022
 echo "from /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/srcF77_jac  test on chip using eg "
 echo "     ../bin/jac_chirp_p2022jul22_dev_cloudy fin=../TEST_RTP/newdayx_1_100_12150_chirp.op.rtp fout=junk.rp.rtp"

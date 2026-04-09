@@ -11,6 +11,15 @@
 #----------------------------------------------------------------------------------------
 # Builds cloudy
 #----------------------------------------------------------------------------------------
+# AIRS for L1C Apr 2026, H2024
+airs_cloudy_apr26_H2024:
+	rm -f *.o incFTC.f fnmie.f cbplev.f 
+	ln -s incFTC_airs_apr26_H2024_pclsam.f incFTC.f
+	ln -s fnmie_iceGHMbaum_waterdrop_desertdust.f fnmie.f
+	ln -s cbplev_L2100.f cbplev.f
+	make -f make_sarta_pclsam
+	mv a.out ../bin/jac_airs_l1c_2834_cloudy_apr26_H2024
+
 # AIRS for L1C Jan 2025, H2020
 # YAYAYAYAYAYAYAYAYA
 airs_cloudy_jan25_H2020:

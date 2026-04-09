@@ -27,33 +27,47 @@
 
 ## note /home/sergio/asl/sergiodisk/ === /umbc/rs/pi_sergio/
 
-echo "making L2_100/AIRS/2022 links .... copied from chepplew on yam"
-cd L2_100/AIRS/2022
+echo "making L2_100/AIRS/2026 links .... "
+cd L2_100/AIRS/2026
+
 
 rm xnte.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/xnte.dat            xnte.dat
 rm xnte_v02.dat;      ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/xnte_v02.dat        xnte_v02.dat
 rm nte_7term.dat;     ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/nte_7term.dat       nte_7term.dat
-rm therm.dat;         ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/therm.dat           therm.dat
-rm hdo.dat;           ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/hdo.dat             hdo.dat
 rm nte.dat;           ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/nte_7term.dat       nte.dat
-rm hno3.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/hno3.dat            hno3.dat
-rm nh3.dat;           ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/nh3.dat             nh3.dat
-rm so2.dat;           ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/so2.dat             so2.dat
-rm n2o.dat;           ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/n2o.dat             n2o.dat
-rm optran.dat;        ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/optran.dat          optran.dat
+# rm xnte.dat;        ln -s /home/sergio/asl/s1/chepplew//data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_xnte_2x7term.dat       xnte.dat
+# rm xnte_v02.dat;    ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/xnte_v02.dat                               .
+# rm nte_7term.dat;   ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/apr2021/fitc/r49/AIRS_L1C_R49_cutcoef_nte_all_7term.dat       nte_7term.dat
+# rm nte.dat;           ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_nte_all_7term.dat       nte.dat
+
+rm hdo.dat;           ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_hdo_all.dat             hdo.dat
+rm therm.dat;         ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/thermFactor_airs_l1c_2834.dat                therm.dat
+rm hno3.dat;          ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_hno3_all.dat            hno3.dat
+rm nh3.dat;           ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_nh3_all.dat             nh3.dat
+rm so2.dat;           ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_so2_all.dat             so2.dat
+rm n2o.dat;           ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_n2o_all.dat             n2o.dat
+
+# rm optran.dat;      ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_r49_mergecoef_optran_fmw.dat        optran.dat
+#rm optran.dat;        ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_r49_cutcoef_optran_fmw.dat        optran.dat
+rm optran.dat;        ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_optran_fmw.dat        optran.dat
+
+# rm tunmlt.txt;        ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/tunmlt_ones.txt                              tunmlt.txt
+# rm refprof_trace400;  ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/refprof_trace400                     .
+# rm fx.txt;            ln -s /home/sergio/asl/s1/chepplew/data/sarta/prod_2022/airs_l1c/jul2022/dbase/Coef/fx.txt                               .
 rm tunmlt.txt;        ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/tunmlt_ones.txt     tunmlt.txt
 rm refprof_trace400;  ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/refprof_trace400    refprof_trace400 
 rm fx.txt;            ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/fx.txt              fx.txt
-rm co2.dat;           ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/co2.dat             co2.dat
-rm set7.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/set7.dat            set7.dat
-rm set6.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/set6.dat            set6.dat
-rm set5.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/set5.dat            set5.dat
-rm set4.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/set4.dat            set4.dat
-rm set3.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/set3.dat            set3.dat
-rm set2.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/set2.dat            set2.dat
-rm set1.dat;          ln -s /umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/AIRSL1C/set1.dat            set1.dat
+
+rm co2.dat;           ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_co2_5term_fowp_sun.dat  co2.dat
+rm set7.dat;          ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_set7_fowp_sun.dat       set7.dat
+rm set6.dat;          ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_set6_fowp_sun.dat       set6.dat
+rm set5.dat;          ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_set5_fowp_sun.dat       set5.dat
+rm set4.dat;          ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_set4_fcow_sun.dat       set4.dat
+rm set3.dat;          ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_set3_fmw.dat            set3.dat
+rm set2.dat;          ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_set2_fowp.dat           set2.dat
+rm set1.dat;          ln -s /home/sergio/nogit/ftcprod/prod_2026/airs_l1c/apr2026_regr49/fitc/r49/AIRS_L1C_R49_cutcoef_set1_fowp.dat           set1.dat
 
 cd ../../../
-ls -lt --color=always  L2_100/AIRS/2022
+ls -lt --color=always  L2_100/AIRS/2026
 echo "from /home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/srcF77_jac  test on chip using eg "
-echo "     ../bin/jac_airs_l1c_2834_cloudy_jan25_H2020 fin=../TEST_RTP/newdayx_1_100_12150.op.rtp fout=junk.rp.rtp"
+echo "     ../bin/jac_airs_l1c_2834_cloudy_apr2026_H2024 fin=../TEST_RTP/newdayx_1_100_12150.op.rtp fout=junk.rp.rtp"
