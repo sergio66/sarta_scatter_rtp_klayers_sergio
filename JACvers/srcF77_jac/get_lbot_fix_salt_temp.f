@@ -43,7 +43,7 @@ c     $              PLEV(I)-PLEV(I+1),PLEV_RTP(I)-PLEV_RTP(I+1)
          STOP
        END IF
        
-       CALL GETBOT(NLAY, PLEV, PSURF, LBOT, BLMULT)
+       CALL GETBOT(IPROF, NLAY, PLEV, PSURF, LBOT, BLMULT)
 
 C      Calc the fractional bottom layer air temperature
 ccc

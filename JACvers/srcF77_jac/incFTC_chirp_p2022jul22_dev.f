@@ -538,7 +538,7 @@ C
        PARAMETER(FNPREF =
      $ '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/SymbolicLinks/L2_100/CHIRP/2022/refprof_trace400')
        PARAMETER(FNSUN =
-     $  '/umbc/rs/pi_sergio/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/solardata.txt')
+     $  '/umbc/rs/pi_sergio/SARTACoefs/Yam_CHEPPLEW/SARTA_COEFFS/Prod2022/CHIRP/solardata.txt')
 c     $ '/home/chepplew/data/sarta/prod_2022/chirp/jul2022/dbase/Solar/solardata.txt')
 C
        PARAMETER(FNTHER =

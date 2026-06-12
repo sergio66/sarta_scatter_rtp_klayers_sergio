@@ -20,12 +20,13 @@ C    based on the supplied surface pressure and temperature profile
 
 
 !CALL PROTOCOL:
-C    GETBOT( NLAY, PLEV, PSURF, LBOT, BLMULT )
+C    GETBOT( IPROF, NLAY, PLEV, PSURF, LBOT, BLMULT )
 
 
 !INPUT PARAMETERS:
 C    type      name    purpose                     units
 C    --------  ------  --------------------------  ---------------------
+C    INTEGER   IPROF   profile number              none
 C    INTEGER   NLAY    number of profile layers    none
 C    REAL arr  PLEV    layer pres level boundaries mb
 C    REAL      PSURF   surface pressure            mb
@@ -100,7 +101,7 @@ C                               assignment rather than IF line below.
 !END====================================================================
 
 C      =================================================================
-       SUBROUTINE GETBOT ( NLAY, PLEV, PSURF, LBOT, BLMULT )
+       SUBROUTINE GETBOT ( IPROF, NLAY, PLEV, PSURF, LBOT, BLMULT )
 C      =================================================================
 
 
@@ -126,6 +127,7 @@ C-----------------------------------------------------------------------
 C      ARGUMENTS
 C-----------------------------------------------------------------------
 C      Input
+       INTEGER   IPROF        ! profile number 
        INTEGER   NLAY         ! number of profile layers
        REAL   PLEV(MAXLAY+1)  ! layer pressure level boundaries
        REAL  PSURF            ! surface pressure
@@ -175,8 +177,8 @@ C      Calc bottom layer multiplier (fractional layer)
        BLMULT = (PSURF - PLEV(LBOT))/(PLEV(LBOT+1) - PLEV(LBOT))
 C
        IF (BLMULT .GT. 1.3) THEN
-          WRITE(IOINFO,1010) BLMULT, LBOTX, NLAY
- 1010     FORMAT('WARNING! excessive BLMULT=',F9.3,'; optimal LBOT=',
+          WRITE(IOINFO,1010) IPROF, BLMULT, LBOTX, NLAY
+ 1010     FORMAT('WARNING! PROF=',I6,' excessive BLMULT=',F9.3,'; optimal LBOT=',
      $    I3,' but layers end at NLAY=',I3)
        ENDIF
 C
