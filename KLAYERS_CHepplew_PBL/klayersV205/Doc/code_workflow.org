@@ -1,0 +1,244 @@
+* KLAYERS code workflow - original FORTRAN
+
+
+** Main: klayers.f
+
+
+** SUBROUTINE RDINFO
+
+       SUBROUTINE RDINFO(FIN, FOUT, COMMNT, FNAFGL, MNAFGL,
+     $    NWANT, LISTG, MASSW, TOFF, SCALEH, LDRY, LSVP, LSPLIN, LPMAX)
+
+***  Input:
+      none
+
+***      Output:
+       CHARACTER*80 FIN
+       CHARACTER*80 FOUT
+       CHARACTER*256 COMMNT
+       CHARACTER*70 FNAFGL
+       INTEGER MNAFGL
+       INTEGER  NWANT
+       INTEGER  LISTG( MXGAS)
+       REAL MASSW( MXGAS)
+       REAL   TOFF
+       REAL   SCALEH
+       LOGICAL   LDRY
+       LOGICAL   LSVP
+       LOGICAL LSPLIN
+       LOGICAL  LPMAX
+
+
+** SUBROUTINE RDAFGL
+
+       SUBROUTINE RDAFGL(FNAFGL, IND, NMODEL, NWANT, IDWANT, NLEVAF,
+     $    NAFGL, IDAFGL, LATAF, HAF, PAF, TAF, DAF, MIXAF)
+
+***  Input/Output Parameters
+       INTEGER    IND               ! AFGL file I/O unit number
+       INTEGER IDWANT( MXGAS)       ! gas IDs of wanted gases
+       INTEGER  NWANT               ! number of gases wanted
+       INTEGER NLEVAF               ! AFGL number of levels
+       INTEGER  NAFGL               ! number of AFGL gas profiles
+       INTEGER IDAFGL( MXGAS)       ! AFGL gas IDs
+       INTEGER NMODEL               ! AFGL model number
+       REAL  LATAF                  ! AFGL profile latitude
+       REAL  MIXAF(  MXIN, MXGAS)   ! AFGL profile mixing ratio
+       REAL    HAF(  MXIN)          ! AFGL profile height
+       REAL    PAF(  MXIN)          ! AFGL profile pressure
+       REAL    TAF(  MXIN)          ! AFGL profile temperature
+       REAL    DAF(  MXIN)          ! AFGL profile density
+       CHARACTER*70 FNAFGL          ! AFGL filename
+
+
+**   SUBROUTINE OPNRTP
+
+       SUBROUTINE OPNRTP(FIN, FOUT, COMMNT, NWANT, LISTG, MASSW,
+     $    POMIN, POMAX, NGASI, GLISTI, NGASF, GLISTF, GUNITF, MASSF,
+     $    INDEXF, IOPCI, IOPCO)
+
+***   Input
+       CHARACTER*80 FIN        ! input RTP filename
+       CHARACTER*80 FOUT       ! output RTP filename
+       CHARACTER*256 COMMNT    ! klayers info comment string
+       INTEGER  NWANT          ! number of wanted gases
+       INTEGER LISTG( MXGAS)   ! list of all wanted gases
+       REAL MASSW( MXGAS)      ! molecular mass of all wanted gases
+       REAL POMIN              ! min pressure (mb) for output file
+       REAL POMAX              ! max pressure (mb) for output file
+
+***   Output
+       INTEGER  NGASI          ! number of gases in input file
+       INTEGER GLISTI( MXGAS)  ! list of gas IDs in input file
+       INTEGER  NGASF          ! number of wanted gases found in input
+       INTEGER GLISTF( MXGAS)  ! list of wanted gases found in input
+       INTEGER GUNITF( MXGAS)  ! gas amount units code number
+       REAL     MASSF( MXGAS)  ! molecular mass
+       INTEGER INDEXF( MXGAS)  ! indices of wanted gases found in input
+       INTEGER  IOPCI  ! I/O unit ("profile channel") for input file
+       INTEGER  IOPCO  ! I/O unit ("profile channel") for output file
+
+
+** SPLLEV & WRTSPL
+
+** SUBROUTINE RDRTP
+
+       SUBROUTINE RDRTP(ISTAT, IOPCI, NGASF, GLISTF, INDEXF, LAT, LON,
+     $    NIN, PIN, LNPIN, TIN, MRIN, ZIN, LZ, PSURF, ZSURF, PROF)
+
+***    Input parameters:
+       INTEGER IOPCI
+       INTEGER  NGASF
+       INTEGER  GLISTF( MXGAS)
+       INTEGER  INDEXF( MXGAS)
+
+***    Output parameters:
+       INTEGER ISTAT
+       REAL    LAT
+       REAL    LON
+       INTEGER    NIN
+       REAL    PIN(  MXIN)
+       REAL  LNPIN(  MXIN)
+       REAL    TIN(  MXIN)
+       REAL   MRIN(  MXIN, MXGAS)
+       REAL    ZIN(  MXIN)
+       LOGICAL LZ
+       REAL  PSURF
+       REAL  ZSURF
+
+
+** SUBROUTINE TOPPMV
+
+       SUBROUTINE TOPPMV(NGASF, GLISTF, GUNITF, NLEV, MASSF, PIN, TIN,
+     $    MRIN)
+
+
+** SUBROUTINE SPLLEV
+
+       SUBROUTINE SPLLEV(NIN, LNPIN, PIN, TIN, NGASES, MRIN,
+     $    NSIN, LNPSIN, PSIN, TSIN, MRSIN, PMIN, PMAX)
+
+** SUBROUTINE WRTSPL
+
+       SUBROUTINE WRTSPL(IOSPL,FNAME,NIN,PIN,TIN,NGASES,GASID,MRIN,
+     $    NSIN,PSIN,TSIN,MRSIN,LAFGL,NMODEL)
+
+
+** SUBROUTINE MERGE
+
+SUBROUTINE MERGE(LZ, NGASES, PMIN, NINX, LISTG, GORDER,
+     $    NIN,    ZIN, PIN, LNPIN, NUSER, GASID,  TIN, MRIN,
+     $    NLEVAF, ZAF, PAF, LNPAF, NAFGL, IDAFGL, TAF, MIXAF, CO2MLT)
+
+***    Input parameters:
+       LOGICAL     LZ              ! user profile uses altitudes
+       INTEGER    NIN              ! number of user profile levels
+       INTEGER  NUSER              ! number of user profile gases
+       INTEGER  NAFGL              ! number of AFGL gases
+       INTEGER NLEVAF              ! number of AFGL levels
+       INTEGER IDAFGL( MXGAS)      ! AFGL gas IDs
+       INTEGER  LISTG( MXGAS)      ! user gas IDs
+       REAL   PMIN                 ! min pressure
+       REAL    PIN(  MXIN)         ! user profile pressures
+       REAL  LNPIN(  MXIN)         ! log of user prof press
+       REAL    ZAF(  MXIN)         ! AFGL altitudes *kilometers*
+       REAL    PAF(  MXIN)         ! AFGL pressures
+       REAL  LNPAF(  MXIN)         ! log of AFGL press
+       REAL    TAF(  MXIN)         ! AFGL temperatures
+       REAL  MIXAF(  MXIN, MXGAS)  ! AFGL mixing ratios
+       REAL CO2MLT                 ! AFGL CO2 mixing ratio multiplier
+
+***    Output parameters:
+       INTEGER NGASES              ! Total number of gases
+       INTEGER   NINX              ! number of extended profile levels
+       INTEGER GORDER( MXGAS)      ! order of gases in gasid
+
+***    Input/Output parameters
+       INTEGER  GASID( MXGAS)      ! user/extended profile gas IDs
+       REAL    ZIN(  MXIN)         ! user/extended profile alts *meters*
+       REAL    TIN(  MXIN)         ! user/extended profile temperatures
+       REAL   MRIN(  MXIN, MXGAS)  ! user/extended profile mixing ratios
+
+
+** SUBROUTINE INTLEV
+
+       SUBROUTINE INTLEV(IP, LZ, LSVP, IMAX, NIN, NGASES, PIN, LNPIN,
+     $    TIN, MRIN, ZIN, LAT, LON, PB, LNPB, LAYBOT, PSURF, ZSURF,
+     $    NSUB, NFINE, PFINE, TFINE,
+     $    MRFINE, ZFINE, WATID, PSUB, TSUB, TGSUB, MRSUB, DZSUB, ZPMAX)
+
+***    Input:
+       INTEGER     IP
+       LOGICAL     LZ
+       LOGICAL   LSVP
+       INTEGER   IMAX
+       INTEGER    NIN
+       INTEGER NGASES
+       REAL    PIN(MXIN)
+       REAL  LNPIN(MXIN)
+       REAL    TIN(MXIN)
+       REAL   MRIN(MXIN,MXGAS)
+       REAL    ZIN(MXIN)
+       REAL    LAT
+       REAL    LON
+       REAL     PB(MYNLAY+1)
+       REAL   LNPB(MYNLAY+1)
+       INTEGER LAYBOT
+       REAL  PSURF
+       REAL  ZSURF
+
+***    Output:
+       INTEGER   NSUB(MYNLAY)
+       INTEGER  NFINE
+       REAL  PFINE(NSUBLV)
+       REAL  TFINE(NSUBLV)
+       REAL  MRFINE(NSUBLV,MXGAS)
+       REAL   ZFINE(NSUBLV)
+       INTEGER  WATID
+       REAL    PSUB(NSUBLV-1)
+       REAL    TSUB(NSUBLV-1)
+       REAL   TGSUB(NSUBLV-1,MXGAS)
+       REAL   MRSUB(NSUBLV-1,MXGAS)
+       REAL   DZSUB(NSUBLV-1)
+       REAL   ZPMAX
+
+
+
+
+**  SUBROUTINE INTEG
+
+       SUBROUTINE INTEG(LTAIR, LAYBOT, NSUB, NFINE, NGASES,
+     $    PFINE, PSUB, TSUB,
+     $    TGSUB, MRSUB, DZSUB, PLAY, TLAY, TGLAY, ALAY, DZLAY)
+
+***  Input parameters:
+       INTEGER NSUB(MYNLAY), NFINE, NGASES
+       INTEGER LAYBOT
+       LOGICAL LTAIR
+       REAL PFINE(NSUBLV), 
+       REAL PSUB(NSUBLV-1), 
+       REAL TSUB(NSUBLV-1),
+       REAL MRSUB(NSUBLV-1,MXGAS), 
+       REAL DZSUB(NSUBLV-1),
+       REAL TGSUB(NSUBLV-1,MXGAS)
+
+***   Output parameters:
+       REAL PLAY(MYNLAY),
+       REAL TLAY(MYNLAY),
+       REAL TGLAY(MYNLAY,MXGAS),
+       REAL ALAY(MYNLAY,MXGAS),
+       REAL DZLAY(MYNLAY)
+
+
+** SUBROUTINE SETXOP
+
+       SUBROUTINE SETXOP(NIN, NGASI, NGASO, LGASI, LGASO, PSURF, PIN,
+     $    PROF)
+
+** SUBROUTINE WRTRTP
+
+       SUBROUTINE WRTRTP(IP, ISTAT, IOPCO, LAYBOT, NGASES, LISTG,
+     $    GORDER, HBOUND, PLEV, PLAY, TLAY, ALAY, TOFF, PROF)
+
+
+

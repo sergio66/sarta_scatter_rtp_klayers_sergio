@@ -1,0 +1,12 @@
+# gitignore file list of files NOT to include
+
+*.tar
+
+# Objects
+Src_rtpV*/*.o
+
+*~
+
+BinV105
+BinV201
+BinV221

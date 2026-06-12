@@ -1,0 +1,41 @@
+Comments for using KLAYERS with AERI layers
+*******************************************
+
+----------
+IMPORTANT!
+----------
+When running KLAYERS for AERI profiles, the surface pressure *MUST* be
+set to the AERI bottom layer pressure, and the surface altitude should
+be set to the altitude at the particular AERI instrument's location!
+
+Note that this means you can NOT use the same exact RTP input profile
+files for different AERI layers; you will need a separate RTP input
+file (with appropriate sureface pressure and altitide) for each!
+
+
+AERI layer sets:
+---------------
+Currently there are 9 different AERI layers, arranged in 3 sets
+of 3 different types per set.  Each AERI layer type consists of
+100 layers (101 levels) and runs from the specified bottom
+pressure to 0.0050 mb.  The sets and bottom pressures are:
+
+1013 +- 20 = 1033, 1013,  993 mb  (UMBC-McMillan & TWP(Nauru) ARM/CART set)
+
+ 980 +- 19 =  999,  980,  961 mb  (SGP(Oaklohoma) ARM/CART set)
+
+ 680 +- 13 =  693,  680,  667 mb  (MLO-Strow (Mau Loa Observatory) set)
+
+
+UMBC-McMillan:  University of Maryland Baltimore County site (30m?)
+   or same instrument temporarily located on Cheasapeake Bay (10m?).
+   Operated by Wallace McMillan (UMBC).
+
+TWP: Tropical Western Pacific ARM/CART site on Nauru island (10m?)
+
+SGP: Southern Great Plains ARM/CART site mostly located in northern
+    Oaklahoma (315-365m).  There are 5 AERI's here.
+
+MLO-Strow: Mauna Loa Observatory site (3397m).  Operated by
+    Larrabee Strow (UMBC).
+

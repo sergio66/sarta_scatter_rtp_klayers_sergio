@@ -1,0 +1,270 @@
+-------------------------------------------------------------------------------
+Notes on updates to the KLAYERS package
+-------------------------------------------------------------------------------
+14 March 2001, Scott Hannon : v2.00 01-03-14
+
+Initial version for the SARTA_RTP_MAR01 package is assembled.
+Based on KLAYRS version Feb2001
+
+-------------------------------------------------------------------------------
+###############################################################################
+-------------------------------------------------------------------------------
+28 March 2001, Scott Hannon : v2.01 01-03-28
+
+Revised version for the SARTA_RTP_MAR01b package.  This version
+includes minor changes related to using RTP version 0.97 (previus
+version used 0.96), but the main change has to do with the
+initialization of the altitude calculations.  All previous versions
+of KLAYERS calc'ed the altitude based on an initialization of the
+altitude at 1100 mb.  Starting with the new Mar2001 KLAYERS,
+the altitude is now initialized based upon the surface altitude.
+This revised altitude calculation resulted in many (mostly minor)
+changes to the existing code (too many to describe here), and a
+new routine called "zbot.f".
+
+Some minor changes were made to the code for RTP v0.97.  This
+was mainly a matter of adding some checks for the new header
+variable "HEAD.pfields".  This required new routine "N2BITS"
+in the "util.f" file to convert the pfields bit flags to logical
+switches.  Some minor changes were also made to the format of
+some of the warning messages in "intlev.f".
+
+-------------------------------------------------------------------------------
+24 July 2001, Scott Hannon : v2.01 01-07-24
+
+The adjustments to the AFGL model profiles that were previously
+done inside "rdafgl.f" were moved to a new routine "adagfl.f".
+Besides CFC-11,12,13 & CCl4, now CO2 and CH4 are also adjusted
+(to the same values in the "Pin_july2000" profiles).  The CO2
+reference amount is now set by new variable CO2STD in "incLAY.f".
+
+KLAYERS now uses PROF.co2ppm from the input RTP file to adjust the
+CO2 amount for the output.  This occurs in "merge.f" using the
+new "XBOTH" and "XONLY" multipliers...a slightly messy solution
+as it requires multiplying all gases except CO2 by unity.  Note
+that only the AFGL model profile is affected by co2ppm; if "gas_2"
+exists in the input RTP, that is what gets used, and no check is
+made to see if co2ppm matches co2ppm. 
+
+I also commented out the "IF NBOTH>0" and  "ENDIF" lines for the
+block of code adding on the mixing ratios at the extended levels.
+The problem was the AFGL-only profiles would be missing the
+extend levels if NBOTH=0 (which might be the case if all we have
+is a temperature profile).
+
+-------------------------------------------------------------------------------
+30 August 2001, Scott Hannon : v2.01 01-08-30
+
+Fix mistakes in routine "rdrtp_klayers.f" so that top-down ordered
+input profiles now work correctly.  Prior to this fix only bottom-up
+profiles worked correctly; now both work OK.
+
+Trivial fix of warning message 1030 in "intlev.f": "small" and "large"
+strings were switched.
+
+Added SATERR to "incLAY.f" and "intlev.f".  The value of SATERR is
+is the minimum percent over-saturation needed to activate a warning
+message when intlev checks the water vapor.  This affects only
+the warning message; if the error is smaller than SATERR the warning
+is suppressed but not the correction.
+
+-------------------------------------------------------------------------------
+ 5 September 2001, Scott Hannon : v2.01 01-09-05
+ 
+Fix mistake in routine "rdinfo_klayers.f"; variable "MASS" was changed
+to real (it had previously been mistakenly declared integer).  This
+error affected some of the units conversions in "toppmv.f" if the input
+profile was not in units of ppmv.
+
+-------------------------------------------------------------------------------
+12 September 2001, Scott Hannon : v2.01 01-09-12
+
+Add parameter DFAFGL to incLAY.f, and remove the hardcoded filename
+from dinfo_klayers.f.  Also, filenames in incLAY.f now use absolute
+paths rather than relative paths.
+
+-------------------------------------------------------------------------------
+###############################################################################
+-------------------------------------------------------------------------------
+20 November 2001, Scott Hannon : v2.02 01-11-20
+
+Add NAMGRD to COMLEV.  This is the name of the pressure layering grid.
+Add VKLAYE to incLAY.f.  This is the version string for KLAYERS.
+
+Re-did the overall layout of the KLAYERS package.  The "cbplev_*.f"
+files have been moved to a separate Grid dir.  Modified the makefiles
+for the new layout.
+
+-------------------------------------------------------------------------------
+ 6 December 2001, Scott Hannon : v2.02 01-12-06
+
+Change calc of default ZSURF (& ZPMAX if lpmax=true) to use a
+variable scale height SCALEH+LOG(P+1)/5 instead of just SCALEH.
+The calc still isn't very good (for absolute altitude) but it's
+better.   This altitude error has virtually no effect on any
+layer values apart from the level boundary altitudes.
+
+-------------------------------------------------------------------------------
+19 December 2001, Scott Hannon : v2.02 01-12-06
+
+Trivial change: "incLAY.f" variable DFAFGL set to absolute path (was
+relative) and "readme.txt" updated to mention that "incLAY.f" should
+be edited to set DFAFGL.  Version unchanged.
+
+-------------------------------------------------------------------------------
+ 8 January 2002, Scott Hannon : v2.02 01-12-06
+
+Trivial fix: inserted missing end parenthesis for "incLAY.f"
+variable DFAFGL .  This error was not spotted by the linux absoft f77
+compiler and had no effect on output, but some compilers saw it
+and refused to compile until corrected.  Version unchanged.
+
+-------------------------------------------------------------------------------
+28 January 2002, Scott Hannon : v2.02 01-12-06
+
+Recompiled using rtpV103 (trivial changes to make_klayers, test_ip.rtp,
+and comparison.rtp).  No changes to klayers code.
+
+-------------------------------------------------------------------------------
+###############################################################################
+-------------------------------------------------------------------------------
+ 8 March 2002, Scott Hannon : v2.03 02-03-08
+
+Add a IF-THEN-ELSE to sub-routine "merge.f" to handle case NIN=0.
+
+Add a new feature:  profile-to-model cross-over pressures.  The
+RTP v1.04 includes profile cross-over pressure (xover) fields for
+temperature and each gas.  This is intended to specify where the
+user profile ends and the model profile begins.  A new sub-routine,
+"setxop.f", has been added to set the xover variables, but only
+if the value has not already been set (assumed not set if xover <= 0).
+
+-------------------------------------------------------------------------------
+15 March 2002, Scott Hannon : v2.03 02-03-08
+
+Trivial changes to test profile for revised rtpV1.04 (14 March 2002).
+No code changes.
+
+-------------------------------------------------------------------------------
+18 March 2002, Scott Hannon : v2.03 02-03-08
+
+Trivial changes to test profile for rtpV1.05 (18 March 2002).
+No code changes.
+
+-------------------------------------------------------------------------------
+29 April 2002, Scott Hannon : v2.03 02-04-29
+
+Changes to klayers_rtp.f and merge.f related to handling user altitudes.
+Now extends user profile using AFGL altitudes if user altitudes do not
+span all PLEVS.
+
+-------------------------------------------------------------------------------
+###############################################################################
+-------------------------------------------------------------------------------
+ 1 May 2002, Scott Hannon : v2.04 02-05-01
+
+Added error trap to rdrtp_klayers.f to abort if PROF.nlevs > MAXLEV
+from include file rtpdefs.f.  Previously the code would run (but
+not correctly!) with warning messages about truncated variables.
+Now the program aborts with a specific error message.
+
+Also fixed typo error (">" instead of ".GT.") in IF-THEN statement
+added on 29 April 2002.
+
+-------------------------------------------------------------------------------
+ 3 January 2003, Scott Hannon : v2.04 03-01-03
+
+Correct mass of SO2 in cbgids.f (was ~32, should be ~64).
+
+-------------------------------------------------------------------------------
+23 July 2003, Scott Hannon : v2.04 03-07-23
+
+Replace old "wexsvp.f" using P.Flatau polynomial fit of Wexler
+equation with Hyland-Wexler 1983 equation for saturation vapor
+pressure.  The new replacement routine has a larger temperature
+range than to old routine.  This change only affects SVP
+calculations for water vapor.  Unless the water amounts are
+specified using humidty, the SVP check of water is optional
+(see description.txt).
+
+-------------------------------------------------------------------------------
+05 August 2003, Scott Hannon: v2.04 03-08-05
+
+Change FIN & FOUT to CHAR*80 (was 70) in "opnrtp_klayers.f",
+"rdinfo_klayers.f", and "klayers_rtp.f".
+
+-------------------------------------------------------------------------------
+05 November 2003, Scott Hannon: v2.04 03-11-05
+
+"adafgl.f": add new SF6, cfc-22, cfc-113 adjustments, and remove
+the cfc-13 adjustment (it was mistakenly adjusted for cfc-113).
+
+-------------------------------------------------------------------------------
+06 October 2004, Scott Hannon: v2.04 04-10-06
+
+"rdrtp_klayers.f": add error trap for profile latitude.
+
+-------------------------------------------------------------------------------
+23 June 2005, Scott Hannon: v2.04 04-10-06
+
+Create "trace" version (rdinfo_trace.f & make_klayers_trace) for use with
+the new AIRS fast model with 8 variable gases.  Same as the standard
+version (rdinfo_klayers.f) version except it has 8 default gases (HITRAN
+IDs 1,2,3,4,5,6,9,12) instead of 4 (1,3,5,6).
+
+-------------------------------------------------------------------------------
+###############################################################################
+-------------------------------------------------------------------------------
+19 February 2007, Scott Hannon: v2.05 07-02-19
+
+Add ability to do layer variable cloud amounts.  This required changes
+to files: incLAY.f, rdinfo.f, opnrtp.f, rdafgl.f, merge.f, and wrtrtp.f.
+
+Currently compiled for up to three clouds with "gas" amount IDs 201, 202, 203.
+
+-------------------------------------------------------------------------------
+20 February 2007, Scott Hannon: v2.05 07-02-20
+
+Add 5 new gas unit code numbers to distinguish between "dry" and "wet"
+air mass and volume mixing ratios.  Rename command line argument "ldry"
+to "ldrya" and modify code so now it only applies to the AFGL gases.
+New internal variable LDRYF(MAXGAS) added to note if each user supplied
+gas is for dry air. Removed obsolete include variable "MRTH2O".
+
+-------------------------------------------------------------------------------
+07 September 2007, Scott Hannon: v2.05 07-09-07
+
+Add ability to do layer variable cloud particle sizes. This required changes
+to files: incLAY.f, rdinfo.f, cbgucs.f, opnrtp.f, wrtrtp.f, merge.f,
+klayers.f, and new routine layps.f.
+
+Curently compiled for up to three clouds with "gas" particle size IDs 301,
+302, 303.
+
+-------------------------------------------------------------------------------
+14 July 2010, Scott Hannon: v2.05 10-07-14
+
+Updated "Src/cbgids.f" for new HITRAN gases 32-42 and xsecs 64-80,
+and changed include file for "glatm_9July2010.dat". Increase NGIDS
+in the include file from 44 to 72.
+
+Add/update gas adjustments in "adafgl.f" to bring mixing ratios up
+to date for circa 2009.
+
+-------------------------------------------------------------------------------
+16 July 2010, Scott Hannon: v2.05 10-07-16
+
+Added SF6 as xec 81 to "cbgids.f" and "adafgl.f" and increase NGIDS
+in the include file from 72 to 73.
+
+-------------------------------------------------------------------------------
+16 August 2010, Scott Hannon: v2.05 10-08-16 
+
+Modify SF6 profile in glatm.dat file; update SF6 adjustment in "adafgl.f".
+
+-------------------------------------------------------------------------------
+30 August 2011, Scott Hannon: v2.05 11-08-30
+
+Add error trap for prof.nlevs=NIN < 10 to "rdrtp_klayers.f"
+
+-------------------------------------------------------------------------------

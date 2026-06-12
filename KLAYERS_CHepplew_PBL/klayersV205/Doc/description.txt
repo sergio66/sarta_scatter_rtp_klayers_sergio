@@ -1,0 +1,311 @@
+
+    ======================================
+    Descriptive notes for the KLAYERS code
+    ======================================
+    KLAYERS program to produce integrated layer profiles
+    Organization: University of Maryland Baltimore County (UMBC)
+    Physics Dept. & Joint Center for Earth Systems Technology (JCET)
+    Programmer: Scott Hannon (email: umbc.edu)
+    Last update: 13 July 2010
+
+
+Introduction:
+------------
+KLAYERS is a program for converting a "levels"-type profile (ie
+point values) into a integrated "layer"-type profile (ie slab
+values) of the type needed for use with the SARTA and KCARTA
+programs.  KLAYERS requires the RTP package; you must build
+the RTP library before you can compile KLAYERS.
+
+The KLAYERS code is "data driven"; that is, the data itself
+(from the input RTP file) provides most of the instructions
+concerning the processing.  Additional instructions (such
+as file names) are provided by the user by means of command-line
+arguments.
+
+
+Platform-Specific Considerations and Limitations:
+------------------------------------------------
+The FORTRAN source code makes use of the non-standard (but common
+extension) "STRUCTURE" type variables.  If your compiler can not
+handle STRUCTURE variables, you will not be able to use KLAYERS.
+
+
+Performance:
+------------
+The program is fairly quick.  On a ~500 MHz linux workstation, we
+processed 16000 profiles in roughly 4 minutes.
+
+
+Command-Line Arguments
+----------------------
+KLAYERS gets some of its process instructions from command-line
+arguments.  Default values are used for all non-specified arguments.
+(Note: defaults are hardcoded in source code file "rdinfo_klayers.f")
+
+Each command line argument is a string of the form
+   <variable>=<value>.
+Each argument string must be 80 characters or less.  It is not
+necessary to enclose the <value> in quotes unless the string includes
+blanks.  The recognized  command-line variables are:
+
+    fin : name of input file.
+       {default fin=klayers_in.rtp)
+
+    fout : name of output file.
+       {default fout=klayers_out.rtp)
+
+    fnafgl : name of AFGL model profile file.
+       {default fnafgl=DFAFGL, where DFAFGL is a string assigned
+        in the "incLAY.f" include file.}
+
+    mnafgl : AFGL model number (integer).  This is the model
+       profile that will be used to fill any holes in the user
+       supplied profile.  There are six model profiles:
+       1 = Tropical
+       2 = Midlatitude Summer
+       3 = Midlatitude Winter
+       4 = Subarctic Summer
+       5 = Subarctic Winter
+       6 = U.S. Standard
+       {default mnafgl=6}
+
+    nwant : number of desired gases (integer 1 to MXGAS, or -1=all).
+       If nwant=-1, all gases will be used and listg must not
+       be specified.  Otherwise listg must be specified and it must
+       contain nwant number of entries.
+       {default nwant=4}
+       HINT: do not set nwant=-1 unless you are using the "kcarta"
+       version of the rtp library (there are too many gases to fit
+       in the usual version).
+
+    listg : list of gas IDs (integers separated by a comma).
+       Alternately the IDs may be specified using a quoted string
+       containing integers separated by a blank space.  Examples:
+          listg=1,2,3,4,5
+          listg='1 2 3 4 5'
+       Note: due to the 80 char limit, the max number of entries
+       in listg is limited. (Eg up to 25 two- digit numbers).
+       {default listg=1,3,5,6}
+
+    toff : offset to be applied to the temperatures of the output
+       layer profile.  It is recommended you ignore this option
+       and leave the default set to zero.
+       {default toff=0.0}
+
+    scaleh : scale height in kilometers (real).  The scale height
+       is only used for some relatively minor calculations, so
+       in general it is recommended you ignore this and leave
+       the default set to seven.
+       {default scaleh=7.0}
+
+    ldry : AFGL mixing ratios are for dry air? (true/false or T/F).
+       See the note below for the meaning of "wet" and "dry"  air.  
+       {default ldry=true}
+
+    lsvp : check if water exceeds the sataturation vapor pressure?
+       (true/false or T/F).  If lsvp=true and the water mixing ratio
+       exceeds the SVP, the water is reset to the SVP amount.
+       {default lsvp=true}
+
+    lsplin : interpolate profile using splines? (true/false or T/F).
+       It is recommended you ignore this option and leave the default
+       set to false.  Splines may seem like a good idea but they
+       have a tendency to occasionally blow up.
+       {default lspline=false}
+
+    lpmax : extend profile to Pmax? (true/false or T/F).  If true,
+        the profile will be extended down to the layering grid's
+        maximum pressure instead of stopping at whichever layer
+        contains PSURF.
+        {default lpmax=false}
+
+Note: the meaning of "dry" and "wet" mixing ratios:
+    "wet"= the effects of water vapor on the make-up of the air has
+        already been factored into the mixing ratio values.  The mixing
+        ratios do not need any further adjustment.
+    "dry"=the mixing ratios are with respect to "dry air"; that is,
+        air without any water vapor present.  The supplied values
+        should be adjusted for the presence of water vapor before
+        being used in profile calculations.
+
+
+Summary of required RTP input file variables:
+--------------------------------------------
+The following variables should be properly filled out in the RTP
+input file read in by KLAYERS.  If any of these variables are left
+blank, KLAYERS will be lacking some vital piece of data or
+instructions.  If that happens, KLAYERS might either refuse to do
+the processing, or it might try to plow thru it, in which case you
+should expect screwy output.
+
+Hint: screwy output is much more likely to be the result of
+screwy input than true problems with KLAYERS.
+
+See the RTP documentation for more info on these variables.
+
+header fields:
+ptype   = profile type; must be code value 0 (ie "levels" not "layers")
+pfields = profile fields bit flags; must have PROFBIT set
+ngas    = number of gases
+glist   = gas ID list; must include gases 1 (H20), 3(O3), 5 (CO), and 6 (CH4)
+gunit   = gas amount units; must be code value 1 or 2
+
+profile fields:
+plat    = profile latitude
+spres   = surface pressure
+nlevs   = number of levels
+plevs   = pressure levels
+ptemp   = temperature profile
+gas_#   = gas amount (where # is each gas ID number in glist)
+
+
+
+Profile Units:
+-------------
+Input profiles: discrete data points in the atmosphere
+   latitude: degrees
+   gas IDs: same notation as the HITRAN'98 database (see gas list below)
+   pressure levels: millibars (mb) [equivalent to hectoPascals (hPa)]
+   temperature: Kelvin (K)
+   mixing ratio: see "gas_units_code.txt".  The prefered unit is dry
+      air PPMV, but other units are allowed (see "Src_klayers/cbgucs.f").
+   surface pressure: millibars
+   surface altitude (optional but recommended): meters
+   level altitudes (optional): meters
+
+   Note: the KLAYERS program works by starting the calculations at the
+   bottom of the bottom-most required layer.  The altitude calculation
+   is initialized by extrapolation of the surface altitude down to the
+   bottom of the layer.  If no surface altitude is provided, the code
+   will calculate a surface altitude using the equation
+      pressure = 1013.25*exp(-altitude/scale_height)
+   The default scale_height is 7 kilometers, but this may be set to
+   some other value using the KLAYERS command-line argument "SCALEH"
+   as discussd in the following section.
+
+Output profiles: integrated/averaged data on the 100 AIRS layers
+   layer average pressure: millibars (mb) [equivalent to hPa]
+   layer average temperature: Kelvin (K)
+   altitude at approximate center of layer: meters
+   gas integrated layer absorber amount: molecules per square centimeter
+      (molecules/cm^2).
+   cloud integrated layer absorber amount: grams per square meter (g/m^2).
+
+
+
+HITRAN Gas List:
+---------------
+See file: gas_xsec_ids.txt
+
+
+
+Cloud ID numbers:
+----------------
+These are fake "gas" ID numbers which are used as a numeric label
+to uniquely identify each cloud. By itself the ID does not imply
+any particular set of cloud properties.
+
+201 = cloud1 amount
+202 = cloud2 amount
+203 = cloud3 amount
+
+301 = cloud1 particle size
+302 = cloud2 particle size
+303 = cloud3 particle size
+
+
+Comments:
+--------
+Our layering program was originally written as a special purpose replacement
+for the layering program included with David Edward's GENLN2 (line-by-line
+monochromatic transmittance and radiance) package.  To maintain compatibility,
+the output was originally in the format required by GENLN2.  However, the
+output of the layering program KLAYERS supplied in this package no longer
+follows the GENLN2 format.
+
+The KLAYERS program was written to support both our fast forward
+model for the AIRS satellite instrument, as well as KCARTA, our
+semi-fast monochromatic code.   The RTP (Radiative Transfer Profile)
+format has been developed as a means of pulling together all the info
+needed to specify a radiative transfer calculation.
+
+The KLAYERS program always calculates an atmosphere spanning complete
+AIRS layers.  In particular, this means that even if the bottom
+surface does not fall exactly on a layer boundary, KLAYERS will still
+calculate a complete bottom layer rather than a fractional bottom
+layer.  This is because the AIRS fast model requires complete layers.
+
+It is up to the user to provide a sensible profile for the entire
+portion of the atmosphere in which they are interested.  The KLAYERS
+code will augment the supplied profile if needed to span the required
+range, but there is no guarantee the KLAYERS program will do a good
+job!
+
+The user supplied profile can be augmented by one of the following
+six AFGL model profiles:
+      Model 1. Tropical
+      Model 2. Midlatitude Summer
+      Model 3. Midlatitude Winter
+      Model 4. Subarctic Summer
+      Model 5. Subarctic Winter
+      Model 6. U.S. Standard
+The choice of model is specified using a command-line argument.
+
+
+Overview of the FORTRAN programming:
+-----------------------------------
+The heart of the supplied code are the two routines "intlev" and "integ".
+This is where the vast majority of the actual work is done, the other
+routines dealing mainly with housekeeping duties (such as load or writing
+files, etc) or minor calculations.
+
+The KLAYERS program is designed to use these two routines to convert an input
+profile into a profile of the type required by kCARTA.  The KLAYERS program:
+   Asks the user for info about the profile (using RDINFO)
+   Opens the input and output RTP files
+   Loops over the profiles
+      Reads in the profile file (using RDRTP)
+      Interpolates the profile levels onto a set of fine AIRS sub-levels
+         (using INTLEV)
+      Integrate the sub-levels to get the averaged and integrated layer
+         values (using INTEG).
+      Writes the layer profile to output (using WRTRTP)
+   Closes RTP files and then done.
+Along with calls to these routine, the program also performs some minor
+calculations and housekeeping duties.
+
+Routine INTLEV interpolates an input profile onto a set of AIRS sub-levels.
+The sub-levels are the 100 AIRS layer divided into finer meshes to form
+sub-layers (defined by these sub-levels).  The layer sub-division is adjusted
+as needed to ensure that each input profile data point (in the range covered
+by the AIRS layers) is accounted for in the sub-levels.
+
+This interpolation assumes a linear relationship between the logarithm of air
+pressure and temperature, mixing ratio, and altitude.  If profile altitudes
+are not supplied, they are calculated recursively, working upward from the
+1100 mb level using a user supplied value of the altitude at this level, and
+then using the hydrostatic equation to calculate each layer's thickness.  The
+use of the hydrostatic equations requires we calculate gravity (using GRAV)
+for each sub-level.
+
+INTLEV can also be told to check the water profile to see if it is
+over-saturated (using WEXSVP), and if so truncate it's value to 100% humidity
+and write a warning to the screen.  The program also checks the bottom-most
+(largest pressure) levels to see if the interpolation is reasonable.  Here
+"reasonable" means within 10K in temperature and a factor of two in mixing
+ratio of the last supplied input data point.  If the interpolation is outside
+these bounds, the interpolated profile is truncated to these values and a
+warning is written to the screen.
+
+Routine INTEG integrates the sub-layers to form the 100 AIRS layer values of
+temperature and absorber amounts (and layer pressure, which is independent of
+input profile).  The absorber amounts are calculated using the ideal gas law to
+compute "air" density, which is then multiplied by the layer thickness and
+mixing ratio to determine absorber amount. The sum of the sub-layers gives the
+total layer integrated absorber amount.  An average layer temperature is
+computed using the "air amount" in the sub-layers as a weight.  A sum of the
+weighted sub-layer temperatures is divided by the sum of the weights to yield
+the average layer temperature.
+
+Scott.
